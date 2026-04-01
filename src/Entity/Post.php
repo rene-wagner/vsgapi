@@ -31,13 +31,13 @@ class Post
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[ApiProperty(identifier: false)]
-    #[Groups(['post:read'])]
+    #[Groups(['post:read', 'category:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Groups(['post:read'])]
+    #[Groups(['post:read', 'category:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, unique: true)]
@@ -48,7 +48,7 @@ class Post
         pattern: '/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
         message: 'Der Slug darf nur Kleinbuchstaben, Zahlen und Bindestriche enthalten.',
     )]
-    #[Groups(['post:read'])]
+    #[Groups(['post:read', 'category:read'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT)]
