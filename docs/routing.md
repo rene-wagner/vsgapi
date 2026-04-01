@@ -82,6 +82,19 @@ Konfiguriert in `src/Entity/Post.php` (`GetCollection`, `Get`). `slug` ist als A
 
 ---
 
+## API Platform — Ressource `Location` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/Location.php` (`GetCollection`, `Get`).
+
+| Name | Methoden | Pfad |
+|------|----------|------|
+| `_api_/api/locations{._format}_get_collection` | GET | `/api/locations.{_format}` |
+| `_api_/api/locations/{id}{._format}_get` | GET | `/api/locations/{id}.{_format}` |
+
+`{id}` ist die numerische Entitäts-ID. JSON-Felder u. a. `name`, `street`, `city`, optional `mapsUrl`.
+
+---
+
 ## Admin-Bereich
 
 | Name | Methoden | Pfad | Zweck |
@@ -102,8 +115,13 @@ Konfiguriert in `src/Entity/Post.php` (`GetCollection`, `Get`). `slug` ist als A
 | `admin_post_show` | GET | `/admin/posts/{id}` | Beitrag anzeigen |
 | `admin_post_edit` | GET, POST | `/admin/posts/{id}/edit` | Beitrag bearbeiten |
 | `admin_post_delete` | POST | `/admin/posts/{id}` | Beitrag löschen (mit CSRF) |
+| `admin_location_index` | GET | `/admin/locations` | Sportstättenliste |
+| `admin_location_new` | GET, POST | `/admin/locations/new` | Neue Sportstätte |
+| `admin_location_show` | GET | `/admin/locations/{id}` | Sportstätte anzeigen |
+| `admin_location_edit` | GET, POST | `/admin/locations/{id}/edit` | Sportstätte bearbeiten |
+| `admin_location_delete` | POST | `/admin/locations/{id}` | Sportstätte löschen (mit CSRF) |
 
-Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`.
+Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`.
 
 ---
 

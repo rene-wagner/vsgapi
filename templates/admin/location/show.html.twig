@@ -1,0 +1,46 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ location.name }} - Sportstätten - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>{{ location.name }}</h1>
+        <div class="actions">
+            <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary">Bearbeiten</a>
+            <a href="{{ path('admin_location_index') }}" class="btn btn-secondary">Zurück</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <dl class="detail-grid">
+            <dt>ID</dt>
+            <dd>{{ location.id }}</dd>
+
+            <dt>Name</dt>
+            <dd>{{ location.name }}</dd>
+
+            <dt>Straße</dt>
+            <dd>{{ location.street }}</dd>
+
+            <dt>Stadt</dt>
+            <dd>{{ location.city }}</dd>
+
+            <dt>Karten-Link</dt>
+            <dd>
+                {% if location.mapsUrl %}
+                    <a href="{{ location.mapsUrl }}" target="_blank" rel="noopener noreferrer">{{ location.mapsUrl }}</a>
+                {% else %}
+                    <span style="color: #999;">—</span>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: #dc3545;">Sportstätte löschen</h3>
+        <form method="post" action="{{ path('admin_location_delete', {id: location.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Sportstätte löschen möchten?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ location.id) }}">
+            <button type="submit" class="btn btn-danger">Sportstätte löschen</button>
+        </form>
+    </div>
+{% endblock %}

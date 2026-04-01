@@ -1,0 +1,42 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Sportstätten - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Sportstätten</h1>
+        <a href="{{ path('admin_location_new') }}" class="btn btn-primary">Neue Sportstätte</a>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Straße</th>
+                    <th>Stadt</th>
+                    <th style="width: 180px;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for location in locations %}
+                    <tr>
+                        <td>{{ location.name }}</td>
+                        <td>{{ location.street }}</td>
+                        <td>{{ location.city }}</td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ path('admin_location_show', {id: location.id}) }}" class="btn btn-secondary btn-sm">Anzeigen</a>
+                                <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 2rem; color: #999;">Keine Sportstätten vorhanden.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
