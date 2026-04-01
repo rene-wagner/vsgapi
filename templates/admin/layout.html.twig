@@ -19,6 +19,9 @@
             <a href="{{ path('admin_post_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_post' ? 'active' : '' }}">
                 Beiträge
             </a>
+            <a href="{{ path('admin_location_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_location' ? 'active' : '' }}">
+                Sportstätten
+            </a>
         </nav>
         <div class="sidebar-footer">
             {{ app.user.fullName }} &middot;

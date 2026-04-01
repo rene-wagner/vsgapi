@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ location.name }} bearbeiten - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>{{ location.name }} bearbeiten</h1>
+        <a href="{{ path('admin_location_index') }}" class="btn btn-secondary">Zurück</a>
+    </div>
+
+    <div class="card">
+        {{ include('admin/location/_form.html.twig') }}
+    </div>
+{% endblock %}

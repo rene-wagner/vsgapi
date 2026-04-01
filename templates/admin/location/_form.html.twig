@@ -1,0 +1,28 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.street) }}
+        {{ form_widget(form.street) }}
+        {{ form_errors(form.street) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.city) }}
+        {{ form_widget(form.city) }}
+        {{ form_errors(form.city) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.mapsUrl) }}
+        {{ form_widget(form.mapsUrl) }}
+        {{ form_help(form.mapsUrl) }}
+        {{ form_errors(form.mapsUrl) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Speichern</button>
+{{ form_end(form) }}
