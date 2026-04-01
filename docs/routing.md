@@ -56,6 +56,19 @@ Konfiguriert in `src/Entity/User.php` (`GetCollection`, `Get`, `Post`, `Patch`, 
 
 ---
 
+## API Platform — Ressource `Category` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/Category.php` (`GetCollection`, `Get`). `slug` ist als API-Identifier gesetzt.
+
+| Name | Methoden | Pfad |
+|------|----------|------|
+| `_api_/api/categories{._format}_get_collection` | GET | `/api/categories.{_format}` |
+| `_api_/api/categories/{slug}{._format}_get` | GET | `/api/categories/{slug}.{_format}` |
+
+`{slug}` ist der SEO-konforme Kategorien-Slug (z. B. `wohnzimmer-lampen`).
+
+---
+
 ## Admin-Bereich
 
 | Name | Methoden | Pfad | Zweck |
@@ -66,8 +79,13 @@ Konfiguriert in `src/Entity/User.php` (`GetCollection`, `Get`, `Post`, `Patch`, 
 | `admin_user_show` | GET | `/admin/users/{id}` | Benutzer anzeigen |
 | `admin_user_edit` | GET, POST | `/admin/users/{id}/edit` | Benutzer bearbeiten |
 | `admin_user_delete` | POST | `/admin/users/{id}` | Benutzer löschen (mit CSRF) |
+| `admin_category_index` | GET | `/admin/categories` | Kategorienliste |
+| `admin_category_new` | GET, POST | `/admin/categories/new` | Neue Kategorie |
+| `admin_category_show` | GET | `/admin/categories/{id}` | Kategorie anzeigen |
+| `admin_category_edit` | GET, POST | `/admin/categories/{id}/edit` | Kategorie bearbeiten |
+| `admin_category_delete` | POST | `/admin/categories/{id}` | Kategorie löschen (mit CSRF) |
 
-Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`.
+Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`.
 
 ---
 
