@@ -1,0 +1,62 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ post.title }} - Beiträge - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>{{ post.title }}</h1>
+        <div class="actions">
+            <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-primary">Bearbeiten</a>
+            <a href="{{ path('admin_post_index') }}" class="btn btn-secondary">Zurück</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <dl class="detail-grid">
+            <dt>ID</dt>
+            <dd>{{ post.id }}</dd>
+
+            <dt>Slug</dt>
+            <dd><span class="badge badge-secondary">{{ post.slug }}</span></dd>
+
+            <dt>Autor</dt>
+            <dd>{{ post.author.fullName }} ({{ post.author.email }})</dd>
+
+            <dt>Kategorien</dt>
+            <dd>
+                {% if post.categories|length > 0 %}
+                    {% for category in post.categories %}
+                        <span class="badge badge-secondary">{{ category.name }}</span>{% if not loop.last %} {% endif %}
+                    {% endfor %}
+                {% else %}
+                    —
+                {% endif %}
+            </dd>
+
+            <dt>Veröffentlicht</dt>
+            <dd>{{ post.published ? 'Ja' : 'Nein' }}</dd>
+
+            <dt>Aufrufe</dt>
+            <dd>{{ post.hits }}</dd>
+
+            <dt>Alter Beitrag</dt>
+            <dd>{{ post.oldPost ? 'Ja' : 'Nein' }}</dd>
+
+            <dt>Erstellt am</dt>
+            <dd>{{ post.createdAt|date('d.m.Y H:i') }}</dd>
+
+            <dt>Zuletzt aktualisiert</dt>
+            <dd>{{ post.updatedAt|date('d.m.Y H:i') }}</dd>
+        </dl>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem;">Inhalt (Markdown)</h3>
+        <pre style="white-space: pre-wrap; word-break: break-word; margin: 0; font-family: inherit;">{{ post.content }}</pre>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: #dc3545;">Beitrag löschen</h3>
+        {{ include('admin/post/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

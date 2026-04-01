@@ -69,6 +69,19 @@ Konfiguriert in `src/Entity/Category.php` (`GetCollection`, `Get`). `slug` ist a
 
 ---
 
+## API Platform — Ressource `Post` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/Post.php` (`GetCollection`, `Get`). `slug` ist als API-Identifier gesetzt.
+
+| Name | Methoden | Pfad |
+|------|----------|------|
+| `_api_/api/posts{._format}_get_collection` | GET | `/api/posts.{_format}` |
+| `_api_/api/posts/{slug}{._format}_get` | GET | `/api/posts/{slug}.{_format}` |
+
+`{slug}` ist der eindeutige Beitrags-Slug (z. B. `mein-beitrag`).
+
+---
+
 ## Admin-Bereich
 
 | Name | Methoden | Pfad | Zweck |
@@ -84,8 +97,13 @@ Konfiguriert in `src/Entity/Category.php` (`GetCollection`, `Get`). `slug` ist a
 | `admin_category_show` | GET | `/admin/categories/{id}` | Kategorie anzeigen |
 | `admin_category_edit` | GET, POST | `/admin/categories/{id}/edit` | Kategorie bearbeiten |
 | `admin_category_delete` | POST | `/admin/categories/{id}` | Kategorie löschen (mit CSRF) |
+| `admin_post_index` | GET | `/admin/posts` | Beitragsliste |
+| `admin_post_new` | GET, POST | `/admin/posts/new` | Neuer Beitrag |
+| `admin_post_show` | GET | `/admin/posts/{id}` | Beitrag anzeigen |
+| `admin_post_edit` | GET, POST | `/admin/posts/{id}/edit` | Beitrag bearbeiten |
+| `admin_post_delete` | POST | `/admin/posts/{id}` | Beitrag löschen (mit CSRF) |
 
-Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`.
+Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`.
 
 ---
 
