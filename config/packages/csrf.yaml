@@ -1,0 +1,5 @@
+# CSRF protection - use session-based tokens for server-rendered forms
+framework:
+    form:
+        csrf_protection:
+            token_id: submit

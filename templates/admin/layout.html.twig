@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>VSG Admin</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="{{ path('admin_dashboard') }}" class="{{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}">
+                Dashboard
+            </a>
+            <a href="{{ path('admin_user_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_user' ? 'active' : '' }}">
+                Benutzerverwaltung
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            {{ app.user.fullName }} &middot;
+            <a href="{{ path('app_logout') }}">Abmelden</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type }}">{{ message }}</div>
+            {% endfor %}
+        {% endfor %}
+
+        {% block content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Dashboard - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Dashboard</h1>
+    </div>
+
+    <div class="card">
+        <p>Willkommen im Administrationsbereich, {{ app.user.firstName }}.</p>
+    </div>
+{% endblock %}

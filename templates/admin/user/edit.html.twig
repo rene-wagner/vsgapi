@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ user.fullName }} bearbeiten - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>{{ user.fullName }} bearbeiten</h1>
+        <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">Zurück</a>
+    </div>
+
+    <div class="card">
+        {{ include('admin/user/_form.html.twig') }}
+    </div>
+{% endblock %}

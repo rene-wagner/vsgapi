@@ -1,0 +1,8 @@
+api_platform:
+    title: VSG API
+    version: 1.0.0
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+        route_prefix: /api
