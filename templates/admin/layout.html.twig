@@ -13,6 +13,9 @@
             <a href="{{ path('admin_user_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_user' ? 'active' : '' }}">
                 Benutzerverwaltung
             </a>
+            <a href="{{ path('admin_category_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_category' ? 'active' : '' }}">
+                Kategorien
+            </a>
         </nav>
         <div class="sidebar-footer">
             {{ app.user.fullName }} &middot;

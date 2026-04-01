@@ -1,0 +1,40 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Kategorien - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Kategorien</h1>
+        <a href="{{ path('admin_category_new') }}" class="btn btn-primary">Neue Kategorie</a>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th style="width: 180px;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td><span class="badge badge-secondary">{{ category.slug }}</span></td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ path('admin_category_show', {id: category.id}) }}" class="btn btn-secondary btn-sm">Anzeigen</a>
+                                <a href="{{ path('admin_category_edit', {id: category.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 2rem; color: #999;">Keine Kategorien vorhanden.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

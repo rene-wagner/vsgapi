@@ -1,0 +1,15 @@
+{{ form_start(form) }}
+    <div class="form-group">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_label(form.slug) }}
+        {{ form_widget(form.slug) }}
+        {{ form_errors(form.slug) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Speichern</button>
+{{ form_end(form) }}
