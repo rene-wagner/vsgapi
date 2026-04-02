@@ -95,6 +95,19 @@ Konfiguriert in `src/Entity/Location.php` (`GetCollection`, `Get`).
 
 ---
 
+## API Platform — Ressource `Department` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/Department.php` (`GetCollection`, `Get`). `slug` ist als API-Identifier gesetzt. Unterobjekte (`departmentStats`, `trainingGroups` mit `departmentTrainingSessions` und eingebetteten `locations`) sind nur über diese Ressource serialisiert, ohne eigene API-Endpunkte.
+
+| Name | Methoden | Pfad |
+|------|----------|------|
+| `_api_/api/departments{._format}_get_collection` | GET | `/api/departments.{_format}` |
+| `_api_/api/departments/{slug}{._format}_get` | GET | `/api/departments/{slug}.{_format}` |
+
+`{slug}` ist der eindeutige Abteilungs-Slug (z. B. `handball`). Die Antwort enthält verschachtelt Statistiken, Trainingsgruppen, Trainingseinheiten und referenzierte Sportstätten (`Location`).
+
+---
+
 ## Admin-Bereich
 
 | Name | Methoden | Pfad | Zweck |
@@ -120,8 +133,13 @@ Konfiguriert in `src/Entity/Location.php` (`GetCollection`, `Get`).
 | `admin_location_show` | GET | `/admin/locations/{id}` | Sportstätte anzeigen |
 | `admin_location_edit` | GET, POST | `/admin/locations/{id}/edit` | Sportstätte bearbeiten |
 | `admin_location_delete` | POST | `/admin/locations/{id}` | Sportstätte löschen (mit CSRF) |
+| `admin_department_index` | GET | `/admin/departments` | Sportabteilungen-Liste |
+| `admin_department_new` | GET, POST | `/admin/departments/new` | Neue Abteilung |
+| `admin_department_show` | GET | `/admin/departments/{id}` | Abteilung anzeigen |
+| `admin_department_edit` | GET, POST | `/admin/departments/{id}/edit` | Abteilung bearbeiten |
+| `admin_department_delete` | POST | `/admin/departments/{id}` | Abteilung löschen (mit CSRF) |
 
-Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`.
+Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`, `App\Controller\Admin\DepartmentController`.
 
 ---
 

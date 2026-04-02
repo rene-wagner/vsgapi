@@ -27,30 +27,30 @@ class Location
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['location:read'])]
+    #[Groups(['location:read', 'department:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Groups(['location:read'])]
+    #[Groups(['location:read', 'department:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Groups(['location:read'])]
+    #[Groups(['location:read', 'department:read'])]
     private ?string $street = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
-    #[Groups(['location:read'])]
+    #[Groups(['location:read', 'department:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 2048, nullable: true)]
     #[Assert\Length(max: 2048)]
-    #[Groups(['location:read'])]
+    #[Groups(['location:read', 'department:read'])]
     private ?string $mapsUrl = null;
 
     public function getId(): ?int

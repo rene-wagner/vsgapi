@@ -1,0 +1,40 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Sportabteilungen - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Sportabteilungen</h1>
+        <a href="{{ path('admin_department_new') }}" class="btn btn-primary">Neue Abteilung</a>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Slug</th>
+                    <th style="width: 180px;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in departments %}
+                    <tr>
+                        <td>{{ department.name }}</td>
+                        <td><code>{{ department.slug }}</code></td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ path('admin_department_show', {id: department.id}) }}" class="btn btn-secondary btn-sm">Anzeigen</a>
+                                <a href="{{ path('admin_department_edit', {id: department.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 2rem; color: #999;">Keine Abteilungen vorhanden.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
