@@ -24,8 +24,7 @@ class DepartmentTrainingGroup
     #[Groups(['department:read'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
     #[Groups(['department:read'])]
     private ?string $ageRange = null;
@@ -67,9 +66,9 @@ class DepartmentTrainingGroup
         return $this->ageRange;
     }
 
-    public function setAgeRange(string $ageRange): static
+    public function setAgeRange(?string $ageRange): static
     {
-        $this->ageRange = $ageRange;
+        $this->ageRange = ($ageRange === null || $ageRange === '') ? null : $ageRange;
 
         return $this;
     }

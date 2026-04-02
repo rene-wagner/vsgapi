@@ -20,7 +20,8 @@ class DepartmentTrainingGroupType extends AbstractType
             ])
             ->add('ageRange', TextType::class, [
                 'label' => 'Altersgruppe',
-                'help' => 'z. B. 6 – 17 oder Erwachsene',
+                'help' => 'Optional, z. B. 6 – 17 oder Erwachsene',
+                'required' => false,
             ])
             ->add('departmentTrainingSessions', CollectionType::class, [
                 'entry_type' => DepartmentTrainingSessionType::class,
