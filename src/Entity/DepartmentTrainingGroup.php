@@ -92,6 +92,19 @@ class DepartmentTrainingGroup
         return $this->departmentTrainingSessions;
     }
 
+    /** @param iterable<DepartmentTrainingSession> $departmentTrainingSessions */
+    public function setDepartmentTrainingSessions(iterable $departmentTrainingSessions): static
+    {
+        foreach ($this->departmentTrainingSessions->toArray() as $existing) {
+            $this->removeDepartmentTrainingSession($existing);
+        }
+        foreach ($departmentTrainingSessions as $session) {
+            $this->addDepartmentTrainingSession($session);
+        }
+
+        return $this;
+    }
+
     public function addDepartmentTrainingSession(DepartmentTrainingSession $session): static
     {
         if (!$this->departmentTrainingSessions->contains($session)) {

@@ -122,6 +122,19 @@ class Department
         return $this->departmentStats;
     }
 
+    /** @param iterable<DepartmentStatistic> $departmentStats */
+    public function setDepartmentStats(iterable $departmentStats): static
+    {
+        foreach ($this->departmentStats->toArray() as $existing) {
+            $this->removeDepartmentStatistic($existing);
+        }
+        foreach ($departmentStats as $statistic) {
+            $this->addDepartmentStatistic($statistic);
+        }
+
+        return $this;
+    }
+
     public function addDepartmentStatistic(DepartmentStatistic $statistic): static
     {
         if (!$this->departmentStats->contains($statistic)) {
@@ -143,6 +156,19 @@ class Department
     public function getTrainingGroups(): Collection
     {
         return $this->trainingGroups;
+    }
+
+    /** @param iterable<DepartmentTrainingGroup> $trainingGroups */
+    public function setTrainingGroups(iterable $trainingGroups): static
+    {
+        foreach ($this->trainingGroups->toArray() as $existing) {
+            $this->removeTrainingGroup($existing);
+        }
+        foreach ($trainingGroups as $trainingGroup) {
+            $this->addTrainingGroup($trainingGroup);
+        }
+
+        return $this;
     }
 
     public function addTrainingGroup(DepartmentTrainingGroup $trainingGroup): static
