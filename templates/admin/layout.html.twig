@@ -22,6 +22,9 @@
             <a href="{{ path('admin_location_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_location' ? 'active' : '' }}">
                 Sportstätten
             </a>
+            <a href="{{ path('admin_department_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_department' ? 'active' : '' }}">
+                Sportabteilungen
+            </a>
         </nav>
         <div class="sidebar-footer">
             {{ app.user.fullName }} &middot;

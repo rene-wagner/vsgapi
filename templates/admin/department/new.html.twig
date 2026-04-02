@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Neue Abteilung - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Neue Abteilung</h1>
+        <a href="{{ path('admin_department_index') }}" class="btn btn-secondary">Zurück</a>
+    </div>
+
+    <div class="card">
+        {{ include('admin/department/_form.html.twig') }}
+    </div>
+{% endblock %}
