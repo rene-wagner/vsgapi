@@ -108,6 +108,19 @@ Konfiguriert in `src/Entity/Department.php` (`GetCollection`, `Get`). `slug` ist
 
 ---
 
+## API Platform — Ressource `ContactPerson` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/ContactPerson.php` (`GetCollection`, `Get`). `slug` ist als API-Identifier gesetzt.
+
+| Name | Methoden | Pfad |
+|------|----------|------|
+| `_api_/api/contact_people{._format}_get_collection` | GET | `/api/contact_people.{_format}` |
+| `_api_/api/contact_people/{slug}{._format}_get` | GET | `/api/contact_people/{slug}.{_format}` |
+
+`{slug}` ist der eindeutige Slug der Kontaktperson (z. B. `max-mustermann`). JSON-Felder u. a. `id`, `slug`, `firstName`, `lastName`, optional `email`, `phone`, `address`.
+
+---
+
 ## Admin-Bereich
 
 | Name | Methoden | Pfad | Zweck |
@@ -138,8 +151,13 @@ Konfiguriert in `src/Entity/Department.php` (`GetCollection`, `Get`). `slug` ist
 | `admin_department_show` | GET | `/admin/departments/{id}` | Abteilung anzeigen |
 | `admin_department_edit` | GET, POST | `/admin/departments/{id}/edit` | Abteilung bearbeiten |
 | `admin_department_delete` | POST | `/admin/departments/{id}` | Abteilung löschen (mit CSRF) |
+| `admin_contact_person_index` | GET | `/admin/contact-people` | Kontaktpersonen-Liste |
+| `admin_contact_person_new` | GET, POST | `/admin/contact-people/new` | Neue Kontaktperson |
+| `admin_contact_person_show` | GET | `/admin/contact-people/{id}` | Kontaktperson anzeigen |
+| `admin_contact_person_edit` | GET, POST | `/admin/contact-people/{id}/edit` | Kontaktperson bearbeiten |
+| `admin_contact_person_delete` | POST | `/admin/contact-people/{id}` | Kontaktperson löschen (mit CSRF) |
 
-Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`, `App\Controller\Admin\DepartmentController`.
+Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`, `App\Controller\Admin\DepartmentController`, `App\Controller\Admin\ContactPersonController`.
 
 ---
 

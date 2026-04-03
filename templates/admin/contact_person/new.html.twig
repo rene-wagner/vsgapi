@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Neue Kontaktperson - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Neue Kontaktperson</h1>
+        <a href="{{ path('admin_contact_person_index') }}" class="btn btn-secondary">Zurück</a>
+    </div>
+
+    <div class="card">
+        {{ include('admin/contact_person/_form.html.twig') }}
+    </div>
+{% endblock %}
