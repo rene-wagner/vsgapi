@@ -1,0 +1,64 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ contact_person.firstName }} {{ contact_person.lastName }} - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>{{ contact_person.firstName }} {{ contact_person.lastName }}</h1>
+        <div class="actions">
+            <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="btn btn-primary">Bearbeiten</a>
+            <a href="{{ path('admin_contact_person_index') }}" class="btn btn-secondary">Zurück</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <dl class="detail-grid">
+            <dt>ID</dt>
+            <dd>{{ contact_person.id }}</dd>
+
+            <dt>Slug</dt>
+            <dd>{{ contact_person.slug }}</dd>
+
+            <dt>Vorname</dt>
+            <dd>{{ contact_person.firstName }}</dd>
+
+            <dt>Nachname</dt>
+            <dd>{{ contact_person.lastName }}</dd>
+
+            <dt>E-Mail</dt>
+            <dd>
+                {% if contact_person.email %}
+                    <a href="mailto:{{ contact_person.email }}">{{ contact_person.email }}</a>
+                {% else %}
+                    <span style="color: #999;">—</span>
+                {% endif %}
+            </dd>
+
+            <dt>Telefon</dt>
+            <dd>
+                {% if contact_person.phone %}
+                    {{ contact_person.phone }}
+                {% else %}
+                    <span style="color: #999;">—</span>
+                {% endif %}
+            </dd>
+
+            <dt>Adresse</dt>
+            <dd>
+                {% if contact_person.address %}
+                    {{ contact_person.address|nl2br }}
+                {% else %}
+                    <span style="color: #999;">—</span>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; color: #dc3545;">Kontaktperson löschen</h3>
+        <form method="post" action="{{ path('admin_contact_person_delete', {id: contact_person.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Kontaktperson löschen möchten?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact_person.id) }}">
+            <button type="submit" class="btn btn-danger">Kontaktperson löschen</button>
+        </form>
+    </div>
+{% endblock %}

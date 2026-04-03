@@ -25,6 +25,9 @@
             <a href="{{ path('admin_department_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_department' ? 'active' : '' }}">
                 Sportabteilungen
             </a>
+            <a href="{{ path('admin_contact_person_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_contact_person' ? 'active' : '' }}">
+                Kontaktpersonen
+            </a>
         </nav>
         <div class="sidebar-footer">
             {{ app.user.fullName }} &middot;

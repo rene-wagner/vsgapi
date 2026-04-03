@@ -1,0 +1,14 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ contact_person.firstName }} {{ contact_person.lastName }} bearbeiten - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>{{ contact_person.firstName }} {{ contact_person.lastName }} bearbeiten</h1>
+        <a href="{{ path('admin_contact_person_index') }}" class="btn btn-secondary">Zurück</a>
+    </div>
+
+    <div class="card">
+        {{ include('admin/contact_person/_form.html.twig') }}
+    </div>
+{% endblock %}
