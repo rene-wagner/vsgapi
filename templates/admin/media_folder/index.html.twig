@@ -1,0 +1,44 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Medien-Ordner - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="main-header">
+        <h1>Medien-Ordner</h1>
+        <div class="actions">
+            <a href="{{ path('admin_mediathek_index') }}" class="btn btn-secondary">Zur Mediathek</a>
+            <a href="{{ path('admin_media_folder_new') }}" class="btn btn-primary">Neuer Ordner</a>
+        </div>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th style="width: 220px;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for folder in folders %}
+                    <tr>
+                        <td>{{ folder.name }}</td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ path('admin_media_folder_edit', {id: folder.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                                <form method="post" action="{{ path('admin_media_folder_delete', {id: folder.id}) }}" onsubmit="return confirm('Ordner wirklich löschen?');" style="display: inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_media_folder' ~ folder.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2" style="text-align: center; padding: 2rem; color: #999;">Keine Ordner vorhanden.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

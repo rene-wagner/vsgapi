@@ -16,8 +16,9 @@ php bin/console debug:router
 Laut `config/packages/security.yaml`:
 
 - `/login` — öffentlich (`PUBLIC_ACCESS`)
+- `/media/` — öffentlich (`PUBLIC_ACCESS`), damit ausgelieferte Mediendateien (Bilder, PDFs, Thumbnails) per direkter URL ohne Session erreichbar sind
 - `/admin` — `ROLE_ADMIN`
-- Weitere Pfade (z. B. `/api`) sind dort nicht einzeln eingetragen; bei Bedarf `access_control` erweitern.
+- Weitere Pfade (z. B. `/api`) sind dort nicht einzeln eingetragen; bei Bedarf `access_control` erweitern. Die Medien-JSON-API unter `/api/media_*` erfordert wie andere geschützte API-Ressourcen eine authentifizierte Session (`IS_AUTHENTICATED_FULLY` auf den betreffenden `#[ApiResource]`-Operationen).
 
 ---
 
@@ -121,6 +122,48 @@ Konfiguriert in `src/Entity/ContactPerson.php` (`GetCollection`, `Get`). `slug` 
 
 ---
 
+## API Platform — Ressource `MediaFolder` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/MediaFolder.php` (`GetCollection`, `Get`). Zugriff nur für authentifizierte Benutzer.
+
+| Name | Methoden | Pfad |
+|------|----------|------|
+| `_api_/api/media_folders{._format}_get_collection` | GET | `/api/media_folders.{_format}` |
+| `_api_/api/media_folders/{id}{._format}_get` | GET | `/api/media_folders/{id}.{_format}` |
+
+`{id}` ist die numerische Ordner-ID.
+
+---
+
+## API Platform — Ressource `MediaItem` (Präfix `/api`)
+
+Konfiguriert in `src/Entity/MediaItem.php`. Zugriff nur für authentifizierte Benutzer. Die Antwort enthält u. a. berechnete Felder `url`, `thumbnail_url`, `size_human`, `folder_id`, `category_id` (siehe `MediaItemNormalizer`).
+
+| Name | Methoden | Pfad | Hinweis |
+|------|----------|------|---------|
+| `_api_/api/media_items_get_collection` | GET | `/api/media_items` | Liste (ohne `{._format}`-Suffix im Pfad; Format über `Accept` / Content-Negotiation) |
+| `_api_/api/media_items/{id}_get` | GET | `/api/media_items/{id}` | Einzelnes Medium |
+| `media_item_upload` | POST | `/api/media_items/upload` | Multipart: `file` (Pflicht), optional `folder`, `category`, `description`, `name` |
+| `media_item_copy` | POST | `/api/media_items/{id}/copy` | Optionaler JSON-Body: `{"folder": <numerische Ordner-ID>}` |
+| `_api_/api/media_items/{id}_patch` | PATCH | `/api/media_items/{id}` | Metadaten / Ordner (Verschieben) |
+| `_api_/api/media_items/{id}_delete` | DELETE | `/api/media_items/{id}` | Löscht Datensatz sowie Dateien auf dem Server |
+
+`{id}` ist die numerische Medien-ID.
+
+---
+
+## Öffentliche Mediendateien (kein API Platform)
+
+Auslieferung der gespeicherten Dateien aus `var/media` (relativ zu `media.storage_dir`). Die in der Datenbank gespeicherten Pfade (`path`, `thumbnail_path`) werden unter dieser URL-Präfixkette erreichbar; vollständige Links setzen sich mit `MEDIA_HOST` und `media.public_path_prefix` (Standard `/media/files`) zusammen (`MediaUrlService`).
+
+| Name | Methoden | Pfad | Hinweis |
+|------|----------|------|---------|
+| `media_file_serve` | GET | `/media/files/{path}` | `{path}` ist der relative Speicherpfad (kann Schrägstriche enthalten). Öffentlich (`PUBLIC_ACCESS`). |
+
+Controller: `App\Controller\MediaFileServeController`.
+
+---
+
 ## Admin-Bereich
 
 | Name | Methoden | Pfad | Zweck |
@@ -156,8 +199,16 @@ Konfiguriert in `src/Entity/ContactPerson.php` (`GetCollection`, `Get`). `slug` 
 | `admin_contact_person_show` | GET | `/admin/contact-people/{id}` | Kontaktperson anzeigen |
 | `admin_contact_person_edit` | GET, POST | `/admin/contact-people/{id}/edit` | Kontaktperson bearbeiten |
 | `admin_contact_person_delete` | POST | `/admin/contact-people/{id}` | Kontaktperson löschen (mit CSRF) |
+| `admin_mediathek_index` | GET, POST | `/admin/mediathek` | Mediathek: Liste, Upload, Ordnerfilter (`?folder=<id>`), Kopieren/Löschen |
+| `admin_mediathek_item_edit` | GET, POST | `/admin/mediathek/items/{id}/edit` | Medium bearbeiten (Name, Beschreibung, Kategorie, Ordner/Verschieben) |
+| `admin_mediathek_item_copy` | POST | `/admin/mediathek/items/{id}/copy` | Medium duplizieren (optional `folder_id` im Formular) |
+| `admin_mediathek_item_delete` | POST | `/admin/mediathek/items/{id}/delete` | Medium inkl. Dateien löschen (mit CSRF) |
+| `admin_media_folder_index` | GET | `/admin/media-folders` | Medien-Ordnerliste |
+| `admin_media_folder_new` | GET, POST | `/admin/media-folders/new` | Neuer Medien-Ordner |
+| `admin_media_folder_edit` | GET, POST | `/admin/media-folders/{id}/edit` | Medien-Ordner bearbeiten |
+| `admin_media_folder_delete` | POST | `/admin/media-folders/{id}` | Medien-Ordner löschen (mit CSRF; nur wenn leer) |
 
-Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`, `App\Controller\Admin\DepartmentController`, `App\Controller\Admin\ContactPersonController`.
+Controller: `App\Controller\Admin\DashboardController`, `App\Controller\Admin\UserController`, `App\Controller\Admin\CategoryController`, `App\Controller\Admin\PostController`, `App\Controller\Admin\LocationController`, `App\Controller\Admin\DepartmentController`, `App\Controller\Admin\ContactPersonController`, `App\Controller\Admin\MediaLibraryController`, `App\Controller\Admin\MediaFolderController`.
 
 ---
 
