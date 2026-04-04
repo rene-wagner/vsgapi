@@ -1,0 +1,9 @@
+{% set r = app.request.attributes.get('_route') %}
+<a href="{{ path('admin_dashboard') }}" class="nav-link px-3 py-2 link-light {{ r == 'admin_dashboard' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Dashboard</a>
+<a href="{{ path('admin_user_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_user' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Benutzer</a>
+<a href="{{ path('admin_category_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_category' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Kategorien</a>
+<a href="{{ path('admin_post_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_post' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Beiträge</a>
+<a href="{{ path('admin_location_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_location' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Sportstätten</a>
+<a href="{{ path('admin_department_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_department' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Sportabteilungen</a>
+<a href="{{ path('admin_contact_person_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_contact_person' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Kontaktpersonen</a>
+<a href="{{ path('admin_mediathek_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_mediathek' or r starts with 'admin_media_folder' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Mediathek</a>

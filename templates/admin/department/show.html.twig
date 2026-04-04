@@ -3,99 +3,111 @@
 {% block title %}{{ department.name }} - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>{{ department.name }}</h1>
-        <div class="actions">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ department.name }}</h1>
+        <div class="d-flex flex-wrap gap-2">
             <a href="{{ path('admin_department_edit', {id: department.id}) }}" class="btn btn-primary">Bearbeiten</a>
             <a href="{{ path('admin_department_index') }}" class="btn btn-secondary">Zurück</a>
         </div>
     </div>
 
-    <div class="card">
-        <dl class="detail-grid">
-            <dt>ID</dt>
-            <dd>{{ department.id }}</dd>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
+                <dd class="col-sm-9">{{ department.id }}</dd>
 
-            <dt>Name</dt>
-            <dd>{{ department.name }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Name</dt>
+                <dd class="col-sm-9">{{ department.name }}</dd>
 
-            <dt>Slug</dt>
-            <dd><code>{{ department.slug }}</code></dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Slug</dt>
+                <dd class="col-sm-9"><code>{{ department.slug }}</code></dd>
 
-            <dt>Beschreibung</dt>
-            <dd style="white-space: pre-wrap;">{{ department.description }}</dd>
-        </dl>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Beschreibung</dt>
+                <dd class="col-sm-9 admin-pre-content mb-0">{{ department.description }}</dd>
+            </dl>
+        </div>
     </div>
 
     {% if department.departmentStats|length > 0 %}
-        <div class="card">
-            <h3 style="margin-bottom: 1rem;">Statistiken</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Bezeichnung</th>
-                        <th>Wert</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for stat in department.departmentStats %}
-                        <tr>
-                            <td>{{ stat.label }}</td>
-                            <td>{{ stat.value }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h2 class="h5 mb-3">Statistiken</h2>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Bezeichnung</th>
+                                <th scope="col">Wert</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in department.departmentStats %}
+                                <tr>
+                                    <td>{{ stat.label }}</td>
+                                    <td>{{ stat.value }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     {% endif %}
 
     {% if department.trainingGroups|length > 0 %}
         {% for group in department.trainingGroups %}
-            <div class="card">
-                <h3 style="margin-bottom: 0.5rem;">{{ group.name }}</h3>
-                {% if group.ageRange %}
-                    <p style="color: #666; margin-bottom: 1rem;">Altersgruppe: {{ group.ageRange }}</p>
-                {% endif %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h2 class="h5 mb-2">{{ group.name }}</h2>
+                    {% if group.ageRange %}
+                        <p class="text-secondary mb-3">Altersgruppe: {{ group.ageRange }}</p>
+                    {% endif %}
 
-                {% if group.departmentTrainingSessions|length > 0 %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Tag</th>
-                                <th>Zeit</th>
-                                <th>Sportstätten</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for session in group.departmentTrainingSessions %}
-                                <tr>
-                                    <td>{{ session.day }}</td>
-                                    <td>{{ session.time }}</td>
-                                    <td>
-                                        {% if session.locations|length > 0 %}
-                                            {% for loc in session.locations %}
-                                                {{ loc.name }}{% if not loop.last %}, {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                            <span style="color: #999;">—</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <p style="color: #999;">Keine Trainingseinheiten eingetragen.</p>
-                {% endif %}
+                    {% if group.departmentTrainingSessions|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Tag</th>
+                                        <th scope="col">Zeit</th>
+                                        <th scope="col">Sportstätten</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for session in group.departmentTrainingSessions %}
+                                        <tr>
+                                            <td>{{ session.day }}</td>
+                                            <td>{{ session.time }}</td>
+                                            <td>
+                                                {% if session.locations|length > 0 %}
+                                                    {% for loc in session.locations %}
+                                                        {{ loc.name }}{% if not loop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <span class="text-muted">—</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Keine Trainingseinheiten eingetragen.</p>
+                    {% endif %}
+                </div>
             </div>
         {% endfor %}
     {% endif %}
 
-    <div class="card">
-        <h3 style="margin-bottom: 1rem; color: #dc3545;">Abteilung löschen</h3>
-        <form method="post" action="{{ path('admin_department_delete', {id: department.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Abteilung löschen möchten?');">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ department.id) }}">
-            <button type="submit" class="btn btn-danger">Abteilung löschen</button>
-        </form>
+    <div class="card shadow-sm border-danger">
+        <div class="card-body">
+            <h2 class="h5 text-danger mb-3">Abteilung löschen</h2>
+            <form method="post" action="{{ path('admin_department_delete', {id: department.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Abteilung löschen möchten?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ department.id) }}">
+                <button type="submit" class="btn btn-danger">Abteilung löschen</button>
+            </form>
+        </div>
     </div>
 {% endblock %}

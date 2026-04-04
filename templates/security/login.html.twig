@@ -3,28 +3,36 @@
 {% block title %}Login - VSG Admin{% endblock %}
 
 {% block body %}
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #1a1a2e;">
-    <div class="card" style="width: 400px;">
-        <h1 style="font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">VSG Admin Login</h1>
+    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-11 col-sm-8 col-md-5 col-lg-4">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <h1 class="h4 text-center mb-4">VSG Admin Login</h1>
 
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+                            {% if error %}
+                                <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            {% endif %}
 
-        <form method="post">
-            <div class="form-group">
-                <label for="inputEmail">E-Mail</label>
-                <input type="email" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label for="inputEmail" class="form-label">E-Mail</label>
+                                    <input type="email" class="form-control" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="inputPassword" class="form-label">Passwort</label>
+                                    <input type="password" class="form-control" id="inputPassword" name="_password" required autocomplete="current-password">
+                                </div>
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                                <button type="submit" class="btn btn-primary w-100">Anmelden</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="inputPassword">Passwort</label>
-                <input type="password" id="inputPassword" name="_password" required autocomplete="current-password">
-            </div>
-
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Anmelden</button>
-        </form>
+        </div>
     </div>
-</div>
 {% endblock %}

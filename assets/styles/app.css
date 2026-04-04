@@ -1,0 +1,34 @@
+body {
+    min-height: 100vh;
+}
+
+/* Flex/grid child: allow main column to shrink so table-responsive scrolls inside */
+.admin-main {
+    min-width: 0;
+}
+
+/* Pre-formatted admin content (Markdown preview) — no inline styles in Twig */
+.admin-pre-content {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.admin-media-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+}
+
+.admin-media-url-field {
+    max-width: 220px;
+}
+
+.admin-copy-folder-select {
+    max-width: 140px;
+}
+
+.checkbox-list ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}

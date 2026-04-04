@@ -3,24 +3,26 @@
 {% block title %}Neuer Medien-Ordner - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>Neuer Medien-Ordner</h1>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">Neuer Medien-Ordner</h1>
         <a href="{{ path('admin_mediathek_index') }}" class="btn btn-secondary">Zurück</a>
     </div>
 
-    <div class="card">
-        {{ form_start(form) }}
-            <div class="form-group">
-                {{ form_label(form.name) }}
-                {{ form_widget(form.name) }}
-                {{ form_errors(form.name) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.parent) }}
-                {{ form_widget(form.parent) }}
-                {{ form_errors(form.parent) }}
-            </div>
-            <button type="submit" class="btn btn-primary">Speichern</button>
-        {{ form_end(form) }}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.name) }}
+                    {{ form_widget(form.name) }}
+                    {{ form_errors(form.name) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.parent) }}
+                    {{ form_widget(form.parent) }}
+                    {{ form_errors(form.parent) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Speichern</button>
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}

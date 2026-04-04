@@ -3,11 +3,13 @@
 {% block title %}Dashboard - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>Dashboard</h1>
+    <div class="mb-4">
+        <h1 class="h3 mb-0">Dashboard</h1>
     </div>
 
-    <div class="card">
-        <p>Willkommen im Administrationsbereich, {{ app.user.firstName }}.</p>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p class="mb-0">Willkommen im Administrationsbereich, {{ app.user.firstName }}.</p>
+        </div>
     </div>
 {% endblock %}

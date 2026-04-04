@@ -1,51 +1,59 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="layout">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>VSG Admin</h2>
+    <nav class="navbar navbar-dark bg-dark shadow-sm d-lg-none">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 fs-5">VSG Admin</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas" aria-label="Menü öffnen">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-        <nav class="sidebar-nav">
-            <a href="{{ path('admin_dashboard') }}" class="{{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}">
-                Dashboard
-            </a>
-            <a href="{{ path('admin_user_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_user' ? 'active' : '' }}">
-                Benutzer
-            </a>
-            <a href="{{ path('admin_category_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_category' ? 'active' : '' }}">
-                Kategorien
-            </a>
-            <a href="{{ path('admin_post_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_post' ? 'active' : '' }}">
-                Beiträge
-            </a>
-            <a href="{{ path('admin_location_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_location' ? 'active' : '' }}">
-                Sportstätten
-            </a>
-            <a href="{{ path('admin_department_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_department' ? 'active' : '' }}">
-                Sportabteilungen
-            </a>
-            <a href="{{ path('admin_contact_person_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_contact_person' ? 'active' : '' }}">
-                Kontaktpersonen
-            </a>
-            <a href="{{ path('admin_mediathek_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_mediathek' or app.request.attributes.get('_route') starts with 'admin_media_folder' ? 'active' : '' }}">
-                Mediathek
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            {{ app.user.fullName }} &middot;
-            <a href="{{ path('app_logout') }}">Abmelden</a>
+    </nav>
+
+    <div class="offcanvas offcanvas-start text-bg-dark d-lg-none" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h2 class="offcanvas-title h5 mb-0" id="adminOffcanvasLabel">VSG Admin</h2>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Schließen"></button>
         </div>
-    </aside>
+        <div class="offcanvas-body d-flex flex-column p-0">
+            <nav class="nav flex-column flex-grow-1 py-2">
+                {% include 'admin/_nav_links.html.twig' %}
+            </nav>
+            <div class="border-top border-secondary p-3 small text-white-50">
+                {{ app.user.fullName }}
+                &middot;
+                <a href="{{ path('app_logout') }}" class="link-light">Abmelden</a>
+            </div>
+        </div>
+    </div>
 
-    <main class="main-content">
-        {% for type, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ type }}">{{ message }}</div>
-            {% endfor %}
-        {% endfor %}
-
-        {% block content %}{% endblock %}
-    </main>
-</div>
+    <div class="container-fluid px-0">
+        <div class="row g-0 flex-lg-nowrap min-vh-100">
+            <aside class="col-lg-3 col-xl-2 d-none d-lg-flex flex-column flex-shrink-0 bg-dark text-white border-end border-secondary">
+                <div class="p-3 border-bottom border-secondary">
+                    <a href="{{ path('admin_dashboard') }}" class="text-white text-decoration-none fw-semibold fs-5">VSG Admin</a>
+                </div>
+                <nav class="nav flex-column flex-grow-1 py-2">
+                    {% include 'admin/_nav_links.html.twig' %}
+                </nav>
+                <div class="p-3 border-top border-secondary small text-white-50">
+                    {{ app.user.fullName }}
+                    &middot;
+                    <a href="{{ path('app_logout') }}" class="link-light">Abmelden</a>
+                </div>
+            </aside>
+            <main class="admin-main col-lg-9 col-xl-10 ms-auto px-2 px-md-3 py-3 py-lg-4">
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        {% set alert_type = type == 'error' ? 'danger' : type %}
+                        <div class="alert alert-{{ alert_type }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
 {% endblock %}

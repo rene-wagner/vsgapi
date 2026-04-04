@@ -1,26 +1,26 @@
 {{ form_start(form, { attr: { class: 'department-form', novalidate: 'novalidate' } }) }}
     {{ form_errors(form) }}
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.name) }}
         {{ form_widget(form.name) }}
         {{ form_errors(form.name) }}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.slug) }}
         {{ form_widget(form.slug) }}
         {{ form_help(form.slug) }}
         {{ form_errors(form.slug) }}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.description) }}
         {{ form_widget(form.description) }}
         {{ form_errors(form.description) }}
     </div>
 
-    <h3 class="form-label-like" style="margin-top: 1.5rem;">{{ form_label(form.departmentStats) }}</h3>
+    <h3 class="h6 fw-semibold mt-4 mb-2">{{ form_label(form.departmentStats) }}</h3>
     {{ form_errors(form.departmentStats) }}
     <div
         class="collection-holder department-stats-collection"
@@ -28,13 +28,13 @@
         data-index="{{ form.departmentStats|length }}"
     >
         {% for stat in form.departmentStats %}
-            <div class="collection-item card" style="margin-bottom: 1rem; padding: 1rem;">
-                <div class="form-group">
+            <div class="collection-item card mb-3 p-3">
+                <div class="mb-3">
                     {{ form_label(stat.label) }}
                     {{ form_widget(stat.label) }}
                     {{ form_errors(stat.label) }}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form_label(stat.value) }}
                     {{ form_widget(stat.value) }}
                     {{ form_errors(stat.value) }}
@@ -43,11 +43,11 @@
             </div>
         {% endfor %}
     </div>
-    <p style="margin-bottom: 1.5rem;">
+    <p class="mb-4">
         <button type="button" class="btn btn-secondary js-add-stat">Statistik hinzufügen</button>
     </p>
 
-    <h3 class="form-label-like">{{ form_label(form.trainingGroups) }}</h3>
+    <h3 class="h6 fw-semibold mb-2">{{ form_label(form.trainingGroups) }}</h3>
     {{ form_errors(form.trainingGroups) }}
     <div
         class="collection-holder department-training-groups-collection"
@@ -55,20 +55,20 @@
         data-index="{{ form.trainingGroups|length }}"
     >
         {% for group in form.trainingGroups %}
-            <div class="collection-item card" style="margin-bottom: 1.5rem; padding: 1rem;">
-                <div class="form-group">
+            <div class="collection-item card mb-4 p-3">
+                <div class="mb-3">
                     {{ form_label(group.name) }}
                     {{ form_widget(group.name) }}
                     {{ form_help(group.name) }}
                     {{ form_errors(group.name) }}
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     {{ form_label(group.ageRange) }}
                     {{ form_widget(group.ageRange) }}
                     {{ form_help(group.ageRange) }}
                     {{ form_errors(group.ageRange) }}
                 </div>
-                <h4 class="form-label-like" style="margin-top: 1rem;">{{ form_label(group.departmentTrainingSessions) }}</h4>
+                <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
                 {{ form_errors(group.departmentTrainingSessions) }}
                 <div
                     class="collection-holder department-training-sessions-collection"
@@ -76,20 +76,20 @@
                     data-index="{{ group.departmentTrainingSessions|length }}"
                 >
                     {% for session in group.departmentTrainingSessions %}
-                        <div class="collection-item card" style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa;">
-                            <div class="form-group">
+                        <div class="collection-item card mb-3 p-3 bg-body-secondary">
+                            <div class="mb-3">
                                 {{ form_label(session.day) }}
                                 {{ form_widget(session.day) }}
                                 {{ form_help(session.day) }}
                                 {{ form_errors(session.day) }}
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 {{ form_label(session.time) }}
                                 {{ form_widget(session.time) }}
                                 {{ form_help(session.time) }}
                                 {{ form_errors(session.time) }}
                             </div>
-                            <div class="form-group checkbox-list">
+                            <div class="mb-3 checkbox-list">
                                 {{ form_label(session.locations) }}
                                 {{ form_widget(session.locations) }}
                                 {{ form_errors(session.locations) }}
@@ -98,14 +98,14 @@
                         </div>
                     {% endfor %}
                 </div>
-                <p style="margin-bottom: 0.5rem;">
+                <p class="mb-2">
                     <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
                 </p>
                 <button type="button" class="btn btn-secondary btn-sm js-remove-group">Trainingsgruppe entfernen</button>
             </div>
         {% endfor %}
     </div>
-    <p style="margin-bottom: 1.5rem;">
+    <p class="mb-4">
         <button type="button" class="btn btn-secondary js-add-group">Trainingsgruppe hinzufügen</button>
     </p>
 
@@ -139,10 +139,7 @@
             var proto = holder.dataset.prototype;
             var sidx = parseInt(holder.dataset.index, 10);
             var div = document.createElement('div');
-            div.className = 'collection-item card';
-            div.style.marginBottom = '1rem';
-            div.style.padding = '1rem';
-            div.style.background = '#f8f9fa';
+            div.className = 'collection-item card mb-3 p-3 bg-body-secondary';
             div.innerHTML = proto.replace(/__session__/g, String(sidx)) +
                 '<button type="button" class="btn btn-secondary btn-sm js-remove-session">Trainingseinheit entfernen</button>';
             holder.appendChild(div);
@@ -157,9 +154,7 @@
             var proto = holder.dataset.prototype;
             var idx = parseInt(holder.dataset.index, 10);
             var div = document.createElement('div');
-            div.className = 'collection-item card';
-            div.style.marginBottom = '1rem';
-            div.style.padding = '1rem';
+            div.className = 'collection-item card mb-3 p-3';
             div.innerHTML = proto.replace(/__stat__/g, String(idx)) +
                 '<button type="button" class="btn btn-secondary btn-sm js-remove-collection-item">Eintrag entfernen</button>';
             holder.appendChild(div);
@@ -179,11 +174,9 @@
                 .replace(/__session__/g, '0')
                 .replace(/__group__/g, String(idx));
             var div = document.createElement('div');
-            div.className = 'collection-item card';
-            div.style.marginBottom = '1.5rem';
-            div.style.padding = '1rem';
+            div.className = 'collection-item card mb-4 p-3';
             div.innerHTML = html +
-                '<p style="margin-bottom: 0.5rem;"><button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button></p>' +
+                '<p class="mb-2"><button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button></p>' +
                 '<button type="button" class="btn btn-secondary btn-sm js-remove-group">Trainingsgruppe entfernen</button>';
             holder.appendChild(div);
             holder.dataset.index = String(idx + 1);

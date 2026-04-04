@@ -3,12 +3,14 @@
 {% block title %}{{ user.fullName }} bearbeiten - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>{{ user.fullName }} bearbeiten</h1>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ user.fullName }} bearbeiten</h1>
         <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">Zurück</a>
     </div>
 
-    <div class="card">
-        {{ include('admin/user/_form.html.twig') }}
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ include('admin/user/_form.html.twig') }}
+        </div>
     </div>
 {% endblock %}

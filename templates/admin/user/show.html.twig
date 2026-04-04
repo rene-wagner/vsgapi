@@ -3,42 +3,46 @@
 {% block title %}{{ user.fullName }} - Benutzerverwaltung - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>{{ user.fullName }}</h1>
-        <div class="actions">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ user.fullName }}</h1>
+        <div class="d-flex flex-wrap gap-2">
             <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-primary">Bearbeiten</a>
             <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">Zurück</a>
         </div>
     </div>
 
-    <div class="card">
-        <dl class="detail-grid">
-            <dt>ID</dt>
-            <dd>{{ user.id }}</dd>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
+                <dd class="col-sm-9">{{ user.id }}</dd>
 
-            <dt>E-Mail</dt>
-            <dd>{{ user.email }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">E-Mail</dt>
+                <dd class="col-sm-9">{{ user.email }}</dd>
 
-            <dt>Vorname</dt>
-            <dd>{{ user.firstName }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Vorname</dt>
+                <dd class="col-sm-9">{{ user.firstName }}</dd>
 
-            <dt>Nachname</dt>
-            <dd>{{ user.lastName }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Nachname</dt>
+                <dd class="col-sm-9">{{ user.lastName }}</dd>
 
-            <dt>Rollen</dt>
-            <dd>
-                {% for role in user.roles %}
-                    <span class="badge {{ role == 'ROLE_ADMIN' ? 'badge-primary' : 'badge-success' }}">{{ role }}</span>
-                {% endfor %}
-            </dd>
-        </dl>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Rollen</dt>
+                <dd class="col-sm-9">
+                    {% for role in user.roles %}
+                        <span class="badge text-bg-{{ role == 'ROLE_ADMIN' ? 'primary' : 'success' }}">{{ role }}</span>
+                    {% endfor %}
+                </dd>
+            </dl>
+        </div>
     </div>
 
-    <div class="card">
-        <h3 style="margin-bottom: 1rem; color: #dc3545;">Benutzer löschen</h3>
-        <form method="post" action="{{ path('admin_user_delete', {id: user.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?');">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-            <button type="submit" class="btn btn-danger">Benutzer löschen</button>
-        </form>
+    <div class="card shadow-sm border-danger">
+        <div class="card-body">
+            <h2 class="h5 text-danger mb-3">Benutzer löschen</h2>
+            <form method="post" action="{{ path('admin_user_delete', {id: user.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                <button type="submit" class="btn btn-danger">Benutzer löschen</button>
+            </form>
+        </div>
     </div>
 {% endblock %}

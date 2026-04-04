@@ -4,6 +4,7 @@
 
 Symfony 7.2 API project with API Platform 4, Doctrine ORM 3, and a Twig-based admin panel.
 PHP 8.2+ required. MySQL 9 database via Docker Compose. German-language UI.
+Frontend assets are built with the **Symfony AssetMapper**; the admin UI uses **Bootstrap 5** as its CSS framework.
 
 ## Architecture
 
@@ -15,7 +16,9 @@ src/
   Entity/          # Doctrine ORM entities with API Platform attributes
   Form/            # Symfony form types
   Repository/      # Doctrine repositories
+assets/            # CSS/JS entry points for AssetMapper (e.g. app.css, app.js)
 config/            # Symfony YAML configuration
+importmap.php      # AssetMapper import map (project root, when enabled)
 migrations/        # Doctrine migrations
 templates/         # Twig templates (admin/ with layout.html.twig base)
 ```
@@ -38,6 +41,10 @@ php bin/console doctrine:migrations:migrate
 
 # Clear cache
 php bin/console cache:clear
+
+# Frontend assets (AssetMapper)
+# Development: assets are served automatically when using symfony server or with asset mapper dev tooling
+php bin/console asset-map:compile    # production / CI — compile versioned assets
 
 # Create admin user
 php bin/console app:create-admin
@@ -143,8 +150,8 @@ No linters or static analysis tools are currently installed. When adding:
 ### Twig Templates
 
 - Admin templates extend `admin/layout.html.twig` (which extends `base.html.twig`)
-- Blocks: `{% block title %}`, `{% block content %}`, `{% block stylesheets %}`
-- CSS is inline in `base.html.twig` — no external CSS framework
+- Blocks: `{% block title %}`, `{% block content %}`, `{% block stylesheets %}`, `{% block javascripts %}`
+- Load CSS/JS through the **AssetMapper**: use `importmap()` (and entry `stylesheet`/`javascript` tags as generated) instead of ad-hoc inline styles for application chrome; **Bootstrap 5** supplies layout, components, and utilities
 - Forms rendered manually with `form_label`, `form_widget`, `form_errors` (not `form_row`)
 - Use `path()` for route generation, never hardcode URLs
 - HTML lang is `de`
@@ -162,6 +169,13 @@ No linters or static analysis tools are currently installed. When adding:
 - Entities excluded from service container
 - Doctrine mapping type: `attribute`
 - API Platform defaults: stateless, `/api` route prefix, cache headers with Vary
+- **AssetMapper** (`framework.asset_mapper`): import map in `importmap.php`, sources under `assets/`; add third-party packages with `php bin/console importmap:require` where applicable
+
+## Frontend & assets
+
+- **Symfony AssetMapper** is the standard way to ship and version CSS/JS (no separate Node/Webpack requirement for typical admin UI work)
+- **Bootstrap 5** is the CSS framework for the admin panel: import or map it via the import map, then extend with project styles in `assets/` (e.g. `app.css` importing Bootstrap and custom rules)
+- Prefer component-friendly markup and Bootstrap utility classes; avoid large blocks of inline CSS except for rare one-off cases
 
 ## Docker
 
@@ -178,4 +192,4 @@ MySQL connection: `mysql://user:secret@localhost:3306/database`
 - API Platform resources defined on Entity classes directly (no separate ApiResource classes yet)
 - No `strict_types` declaration in app code — follow existing convention
 - German UI strings — keep all user-facing text in German
-- Inline CSS in base template — no build pipeline or asset bundler
+- **AssetMapper** for building and serving assets; **Bootstrap 5** for CSS framework and UI primitives

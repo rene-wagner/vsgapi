@@ -1,54 +1,54 @@
 {{ form_start(form) }}
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.title) }}
         {{ form_widget(form.title) }}
         {{ form_errors(form.title) }}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.slug) }}
         {{ form_widget(form.slug) }}
         {{ form_errors(form.slug) }}
         {% if form.slug.vars.help %}
-            <small class="form-help">{{ form.slug.vars.help }}</small>
+            <div class="form-text">{{ form.slug.vars.help }}</div>
         {% endif %}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.content) }}
         {{ form_widget(form.content) }}
         {{ form_errors(form.content) }}
     </div>
 
-    <div class="form-group form-row-inline">
+    <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
         {{ form_widget(form.published) }}
         {{ form_label(form.published) }}
         {{ form_errors(form.published) }}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.hits) }}
         {{ form_widget(form.hits) }}
         {{ form_errors(form.hits) }}
         {% if form.hits.vars.help %}
-            <small class="form-help">{{ form.hits.vars.help }}</small>
+            <div class="form-text">{{ form.hits.vars.help }}</div>
         {% endif %}
     </div>
 
-    <div class="form-group form-row-inline">
+    <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
         {{ form_widget(form.oldPost) }}
         {{ form_label(form.oldPost) }}
         {{ form_errors(form.oldPost) }}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         {{ form_label(form.author) }}
         {{ form_widget(form.author) }}
         {{ form_errors(form.author) }}
     </div>
 
-    <div class="form-group">
-        <span class="form-label-like">{{ form.categories.vars.label }}</span>
+    <div class="mb-3">
+        <span class="form-label d-block">{{ form.categories.vars.label }}</span>
         <div class="checkbox-list">
             {{ form_widget(form.categories) }}
         </div>

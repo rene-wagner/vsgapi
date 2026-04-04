@@ -3,60 +3,66 @@
 {% block title %}{{ post.title }} - Beiträge - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>{{ post.title }}</h1>
-        <div class="actions">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ post.title }}</h1>
+        <div class="d-flex flex-wrap gap-2">
             <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-primary">Bearbeiten</a>
             <a href="{{ path('admin_post_index') }}" class="btn btn-secondary">Zurück</a>
         </div>
     </div>
 
-    <div class="card">
-        <dl class="detail-grid">
-            <dt>ID</dt>
-            <dd>{{ post.id }}</dd>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
+                <dd class="col-sm-9">{{ post.id }}</dd>
 
-            <dt>Slug</dt>
-            <dd><span class="badge badge-secondary">{{ post.slug }}</span></dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Slug</dt>
+                <dd class="col-sm-9"><span class="badge text-bg-secondary">{{ post.slug }}</span></dd>
 
-            <dt>Autor</dt>
-            <dd>{{ post.author.fullName }} ({{ post.author.email }})</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Autor</dt>
+                <dd class="col-sm-9">{{ post.author.fullName }} ({{ post.author.email }})</dd>
 
-            <dt>Kategorien</dt>
-            <dd>
-                {% if post.categories|length > 0 %}
-                    {% for category in post.categories %}
-                        <span class="badge badge-secondary">{{ category.name }}</span>{% if not loop.last %} {% endif %}
-                    {% endfor %}
-                {% else %}
-                    —
-                {% endif %}
-            </dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Kategorien</dt>
+                <dd class="col-sm-9">
+                    {% if post.categories|length > 0 %}
+                        {% for category in post.categories %}
+                            <span class="badge text-bg-secondary">{{ category.name }}</span>{% if not loop.last %} {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </dd>
 
-            <dt>Veröffentlicht</dt>
-            <dd>{{ post.published ? 'Ja' : 'Nein' }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Veröffentlicht</dt>
+                <dd class="col-sm-9">{{ post.published ? 'Ja' : 'Nein' }}</dd>
 
-            <dt>Aufrufe</dt>
-            <dd>{{ post.hits }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Aufrufe</dt>
+                <dd class="col-sm-9">{{ post.hits }}</dd>
 
-            <dt>Alter Beitrag</dt>
-            <dd>{{ post.oldPost ? 'Ja' : 'Nein' }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Alter Beitrag</dt>
+                <dd class="col-sm-9">{{ post.oldPost ? 'Ja' : 'Nein' }}</dd>
 
-            <dt>Erstellt am</dt>
-            <dd>{{ post.createdAt|date('d.m.Y H:i') }}</dd>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Erstellt am</dt>
+                <dd class="col-sm-9">{{ post.createdAt|date('d.m.Y H:i') }}</dd>
 
-            <dt>Zuletzt aktualisiert</dt>
-            <dd>{{ post.updatedAt|date('d.m.Y H:i') }}</dd>
-        </dl>
+                <dt class="col-sm-3 text-secondary small text-uppercase">Zuletzt aktualisiert</dt>
+                <dd class="col-sm-9">{{ post.updatedAt|date('d.m.Y H:i') }}</dd>
+            </dl>
+        </div>
     </div>
 
-    <div class="card">
-        <h3 style="margin-bottom: 1rem;">Inhalt (Markdown)</h3>
-        <pre style="white-space: pre-wrap; word-break: break-word; margin: 0; font-family: inherit;">{{ post.content }}</pre>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Inhalt (Markdown)</h2>
+            <pre class="admin-pre-content mb-0 small bg-body-tertiary p-3 rounded border">{{ post.content }}</pre>
+        </div>
     </div>
 
-    <div class="card">
-        <h3 style="margin-bottom: 1rem; color: #dc3545;">Beitrag löschen</h3>
-        {{ include('admin/post/_delete_form.html.twig') }}
+    <div class="card shadow-sm border-danger">
+        <div class="card-body">
+            <h2 class="h5 text-danger mb-3">Beitrag löschen</h2>
+            {{ include('admin/post/_delete_form.html.twig') }}
+        </div>
     </div>
 {% endblock %}

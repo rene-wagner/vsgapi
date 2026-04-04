@@ -3,40 +3,42 @@
 {% block title %}Sportstätten - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>Sportstätten</h1>
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">Sportstätten</h1>
         <a href="{{ path('admin_location_new') }}" class="btn btn-primary">Neue Sportstätte</a>
     </div>
 
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Straße</th>
-                    <th>Stadt</th>
-                    <th style="width: 180px;">Aktionen</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for location in locations %}
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ location.name }}</td>
-                        <td>{{ location.street }}</td>
-                        <td>{{ location.city }}</td>
-                        <td>
-                            <div class="actions">
-                                <a href="{{ path('admin_location_show', {id: location.id}) }}" class="btn btn-secondary btn-sm">Anzeigen</a>
-                                <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
-                            </div>
-                        </td>
+                        <th scope="col">Name</th>
+                        <th scope="col">Straße</th>
+                        <th scope="col">Stadt</th>
+                        <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
                     </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="4" style="text-align: center; padding: 2rem; color: #999;">Keine Sportstätten vorhanden.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for location in locations %}
+                        <tr>
+                            <td>{{ location.name }}</td>
+                            <td>{{ location.street }}</td>
+                            <td>{{ location.city }}</td>
+                            <td class="text-md-end">
+                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                                    <a href="{{ path('admin_location_show', {id: location.id}) }}" class="btn btn-secondary btn-sm">Anzeigen</a>
+                                    <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-5">Keine Sportstätten vorhanden.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}

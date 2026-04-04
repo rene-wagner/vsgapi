@@ -3,42 +3,44 @@
 {% block title %}Medien-Ordner - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="main-header">
-        <h1>Medien-Ordner</h1>
-        <div class="actions">
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">Medien-Ordner</h1>
+        <div class="d-flex flex-wrap gap-2">
             <a href="{{ path('admin_mediathek_index') }}" class="btn btn-secondary">Zur Mediathek</a>
             <a href="{{ path('admin_media_folder_new') }}" class="btn btn-primary">Neuer Ordner</a>
         </div>
     </div>
 
-    <div class="card" style="padding: 0; overflow: hidden;">
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th style="width: 220px;">Aktionen</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for folder in folders %}
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <td>{{ folder.name }}</td>
-                        <td>
-                            <div class="actions">
-                                <a href="{{ path('admin_media_folder_edit', {id: folder.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
-                                <form method="post" action="{{ path('admin_media_folder_delete', {id: folder.id}) }}" onsubmit="return confirm('Ordner wirklich löschen?');" style="display: inline;">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_media_folder' ~ folder.id) }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
-                                </form>
-                            </div>
-                        </td>
+                        <th scope="col">Name</th>
+                        <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
                     </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="2" style="text-align: center; padding: 2rem; color: #999;">Keine Ordner vorhanden.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for folder in folders %}
+                        <tr>
+                            <td>{{ folder.name }}</td>
+                            <td class="text-md-end">
+                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                                    <a href="{{ path('admin_media_folder_edit', {id: folder.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                                    <form method="post" action="{{ path('admin_media_folder_delete', {id: folder.id}) }}" class="d-inline" onsubmit="return confirm('Ordner wirklich löschen?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_media_folder' ~ folder.id) }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Löschen</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted py-5">Keine Ordner vorhanden.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
