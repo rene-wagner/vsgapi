@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    media.storage_dir: '%kernel.project_dir%/var/media'
+    media.public_path_prefix: '/media/files'
+    media.max_upload_bytes: 10485760
+    media.thumbnail_max_edge: 320
 
 services:
     # default configuration for services in *this* file
@@ -19,6 +23,33 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\Media\MediaUrlService:
+        arguments:
+            $mediaHost: '%env(MEDIA_HOST)%'
+            $publicPathPrefix: '%media.public_path_prefix%'
+
+    App\Controller\MediaFileServeController:
+        arguments:
+            $mediaStorageDir: '%media.storage_dir%'
+
+    App\Service\Media\MediaUploadService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
+            $maxUploadBytes: '%media.max_upload_bytes%'
+            $thumbnailMaxEdge: '%media.thumbnail_max_edge%'
+
+    App\Service\Media\MediaDeleteService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
+
+    App\Service\Media\MediaCopyService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
+
+    App\Serializer\MediaItemNormalizer:
+        tags:
+            - { name: serializer.normalizer, priority: 64 }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

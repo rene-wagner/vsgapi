@@ -1,0 +1,293 @@
+<?php
+
+namespace App\Entity;
+
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Enum\MediaItemType;
+use App\Repository\MediaItemRepository;
+use App\Controller\Api\MediaItemCopyController;
+use App\Controller\Api\MediaItemUploadController;
+use App\State\MediaItemDeleteProcessor;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
+
+#[ORM\Entity(repositoryClass: MediaItemRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource(
+    operations: [
+        new GetCollection(uriTemplate: '/media_items'),
+        new Get(uriTemplate: '/media_items/{id}'),
+        new Post(
+            uriTemplate: '/media_items/upload',
+            controller: MediaItemUploadController::class,
+            deserialize: false,
+            name: 'media_item_upload',
+        ),
+        new Post(
+            uriTemplate: '/media_items/{id}/copy',
+            uriVariables: ['id'],
+            controller: MediaItemCopyController::class,
+            deserialize: false,
+            name: 'media_item_copy',
+        ),
+        new Patch(uriTemplate: '/media_items/{id}'),
+        new Delete(uriTemplate: '/media_items/{id}', processor: MediaItemDeleteProcessor::class),
+    ],
+    normalizationContext: ['groups' => ['media_item:read']],
+    denormalizationContext: ['groups' => ['media_item:write']],
+    security: 'is_granted("IS_AUTHENTICATED_FULLY")',
+    stateless: false,
+)]
+class MediaItem
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    #[ApiProperty(identifier: false)]
+    #[Groups(['media_item:read'])]
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'mediaItems')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['media_item:write'])]
+    private ?MediaFolder $folder = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['media_item:write'])]
+    private ?Category $category = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255)]
+    #[SerializedName('original_filename')]
+    #[Groups(['media_item:read'])]
+    private ?string $originalFilename = null;
+
+    #[ORM\Column(length: 127)]
+    #[SerializedName('mime_type')]
+    #[Groups(['media_item:read'])]
+    private ?string $mimeType = null;
+
+    #[ORM\Column(length: 16)]
+    #[Groups(['media_item:read'])]
+    private ?string $extension = null;
+
+    #[ORM\Column(enumType: MediaItemType::class)]
+    #[Groups(['media_item:read'])]
+    private ?MediaItemType $type = null;
+
+    #[ORM\Column]
+    #[SerializedName('size_bytes')]
+    #[Groups(['media_item:read'])]
+    private int $sizeBytes = 0;
+
+    #[ORM\Column(length: 512)]
+    private ?string $path = null;
+
+    #[ORM\Column(length: 512, nullable: true)]
+    private ?string $thumbnailPath = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(max: 2000)]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private ?string $description = null;
+
+    #[ORM\Column]
+    #[SerializedName('created_at')]
+    #[Groups(['media_item:read'])]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    #[SerializedName('updated_at')]
+    #[Groups(['media_item:read'])]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getFolder(): ?MediaFolder
+    {
+        return $this->folder;
+    }
+
+    public function setFolder(?MediaFolder $folder): static
+    {
+        $this->folder = $folder;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getOriginalFilename(): ?string
+    {
+        return $this->originalFilename;
+    }
+
+    public function setOriginalFilename(string $originalFilename): static
+    {
+        $this->originalFilename = $originalFilename;
+
+        return $this;
+    }
+
+    public function getMimeType(): ?string
+    {
+        return $this->mimeType;
+    }
+
+    public function setMimeType(string $mimeType): static
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    public function getExtension(): ?string
+    {
+        return $this->extension;
+    }
+
+    public function setExtension(string $extension): static
+    {
+        $this->extension = $extension;
+
+        return $this;
+    }
+
+    public function getType(): ?MediaItemType
+    {
+        return $this->type;
+    }
+
+    public function setType(MediaItemType $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getSizeBytes(): int
+    {
+        return $this->sizeBytes;
+    }
+
+    public function setSizeBytes(int $sizeBytes): static
+    {
+        $this->sizeBytes = $sizeBytes;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): static
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    public function getThumbnailPath(): ?string
+    {
+        return $this->thumbnailPath;
+    }
+
+    public function setThumbnailPath(?string $thumbnailPath): static
+    {
+        $this->thumbnailPath = $thumbnailPath;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $now = new \DateTimeImmutable();
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+}

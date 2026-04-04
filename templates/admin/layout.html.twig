@@ -28,6 +28,9 @@
             <a href="{{ path('admin_contact_person_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_contact_person' ? 'active' : '' }}">
                 Kontaktpersonen
             </a>
+            <a href="{{ path('admin_mediathek_index') }}" class="{{ app.request.attributes.get('_route') starts with 'admin_mediathek' or app.request.attributes.get('_route') starts with 'admin_media_folder' ? 'active' : '' }}">
+                Mediathek
+            </a>
         </nav>
         <div class="sidebar-footer">
             {{ app.user.fullName }} &middot;

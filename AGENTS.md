@@ -65,6 +65,7 @@ Naming strategy: `underscore` (camelCase properties → snake_case columns).
 ## Testing
 
 No test framework is currently configured. When adding tests:
+
 - Use PHPUnit via `symfony/phpunit-bridge`
 - Test namespace: `App\Tests\` → `tests/`
 - Run: `php bin/phpunit` or `./vendor/bin/phpunit`
@@ -74,6 +75,7 @@ No test framework is currently configured. When adding tests:
 ## Linting & Static Analysis
 
 No linters or static analysis tools are currently installed. When adding:
+
 - PHPStan: `composer require --dev phpstan/phpstan` → `vendor/bin/phpstan analyse src/`
 - PHP-CS-Fixer: `composer require --dev friendsofphp/php-cs-fixer` → `vendor/bin/php-cs-fixer fix`
 
@@ -86,7 +88,7 @@ No linters or static analysis tools are currently installed. When adding:
 - One class per file, PSR-4 autoloading under `App\` namespace
 
 ### Imports
-￼￼￼￼￼￼
+
 - Group order: PHP built-in → third-party (ApiPlatform, Doctrine, Symfony) → App namespace
 - One `use` statement per class — no grouped imports
 - Aliased imports for constraints: `Doctrine\ORM\Mapping as ORM`, `Symfony\Component\Validator\Constraints as Assert`
