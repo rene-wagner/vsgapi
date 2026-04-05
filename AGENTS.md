@@ -4,7 +4,7 @@
 
 Symfony 7.2 API project with API Platform 4, Doctrine ORM 3, and a Twig-based admin panel.
 PHP 8.2+ required. MySQL 9 database via Docker Compose. German-language UI.
-Frontend assets are built with the **Symfony AssetMapper**; the admin UI uses **Bootstrap 5** as its CSS framework.
+Frontend assets are built with the **Symfony AssetMapper**; the admin UI uses **Bootstrap 5** as its CSS framework and **Font Awesome Free** (solid icons) for pictograms.
 
 ## Architecture
 
@@ -32,6 +32,10 @@ Templates follow `templates/{module}/{entity}/{action}.html.twig` — partials p
 ```bash
 # Install dependencies
 composer install
+
+# Download Importmap vendor assets (Bootstrap, Font Awesome, etc.) into assets/vendor/
+# Required after clone; importmap.php is committed, assets/vendor/ is gitignored
+php bin/console importmap:install
 
 # Start database
 docker compose up -d
@@ -152,6 +156,7 @@ No linters or static analysis tools are currently installed. When adding:
 - Admin templates extend `admin/layout.html.twig` (which extends `base.html.twig`)
 - Blocks: `{% block title %}`, `{% block content %}`, `{% block stylesheets %}`, `{% block javascripts %}`
 - Load CSS/JS through the **AssetMapper**: use `importmap()` (and entry `stylesheet`/`javascript` tags as generated) instead of ad-hoc inline styles for application chrome; **Bootstrap 5** supplies layout, components, and utilities
+- **Icons**: use **Font Awesome** classes (e.g. `fa-solid fa-trash`) in markup; CSS is pulled in via `assets/app.js`. Prefer `aria-label` on icon-only controls and `aria-hidden="true"` on decorative `<i>` elements
 - Forms rendered manually with `form_label`, `form_widget`, `form_errors` (not `form_row`)
 - Use `path()` for route generation, never hardcode URLs
 - HTML lang is `de`
@@ -169,13 +174,15 @@ No linters or static analysis tools are currently installed. When adding:
 - Entities excluded from service container
 - Doctrine mapping type: `attribute`
 - API Platform defaults: stateless, `/api` route prefix, cache headers with Vary
-- **AssetMapper** (`framework.asset_mapper`): import map in `importmap.php`, sources under `assets/`; add third-party packages with `php bin/console importmap:require` where applicable
+- **AssetMapper** (`framework.asset_mapper`): import map in `importmap.php`, sources under `assets/`; add third-party JS/CSS packages with `php bin/console importmap:require <package>` (updates `importmap.php` and downloads into `assets/vendor/`). After cloning the repo, run `php bin/console importmap:install` so `assets/vendor/` matches the lock file
 
 ## Frontend & assets
 
 - **Symfony AssetMapper** is the standard way to ship and version CSS/JS (no separate Node/Webpack requirement for typical admin UI work)
-- **Bootstrap 5** is the CSS framework for the admin panel: import or map it via the import map, then extend with project styles in `assets/` (e.g. `app.css` importing Bootstrap and custom rules)
+- **Bootstrap 5** is the CSS framework for the admin panel: CSS is imported from the import map in `assets/app.js`, with additional rules in `assets/styles/app.css`
+- **Font Awesome Free** (`@fortawesome/fontawesome-free`): In `assets/app.js` import both `css/fontawesome.min.css` (Icon-Definitionen) and `css/solid.min.css` (**@font-face** + `webfonts/fa-solid-900.woff2` für `fa-solid`). Ohne `solid.min.css` erscheinen keine Glyphen. Paket hinzufügen/aktualisieren: `php bin/console importmap:require …` bzw. `importmap:update`. **`importmap:install`** meldet „nichts zu installieren“, wenn `assets/vendor/` bereits zur `importmap.php` passt — das ist normal. Nur **Font Awesome Free**; Pro ist hier nicht eingerichtet
 - Prefer component-friendly markup and Bootstrap utility classes; avoid large blocks of inline CSS except for rare one-off cases
+- **Department admin form** (`templates/admin/department/_form.html.twig`): nested `CollectionType` rows use cards with a red icon-only remove control (`btn-danger`, Font Awesome trash) in the top-right corner; dynamic rows added by the inline script must mirror the same HTML structure as Twig
 
 ## Docker
 
@@ -192,4 +199,4 @@ MySQL connection: `mysql://user:secret@localhost:3306/database`
 - API Platform resources defined on Entity classes directly (no separate ApiResource classes yet)
 - No `strict_types` declaration in app code — follow existing convention
 - German UI strings — keep all user-facing text in German
-- **AssetMapper** for building and serving assets; **Bootstrap 5** for CSS framework and UI primitives
+- **AssetMapper** for building and serving assets; **Bootstrap 5** for CSS framework and UI primitives; **Font Awesome Free** for icons in the admin UI

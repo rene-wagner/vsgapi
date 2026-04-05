@@ -74,8 +74,9 @@ Dieses Dokument fasst verbindliche und empfohlene Arbeitsweisen für Code, Templ
 ## Twig
 
 - Admin-Templates erweitern `admin/layout.html.twig` (welches `base.html.twig` einbindet).
-- Übliche Blöcke: `title`, `content`, `stylesheets`.
-- **Kein** externes CSS-Framework — Styles v. a. inline in `base.html.twig`.
+- Übliche Blöcke: `title`, `content`, `stylesheets`, `javascripts`.
+- **Styles und Skripte** über den **Symfony AssetMapper**: `importmap('app')` im Basis-Layout; Einstieg `assets/app.js` importiert u. a. **Bootstrap 5**-CSS, **Font Awesome** `fontawesome.min.css` plus **`solid.min.css`** (lädt die Webfont für `fa-solid`), danach `assets/styles/app.css`. Kein Webpack Encore.
+- **Icons:** Font Awesome (z. B. `fa-solid fa-trash`); bei rein grafischen Schaltflächen `aria-label` auf dem Button und `aria-hidden="true"` am `<i>`-Element.
 - Formulare **manuell** mit `form_label`, `form_widget`, `form_errors` (nicht `form_row`).
 - URLs nur über `path()` / `url()`, keine hart codierten Links.
 - HTML-Attribut `lang="de"` (Basis-Layout).
@@ -101,7 +102,7 @@ Dieses Dokument fasst verbindliche und empfohlene Arbeitsweisen für Code, Templ
 ## Produkt- und Technikentscheidungen
 
 - API-Ressourcen zunächst **auf den Entitäten**, nicht als separate API-Ressourcen-Klassen.
-- **Kein** Asset-Build (Webpack Encore o. Ä.) — einfache statische/inline Styles.
+- **Frontend:** Symfony **AssetMapper** + `importmap.php` — kein Webpack Encore. Nach `composer install` **`php bin/console importmap:install`** ausführen, damit Pakete aus der Importmap (u. a. Bootstrap, Font Awesome) unter `assets/vendor/` liegen; für Produktion/CI ggf. `php bin/console asset-map:compile`.
 
 ---
 
