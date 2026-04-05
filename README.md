@@ -17,6 +17,7 @@ Die API ist unter dem konfigurierten Präfix (z. B. `/api`) erreichbar; das Ad
 
 ```bash
 composer install
+php bin/console importmap:install   # Bootstrap, Font Awesome & Co. → assets/vendor/
 docker compose up -d
 php bin/console doctrine:migrations:migrate
 php bin/console app:create-admin

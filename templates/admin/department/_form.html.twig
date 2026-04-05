@@ -28,18 +28,22 @@
         data-index="{{ form.departmentStats|length }}"
     >
         {% for stat in form.departmentStats %}
-            <div class="collection-item card mb-3 p-3">
-                <div class="mb-3">
-                    {{ form_label(stat.label) }}
-                    {{ form_widget(stat.label) }}
-                    {{ form_errors(stat.label) }}
+            <div class="collection-item card mb-3 p-3 position-relative">
+                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-collection-item" aria-label="Statistik entfernen">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+                <div class="pe-4 pt-4">
+                    <div class="mb-3">
+                        {{ form_label(stat.label) }}
+                        {{ form_widget(stat.label) }}
+                        {{ form_errors(stat.label) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(stat.value) }}
+                        {{ form_widget(stat.value) }}
+                        {{ form_errors(stat.value) }}
+                    </div>
                 </div>
-                <div class="mb-3">
-                    {{ form_label(stat.value) }}
-                    {{ form_widget(stat.value) }}
-                    {{ form_errors(stat.value) }}
-                </div>
-                <button type="button" class="btn btn-secondary btn-sm js-remove-collection-item">Eintrag entfernen</button>
             </div>
         {% endfor %}
     </div>
@@ -55,53 +59,61 @@
         data-index="{{ form.trainingGroups|length }}"
     >
         {% for group in form.trainingGroups %}
-            <div class="collection-item card mb-4 p-3">
-                <div class="mb-3">
-                    {{ form_label(group.name) }}
-                    {{ form_widget(group.name) }}
-                    {{ form_help(group.name) }}
-                    {{ form_errors(group.name) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(group.ageRange) }}
-                    {{ form_widget(group.ageRange) }}
-                    {{ form_help(group.ageRange) }}
-                    {{ form_errors(group.ageRange) }}
-                </div>
-                <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
-                {{ form_errors(group.departmentTrainingSessions) }}
-                <div
-                    class="collection-holder department-training-sessions-collection"
-                    data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}"
-                    data-index="{{ group.departmentTrainingSessions|length }}"
-                >
-                    {% for session in group.departmentTrainingSessions %}
-                        <div class="collection-item card mb-3 p-3 bg-body-secondary">
-                            <div class="mb-3">
-                                {{ form_label(session.day) }}
-                                {{ form_widget(session.day) }}
-                                {{ form_help(session.day) }}
-                                {{ form_errors(session.day) }}
+            <div class="collection-item card mb-4 p-3 position-relative">
+                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-group" aria-label="Trainingsgruppe entfernen">
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+                <div class="pe-4 pt-4">
+                    <div class="mb-3">
+                        {{ form_label(group.name) }}
+                        {{ form_widget(group.name) }}
+                        {{ form_help(group.name) }}
+                        {{ form_errors(group.name) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(group.ageRange) }}
+                        {{ form_widget(group.ageRange) }}
+                        {{ form_help(group.ageRange) }}
+                        {{ form_errors(group.ageRange) }}
+                    </div>
+                    <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
+                    {{ form_errors(group.departmentTrainingSessions) }}
+                    <div
+                        class="collection-holder department-training-sessions-collection"
+                        data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}"
+                        data-index="{{ group.departmentTrainingSessions|length }}"
+                    >
+                        {% for session in group.departmentTrainingSessions %}
+                            <div class="collection-item card mb-3 p-3 bg-body-secondary position-relative">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-session" aria-label="Trainingseinheit entfernen">
+                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <div class="pe-4 pt-4">
+                                    <div class="mb-3">
+                                        {{ form_label(session.day) }}
+                                        {{ form_widget(session.day) }}
+                                        {{ form_help(session.day) }}
+                                        {{ form_errors(session.day) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(session.time) }}
+                                        {{ form_widget(session.time) }}
+                                        {{ form_help(session.time) }}
+                                        {{ form_errors(session.time) }}
+                                    </div>
+                                    <div class="mb-3 checkbox-list">
+                                        {{ form_label(session.locations) }}
+                                        {{ form_widget(session.locations) }}
+                                        {{ form_errors(session.locations) }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                {{ form_label(session.time) }}
-                                {{ form_widget(session.time) }}
-                                {{ form_help(session.time) }}
-                                {{ form_errors(session.time) }}
-                            </div>
-                            <div class="mb-3 checkbox-list">
-                                {{ form_label(session.locations) }}
-                                {{ form_widget(session.locations) }}
-                                {{ form_errors(session.locations) }}
-                            </div>
-                            <button type="button" class="btn btn-secondary btn-sm js-remove-session">Trainingseinheit entfernen</button>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <p class="mb-2">
+                        <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
+                    </p>
                 </div>
-                <p class="mb-2">
-                    <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
-                </p>
-                <button type="button" class="btn btn-secondary btn-sm js-remove-group">Trainingsgruppe entfernen</button>
             </div>
         {% endfor %}
     </div>
@@ -114,6 +126,10 @@
 
 <script>
 (function () {
+    function removeButtonHtml(jsClass, ariaLabel) {
+        return '<button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 ' + jsClass + '" aria-label="' + ariaLabel + '"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>';
+    }
+
     function bindRemoveStat(btn) {
         btn.addEventListener('click', function () {
             btn.closest('.collection-item').remove();
@@ -139,9 +155,9 @@
             var proto = holder.dataset.prototype;
             var sidx = parseInt(holder.dataset.index, 10);
             var div = document.createElement('div');
-            div.className = 'collection-item card mb-3 p-3 bg-body-secondary';
-            div.innerHTML = proto.replace(/__session__/g, String(sidx)) +
-                '<button type="button" class="btn btn-secondary btn-sm js-remove-session">Trainingseinheit entfernen</button>';
+            div.className = 'collection-item card mb-3 p-3 bg-body-secondary position-relative';
+            div.innerHTML = removeButtonHtml('js-remove-session', 'Trainingseinheit entfernen') +
+                '<div class="pe-4 pt-4">' + proto.replace(/__session__/g, String(sidx)) + '</div>';
             holder.appendChild(div);
             holder.dataset.index = String(sidx + 1);
             bindRemoveSession(div.querySelector('.js-remove-session'));
@@ -154,9 +170,9 @@
             var proto = holder.dataset.prototype;
             var idx = parseInt(holder.dataset.index, 10);
             var div = document.createElement('div');
-            div.className = 'collection-item card mb-3 p-3';
-            div.innerHTML = proto.replace(/__stat__/g, String(idx)) +
-                '<button type="button" class="btn btn-secondary btn-sm js-remove-collection-item">Eintrag entfernen</button>';
+            div.className = 'collection-item card mb-3 p-3 position-relative';
+            div.innerHTML = removeButtonHtml('js-remove-collection-item', 'Statistik entfernen') +
+                '<div class="pe-4 pt-4">' + proto.replace(/__stat__/g, String(idx)) + '</div>';
             holder.appendChild(div);
             holder.dataset.index = String(idx + 1);
             bindRemoveStat(div.querySelector('.js-remove-collection-item'));
@@ -174,10 +190,10 @@
                 .replace(/__session__/g, '0')
                 .replace(/__group__/g, String(idx));
             var div = document.createElement('div');
-            div.className = 'collection-item card mb-4 p-3';
-            div.innerHTML = html +
-                '<p class="mb-2"><button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button></p>' +
-                '<button type="button" class="btn btn-secondary btn-sm js-remove-group">Trainingsgruppe entfernen</button>';
+            div.className = 'collection-item card mb-4 p-3 position-relative';
+            div.innerHTML = removeButtonHtml('js-remove-group', 'Trainingsgruppe entfernen') +
+                '<div class="pe-4 pt-4">' + html +
+                '<p class="mb-2"><button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button></p></div>';
             holder.appendChild(div);
             holder.dataset.index = String(idx + 1);
             var sessionsHolder = div.querySelector('.department-training-sessions-collection');
