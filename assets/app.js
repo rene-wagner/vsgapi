@@ -11,3 +11,7 @@ if (document.querySelector('[data-mediathek-dropzone]')) {
 if (document.querySelector('[data-media-item-crop]')) {
     void import('./media-item-crop.js');
 }
+
+if (document.querySelector('form textarea')) {
+    void import('./easymde-init.js');
+}
