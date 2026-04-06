@@ -53,15 +53,15 @@
     </div>
 
     <div class="card shadow-sm mb-4">
+        <h5 class="card-header">Inhalt (Markdown)</h5>
         <div class="card-body">
-            <h2 class="h5 mb-3">Inhalt (Markdown)</h2>
             <pre class="admin-pre-content mb-0 small bg-body-tertiary p-3 rounded border">{{ post.content }}</pre>
         </div>
     </div>
 
     <div class="card shadow-sm border-danger">
+        <h5 class="card-header text-danger">Beitrag löschen</h5>
         <div class="card-body">
-            <h2 class="h5 text-danger mb-3">Beitrag löschen</h2>
             {{ include('admin/post/_delete_form.html.twig') }}
         </div>
     </div>

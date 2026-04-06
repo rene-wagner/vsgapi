@@ -31,8 +31,8 @@
 
     {% if department.departmentStats|length > 0 %}
         <div class="card shadow-sm mb-4">
+            <h5 class="card-header">Statistiken</h5>
             <div class="card-body">
-                <h2 class="h5 mb-3">Statistiken</h2>
                 <div class="table-responsive">
                     <table class="table table-sm table-hover align-middle mb-0">
                         <thead class="table-light">
@@ -58,8 +58,8 @@
     {% if department.trainingGroups|length > 0 %}
         {% for group in department.trainingGroups %}
             <div class="card shadow-sm mb-4">
+                <h5 class="card-header">{{ group.name }}</h5>
                 <div class="card-body">
-                    <h2 class="h5 mb-2">{{ group.name }}</h2>
                     {% if group.ageRange %}
                         <p class="text-secondary mb-3">Altersgruppe: {{ group.ageRange }}</p>
                     {% endif %}
@@ -102,8 +102,8 @@
     {% endif %}
 
     <div class="card shadow-sm border-danger">
+        <h5 class="card-header text-danger">Abteilung löschen</h5>
         <div class="card-body">
-            <h2 class="h5 text-danger mb-3">Abteilung löschen</h2>
             <form method="post" action="{{ path('admin_department_delete', {id: department.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Abteilung löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ department.id) }}">
                 <button type="submit" class="btn btn-danger">Abteilung löschen</button>

@@ -37,8 +37,8 @@
     </div>
 
     <div class="card shadow-sm border-danger">
+        <h5 class="card-header text-danger">Benutzer löschen</h5>
         <div class="card-body">
-            <h2 class="h5 text-danger mb-3">Benutzer löschen</h2>
             <form method="post" action="{{ path('admin_user_delete', {id: user.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
                 <button type="submit" class="btn btn-danger">Benutzer löschen</button>

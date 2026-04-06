@@ -12,9 +12,11 @@
     </div>
 
     <div class="card shadow-sm mb-3">
+        <h5 class="card-header">Dateien</h5>
         <div class="card-body pb-0">
             <nav aria-label="Ordnerpfad">
-                <ol class="breadcrumb mb-0">
+                <span class="fw-bold">Speicherort</span>
+                <ol class="breadcrumb">
                     {% if current_folder %}
                         <li class="breadcrumb-item"><a href="{{ path('admin_mediathek_index') }}">Mediathek</a></li>
                         {% for f in folder_breadcrumb %}
@@ -31,9 +33,9 @@
             </nav>
         </div>
         {% if folders_at_level is empty and items is empty %}
-            <div class="card-body pt-3 text-muted text-center py-5 border-top">Keine Ordner oder Dateien in dieser Ebene.</div>
+            <div class="card-body pt-3 text-muted text-center py-5">Keine Ordner oder Dateien in dieser Ebene.</div>
         {% else %}
-            <div class="list-group list-group-flush border-top rounded-0">
+            <div class="list-group list-group-flush rounded-0">
                 {% for subfolder in folders_at_level %}
                     <a href="{{ path('admin_mediathek_index', {folder: subfolder.id}) }}" class="admin-mediathek-row list-group-item list-group-item-action d-flex flex-column flex-sm-row align-items-sm-center gap-3 py-3 px-3 text-decoration-none">
                         <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
@@ -83,8 +85,8 @@
     </div>
 
     <div class="card shadow-sm mb-4">
+        <h5 class="card-header">Dateien hochladen</h5>
         <div class="card-body">
-            <h2 class="h5 mb-3">Dateien hochladen</h2>
             {% if current_folder %}
                 <p class="small text-muted mb-3">Die Dateien werden in den Ordner <strong>{{ current_folder.name }}</strong> gelegt.</p>
             {% else %}

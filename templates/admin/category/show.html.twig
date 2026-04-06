@@ -27,8 +27,8 @@
     </div>
 
     <div class="card shadow-sm border-danger">
+        <h5 class="card-header text-danger">Kategorie löschen</h5>
         <div class="card-body">
-            <h2 class="h5 text-danger mb-3">Kategorie löschen</h2>
             <form method="post" action="{{ path('admin_category_delete', {id: category.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Kategorie löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
                 <button type="submit" class="btn btn-danger">Kategorie löschen</button>
