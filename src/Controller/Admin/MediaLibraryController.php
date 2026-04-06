@@ -70,13 +70,12 @@ class MediaLibraryController extends AbstractController
         }
 
         $items = $mediaItemRepository->findByFolderOrdered($currentFolder);
-        $roots = $mediaFolderRepository->findRoots();
-        $folderTree = $this->flattenFolderTree($roots);
 
         return $this->render('admin/mediathek/index.html.twig', [
             'current_folder' => $currentFolder,
             'items' => $items,
-            'folder_tree' => $folderTree,
+            'folders_at_level' => $mediaFolderRepository->findByParentOrdered($currentFolder),
+            'folder_breadcrumb' => $currentFolder !== null ? $this->buildFolderBreadcrumbTrail($currentFolder) : [],
             'upload_form' => $uploadForm,
             'media_url' => $mediaUrlService,
         ]);
@@ -87,7 +86,6 @@ class MediaLibraryController extends AbstractController
         Request $request,
         MediaItem $item,
         EntityManagerInterface $entityManager,
-        MediaFolderRepository $mediaFolderRepository,
     ): Response {
         $form = $this->createForm(MediaItemEditType::class, $item);
         $form->handleRequest($request);
@@ -107,7 +105,6 @@ class MediaLibraryController extends AbstractController
         return $this->render('admin/mediathek/edit.html.twig', [
             'item' => $item,
             'form' => $form,
-            'folder_tree' => $this->flattenFolderTree($mediaFolderRepository->findRoots()),
         ]);
     }
 
@@ -161,22 +158,17 @@ class MediaLibraryController extends AbstractController
     }
 
     /**
-     * @param list<MediaFolder> $folders
-     *
-     * @return list<array{folder: MediaFolder, label: string}>
+     * @return list<MediaFolder>
      */
-    private function flattenFolderTree(array $folders, string $prefix = ''): array
+    private function buildFolderBreadcrumbTrail(MediaFolder $folder): array
     {
-        $rows = [];
-        usort($folders, static fn (MediaFolder $a, MediaFolder $b) => strcasecmp((string) $a->getName(), (string) $b->getName()));
-        foreach ($folders as $f) {
-            $label = $prefix . (string) $f->getName();
-            $rows[] = ['folder' => $f, 'label' => $label];
-            $children = $f->getChildren()->toArray();
-            $rows = array_merge($rows, $this->flattenFolderTree($children, $label . ' / '));
+        $chain = [];
+        while ($folder !== null) {
+            $chain[] = $folder;
+            $folder = $folder->getParent();
         }
 
-        return $rows;
+        return array_reverse($chain);
     }
 
     private function redirectWithFolder(?MediaFolder $folder): Response

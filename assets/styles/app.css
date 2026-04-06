@@ -19,12 +19,27 @@ body {
     object-fit: cover;
 }
 
-.admin-media-url-field {
-    max-width: 220px;
+.admin-mediathek-row {
+    min-width: 0;
 }
 
-.admin-copy-folder-select {
-    max-width: 140px;
+.admin-mediathek-row:not(.list-group-item-action):hover {
+    background-color: var(--bs-secondary-bg);
+}
+
+.admin-mediathek-row-actions {
+    min-width: 0;
+}
+
+.admin-mediathek-folder-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+}
+
+.admin-mediathek-pdf-badge {
+    width: 72px;
+    height: 72px;
+    font-size: 0.75rem;
 }
 
 .checkbox-list ul {
