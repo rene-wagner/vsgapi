@@ -42,6 +42,22 @@ body {
     font-size: 0.75rem;
 }
 
+.admin-mediathek-dropzone {
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.admin-mediathek-dropzone:hover,
+.admin-mediathek-dropzone:focus-visible {
+    border-color: var(--bs-primary) !important;
+    outline: none;
+}
+
+.admin-mediathek-dropzone.is-dragover {
+    border-color: var(--bs-primary) !important;
+    background-color: var(--bs-primary-bg-subtle) !important;
+}
+
 .checkbox-list ul {
     list-style: none;
     padding-left: 0;

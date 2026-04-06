@@ -14,6 +14,7 @@ use App\Service\Media\MediaUploadService;
 use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -36,29 +37,52 @@ class MediaLibraryController extends AbstractController
             $currentFolder = $mediaFolderRepository->find((int) $folderId);
         }
 
-        $uploadForm = $this->createForm(MediaItemUploadType::class, null, [
-            'current_folder' => $currentFolder,
-        ]);
+        $uploadForm = $this->createForm(MediaItemUploadType::class, null);
         $uploadForm->handleRequest($request);
 
         if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
-            $file = $uploadForm->get('file')->getData();
-            $folderField = $uploadForm->get('folder')->getData();
+            $filesRaw = $uploadForm->get('files')->getData();
+            /** @var list<UploadedFile> $files */
+            $files = array_values(array_filter(
+                \is_array($filesRaw) ? $filesRaw : [],
+                static fn (mixed $f): bool => $f instanceof UploadedFile && $f->isValid(),
+            ));
             $category = $uploadForm->get('category')->getData();
-            $description = $uploadForm->get('description')->getData();
-            $displayName = $uploadForm->get('name')->getData();
 
-            try {
-                $mediaUploadService->upload(
-                    $file,
-                    $folderField instanceof MediaFolder ? $folderField : null,
-                    $category,
-                    \is_string($description) ? $description : null,
-                    \is_string($displayName) && $displayName !== '' ? $displayName : null,
+            $successCount = 0;
+            /** @var list<string> $errorMessages */
+            $errorMessages = [];
+            foreach ($files as $file) {
+                try {
+                    $mediaUploadService->upload(
+                        $file,
+                        $currentFolder,
+                        $category,
+                        null,
+                        null,
+                    );
+                    ++$successCount;
+                } catch (HttpExceptionInterface $e) {
+                    $errorMessages[] = $file->getClientOriginalName() . ': ' . $e->getMessage();
+                }
+            }
+
+            if ($successCount > 0) {
+                $this->addFlash(
+                    'success',
+                    $successCount === 1
+                        ? '1 Datei wurde erfolgreich hochgeladen.'
+                        : sprintf('%d Dateien wurden erfolgreich hochgeladen.', $successCount),
                 );
-                $this->addFlash('success', 'Datei wurde erfolgreich hochgeladen.');
-            } catch (HttpExceptionInterface $e) {
-                $this->addFlash('danger', $e->getMessage());
+            }
+            if ($errorMessages !== []) {
+                $this->addFlash(
+                    'danger',
+                    'Fehler bei folgenden Dateien: ' . implode(' · ', $errorMessages),
+                );
+            }
+            if ($successCount === 0 && $errorMessages === []) {
+                $this->addFlash('danger', 'Es wurden keine gültigen Dateien übermittelt.');
             }
 
             $params = [];

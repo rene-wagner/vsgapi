@@ -84,32 +84,33 @@
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h2 class="h5 mb-3">Datei hochladen</h2>
+            <h2 class="h5 mb-3">Dateien hochladen</h2>
+            {% if current_folder %}
+                <p class="small text-muted mb-3">Die Dateien werden in den Ordner <strong>{{ current_folder.name }}</strong> gelegt.</p>
+            {% else %}
+                <p class="small text-muted mb-3">Die Dateien werden auf der obersten Mediathek-Ebene abgelegt.</p>
+            {% endif %}
             {{ form_start(upload_form, {attr: {enctype: 'multipart/form-data'}}) }}
-                <div class="mb-3">
-                    {{ form_label(upload_form.file) }}
-                    {{ form_widget(upload_form.file) }}
-                    {{ form_errors(upload_form.file) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(upload_form.folder) }}
-                    {{ form_widget(upload_form.folder) }}
-                    {{ form_errors(upload_form.folder) }}
+                <div class="mb-3" data-mediathek-dropzone>
+                    {{ form_label(upload_form.files) }}
+                    <button type="button" class="admin-mediathek-dropzone w-100 text-center text-muted border border-2 border-dashed rounded-3 p-4 bg-body-secondary bg-opacity-25" data-mediathek-dropzone-target aria-label="Dateien auswählen oder per Drag-and-Drop hinzufügen">
+                        <span class="d-inline-flex flex-column align-items-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up fa-2x text-body-secondary" aria-hidden="true"></i>
+                            <span class="fw-medium text-body">Dateien hierher ziehen</span>
+                            <span class="small">oder klicken, um mehrere Dateien auszuwählen</span>
+                        </span>
+                    </button>
+                    <div class="visually-hidden">
+                        {{ form_widget(upload_form.files) }}
+                    </div>
+                    {{ form_errors(upload_form.files) }}
+                    <p class="small text-muted mt-2 mb-0 admin-mediathek-selected-files" data-mediathek-selected-list hidden></p>
                 </div>
                 <div class="mb-3">
                     {{ form_label(upload_form.category) }}
                     {{ form_widget(upload_form.category) }}
                     {{ form_errors(upload_form.category) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(upload_form.description) }}
-                    {{ form_widget(upload_form.description) }}
-                    {{ form_errors(upload_form.description) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(upload_form.name) }}
-                    {{ form_widget(upload_form.name) }}
-                    {{ form_errors(upload_form.name) }}
+                    {{ form_help(upload_form.category) }}
                 </div>
                 <button type="submit" class="btn btn-primary">Hochladen</button>
             {{ form_end(upload_form) }}
