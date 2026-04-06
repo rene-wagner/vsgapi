@@ -53,9 +53,15 @@ body {
     min-width: 0;
 }
 
+/* Gleiche Kachelgröße wie .admin-media-thumb / PDF-Badge in der Mediathek */
 .admin-mediathek-folder-icon {
-    width: 2.75rem;
-    height: 2.75rem;
+    width: 72px;
+    height: 72px;
+}
+
+.admin-mediathek-folder-icon i {
+    font-size: 2.5rem;
+    line-height: 1;
 }
 
 .admin-mediathek-pdf-badge {
