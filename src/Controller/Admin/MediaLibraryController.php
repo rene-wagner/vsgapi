@@ -4,16 +4,21 @@ namespace App\Controller\Admin;
 
 use App\Entity\MediaFolder;
 use App\Entity\MediaItem;
+use App\Enum\MediaItemType;
 use App\Form\MediaItemEditType;
 use App\Form\MediaItemUploadType;
 use App\Repository\MediaFolderRepository;
 use App\Repository\MediaItemRepository;
 use App\Service\Media\MediaCopyService;
 use App\Service\Media\MediaDeleteService;
+use App\Service\Media\MediaImageCropService;
 use App\Service\Media\MediaUploadService;
 use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -36,29 +41,52 @@ class MediaLibraryController extends AbstractController
             $currentFolder = $mediaFolderRepository->find((int) $folderId);
         }
 
-        $uploadForm = $this->createForm(MediaItemUploadType::class, null, [
-            'current_folder' => $currentFolder,
-        ]);
+        $uploadForm = $this->createForm(MediaItemUploadType::class, null);
         $uploadForm->handleRequest($request);
 
         if ($uploadForm->isSubmitted() && $uploadForm->isValid()) {
-            $file = $uploadForm->get('file')->getData();
-            $folderField = $uploadForm->get('folder')->getData();
+            $filesRaw = $uploadForm->get('files')->getData();
+            /** @var list<UploadedFile> $files */
+            $files = array_values(array_filter(
+                \is_array($filesRaw) ? $filesRaw : [],
+                static fn (mixed $f): bool => $f instanceof UploadedFile && $f->isValid(),
+            ));
             $category = $uploadForm->get('category')->getData();
-            $description = $uploadForm->get('description')->getData();
-            $displayName = $uploadForm->get('name')->getData();
 
-            try {
-                $mediaUploadService->upload(
-                    $file,
-                    $folderField instanceof MediaFolder ? $folderField : null,
-                    $category,
-                    \is_string($description) ? $description : null,
-                    \is_string($displayName) && $displayName !== '' ? $displayName : null,
+            $successCount = 0;
+            /** @var list<string> $errorMessages */
+            $errorMessages = [];
+            foreach ($files as $file) {
+                try {
+                    $mediaUploadService->upload(
+                        $file,
+                        $currentFolder,
+                        $category,
+                        null,
+                        null,
+                    );
+                    ++$successCount;
+                } catch (HttpExceptionInterface $e) {
+                    $errorMessages[] = $file->getClientOriginalName() . ': ' . $e->getMessage();
+                }
+            }
+
+            if ($successCount > 0) {
+                $this->addFlash(
+                    'success',
+                    $successCount === 1
+                        ? '1 Datei wurde erfolgreich hochgeladen.'
+                        : sprintf('%d Dateien wurden erfolgreich hochgeladen.', $successCount),
                 );
-                $this->addFlash('success', 'Datei wurde erfolgreich hochgeladen.');
-            } catch (HttpExceptionInterface $e) {
-                $this->addFlash('danger', $e->getMessage());
+            }
+            if ($errorMessages !== []) {
+                $this->addFlash(
+                    'danger',
+                    'Fehler bei folgenden Dateien: ' . implode(' · ', $errorMessages),
+                );
+            }
+            if ($successCount === 0 && $errorMessages === []) {
+                $this->addFlash('danger', 'Es wurden keine gültigen Dateien übermittelt.');
             }
 
             $params = [];
@@ -70,13 +98,12 @@ class MediaLibraryController extends AbstractController
         }
 
         $items = $mediaItemRepository->findByFolderOrdered($currentFolder);
-        $roots = $mediaFolderRepository->findRoots();
-        $folderTree = $this->flattenFolderTree($roots);
 
         return $this->render('admin/mediathek/index.html.twig', [
             'current_folder' => $currentFolder,
             'items' => $items,
-            'folder_tree' => $folderTree,
+            'folders_at_level' => $mediaFolderRepository->findByParentOrdered($currentFolder),
+            'folder_breadcrumb' => $currentFolder !== null ? $this->buildFolderBreadcrumbTrail($currentFolder) : [],
             'upload_form' => $uploadForm,
             'media_url' => $mediaUrlService,
         ]);
@@ -87,28 +114,123 @@ class MediaLibraryController extends AbstractController
         Request $request,
         MediaItem $item,
         EntityManagerInterface $entityManager,
-        MediaFolderRepository $mediaFolderRepository,
+        MediaUrlService $mediaUrlService,
+        MediaImageCropService $mediaImageCropService,
     ): Response {
-        $form = $this->createForm(MediaItemEditType::class, $item);
+        $originalPath = $item->getOriginalPath();
+        $showRestoreOriginal = $item->getType() === MediaItemType::Image
+            && $originalPath !== null
+            && $originalPath !== '';
+
+        $form = $this->createForm(MediaItemEditType::class, $item, [
+            'show_restore_original' => $showRestoreOriginal,
+        ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            $this->addFlash('success', 'Medien-Eintrag wurde aktualisiert.');
+        if ($form->isSubmitted()) {
+            if ($form->has('restore_original') && $form->get('restore_original')->isClicked()) {
+                if ($form->isValid()) {
+                    $restoreSucceeded = true;
+                    try {
+                        $mediaImageCropService->restoreOriginal($item);
+                    } catch (\InvalidArgumentException $e) {
+                        $form->addError(new FormError($e->getMessage()));
+                        $restoreSucceeded = false;
+                    }
 
-            $params = [];
-            if ($item->getFolder() !== null) {
-                $params['folder'] = $item->getFolder()->getId();
+                    if ($restoreSucceeded) {
+                        $entityManager->flush();
+                        $this->addFlash('success', 'Das Originalbild wurde wiederhergestellt.');
+
+                        $params = [];
+                        if ($item->getFolder() !== null) {
+                            $params['folder'] = $item->getFolder()->getId();
+                        }
+
+                        return $this->redirectToRoute('admin_mediathek_index', $params);
+                    }
+                }
+            } elseif ($form->isValid()) {
+                $cropPayload = $this->parseCropPayload($form);
+                if ($cropPayload === false) {
+                    $form->addError(new FormError('Die Zuschnitt-Daten sind unvollständig oder ungültig.'));
+                } elseif ($cropPayload !== null) {
+                    if ($item->getType() !== MediaItemType::Image) {
+                        $form->addError(new FormError('Zuschneiden ist nur für Bilddateien möglich.'));
+                    } else {
+                        try {
+                            $mediaImageCropService->applyCrop(
+                                $item,
+                                $cropPayload['x'],
+                                $cropPayload['y'],
+                                $cropPayload['w'],
+                                $cropPayload['h'],
+                                $cropPayload['nw'],
+                                $cropPayload['nh'],
+                            );
+                        } catch (\InvalidArgumentException $e) {
+                            $form->addError(new FormError($e->getMessage()));
+                        }
+                    }
+                }
+
+                if ($form->isValid()) {
+                    $entityManager->flush();
+                    $this->addFlash('success', 'Medien-Eintrag wurde aktualisiert.');
+
+                    $params = [];
+                    if ($item->getFolder() !== null) {
+                        $params['folder'] = $item->getFolder()->getId();
+                    }
+
+                    return $this->redirectToRoute('admin_mediathek_index', $params);
+                }
             }
-
-            return $this->redirectToRoute('admin_mediathek_index', $params);
         }
 
         return $this->render('admin/mediathek/edit.html.twig', [
             'item' => $item,
             'form' => $form,
-            'folder_tree' => $this->flattenFolderTree($mediaFolderRepository->findRoots()),
+            'media_url' => $mediaUrlService,
+            'show_restore_original' => $showRestoreOriginal,
         ]);
+    }
+
+    /**
+     * @return array{x: int, y: int, w: int, h: int, nw: int, nh: int}|null|false
+     */
+    private function parseCropPayload(FormInterface $form): array|false|null
+    {
+        $names = ['crop_x', 'crop_y', 'crop_w', 'crop_h', 'crop_natural_w', 'crop_natural_h'];
+        $parts = [];
+        foreach ($names as $name) {
+            $v = $form->get($name)->getData();
+            if ($v === null || $v === '') {
+                $parts[] = null;
+            } elseif (is_numeric($v)) {
+                $parts[] = (int) $v;
+            } else {
+                return false;
+            }
+        }
+
+        $allEmpty = !array_filter($parts, static fn (?int $p): bool => $p !== null);
+        if ($allEmpty) {
+            return null;
+        }
+
+        if (in_array(null, $parts, true)) {
+            return false;
+        }
+
+        return [
+            'x' => $parts[0],
+            'y' => $parts[1],
+            'w' => $parts[2],
+            'h' => $parts[3],
+            'nw' => $parts[4],
+            'nh' => $parts[5],
+        ];
     }
 
     #[Route('/items/{id}/copy', name: 'admin_mediathek_item_copy', methods: ['POST'])]
@@ -161,22 +283,17 @@ class MediaLibraryController extends AbstractController
     }
 
     /**
-     * @param list<MediaFolder> $folders
-     *
-     * @return list<array{folder: MediaFolder, label: string}>
+     * @return list<MediaFolder>
      */
-    private function flattenFolderTree(array $folders, string $prefix = ''): array
+    private function buildFolderBreadcrumbTrail(MediaFolder $folder): array
     {
-        $rows = [];
-        usort($folders, static fn (MediaFolder $a, MediaFolder $b) => strcasecmp((string) $a->getName(), (string) $b->getName()));
-        foreach ($folders as $f) {
-            $label = $prefix . (string) $f->getName();
-            $rows[] = ['folder' => $f, 'label' => $label];
-            $children = $f->getChildren()->toArray();
-            $rows = array_merge($rows, $this->flattenFolderTree($children, $label . ' / '));
+        $chain = [];
+        while ($folder !== null) {
+            $chain[] = $folder;
+            $folder = $folder->getParent();
         }
 
-        return $rows;
+        return array_reverse($chain);
     }
 
     private function redirectWithFolder(?MediaFolder $folder): Response

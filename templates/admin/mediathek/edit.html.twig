@@ -8,31 +8,97 @@
         <a href="{% if item.folder %}{{ path('admin_mediathek_index', {folder: item.folder.id}) }}{% else %}{{ path('admin_mediathek_index') }}{% endif %}" class="btn btn-secondary">Zurück</a>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            {{ form_start(form) }}
-                <div class="mb-3">
-                    {{ form_label(form.name) }}
-                    {{ form_widget(form.name) }}
-                    {{ form_errors(form.name) }}
+    {% set file_url = media_url.buildFileUrl(item.path) %}
+    {% set is_image = item.type.value == 'image' %}
+
+    <div class="row g-4"{% if is_image %} data-media-item-crop{% endif %}>
+        <div class="col-12 col-lg-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-header fw-semibold">Aktuelles Medium</div>
+                <div class="card-body">
+                    {% if is_image %}
+                        <p class="small text-muted mb-2">Ziehen Sie den Rahmen, um den gewünschten Bildausschnitt zu wählen. Beim ersten Speichern mit Zuschnitt wird ein unverändertes Original gesichert; beim Speichern wird das Bild serverseitig zugeschnitten.</p>
+                        <div class="admin-media-crop-wrap mb-3">
+                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-image crossorigin="anonymous" decoding="async">
+                        </div>
+                        <div class="row g-2 mb-3" aria-live="polite">
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-0" for="media-item-crop-sel-w">Auswahl Breite (px)</label>
+                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-w" data-media-item-crop-selection-width readonly tabindex="-1" autocomplete="off" value="">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted mb-0" for="media-item-crop-sel-h">Auswahl Höhe (px)</label>
+                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-h" data-media-item-crop-selection-height readonly tabindex="-1" autocomplete="off" value="">
+                            </div>
+                        </div>
+                        <p class="small text-muted mb-2">Werte beziehen sich auf die Bildpixel der aktuellen Datei (wie beim Speichern zugeschnitten).</p>
+                        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" data-media-item-crop-reset>
+                            Auswahl zurücksetzen
+                        </button>
+                        <p class="small text-muted mb-0 text-break">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
+                    {% else %}
+                        <div class="text-center text-danger mb-3" aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf fa-3x"></i>
+                        </div>
+                        <p class="fw-semibold text-break mb-1">{{ item.originalFilename }}</p>
+                        <p class="small text-muted mb-2">{{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
+                        <p class="small text-muted mb-0">Für PDF-Dateien wird keine Vorschau angezeigt.</p>
+                    {% endif %}
                 </div>
-                <div class="mb-3">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                    {{ form_errors(form.description) }}
+            </div>
+        </div>
+        <div class="col-12 col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {% set form_attr = {} %}
+                    {% if is_image %}
+                        {% set form_attr = form_attr|merge({'data-media-item-crop-form': ''}) %}
+                    {% endif %}
+                    {{ form_start(form, { attr: form_attr }) }}
+                        {{ form_errors(form) }}
+                        {% if is_image %}
+                            <div class="visually-hidden" aria-hidden="true">
+                                {{ form_widget(form.crop_x) }}
+                                {{ form_widget(form.crop_y) }}
+                                {{ form_widget(form.crop_w) }}
+                                {{ form_widget(form.crop_h) }}
+                                {{ form_widget(form.crop_natural_w) }}
+                                {{ form_widget(form.crop_natural_h) }}
+                            </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.category) }}
+                            {{ form_widget(form.category) }}
+                            {{ form_errors(form.category) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.folder) }}
+                            {{ form_widget(form.folder) }}
+                            {{ form_errors(form.folder) }}
+                        </div>
+                        {% if show_restore_original %}
+                            <p class="small text-muted mb-2">Ein unverändertes Original ist gespeichert. Mit der folgenden Aktion wird die aktuelle Datei durch dieses Original ersetzt und die Sicherung entfernt.</p>
+                        {% endif %}
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            <button type="submit" class="btn btn-primary">Speichern</button>
+                            {% if show_restore_original %}
+                                {{ form_widget(form.restore_original) }}
+                            {% endif %}
+                        </div>
+                        {{ form_widget(form._token) }}
+                    {{ form_end(form, { render_rest: false }) }}
                 </div>
-                <div class="mb-3">
-                    {{ form_label(form.category) }}
-                    {{ form_widget(form.category) }}
-                    {{ form_errors(form.category) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.folder) }}
-                    {{ form_widget(form.folder) }}
-                    {{ form_errors(form.folder) }}
-                </div>
-                <button type="submit" class="btn btn-primary">Speichern</button>
-            {{ form_end(form) }}
+            </div>
         </div>
     </div>
 {% endblock %}

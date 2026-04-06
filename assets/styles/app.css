@@ -19,12 +19,71 @@ body {
     object-fit: cover;
 }
 
-.admin-media-url-field {
-    max-width: 220px;
+.admin-media-edit-preview {
+    max-width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    background-color: var(--bs-secondary-bg);
 }
 
-.admin-copy-folder-select {
-    max-width: 140px;
+/* Cropper target: volle Datei-Auflösung, Darstellung begrenzt */
+.admin-media-crop-wrap {
+    max-width: 100%;
+}
+
+.admin-media-crop-wrap .cropper-container {
+    max-width: 100%;
+}
+
+.admin-media-crop-wrap img {
+    display: block;
+    max-width: 100%;
+    max-height: min(70vh, 520px);
+}
+
+.admin-mediathek-row {
+    min-width: 0;
+}
+
+.admin-mediathek-row:not(.list-group-item-action):hover {
+    background-color: var(--bs-secondary-bg);
+}
+
+.admin-mediathek-row-actions {
+    min-width: 0;
+}
+
+/* Gleiche Kachelgröße wie .admin-media-thumb / PDF-Badge in der Mediathek */
+.admin-mediathek-folder-icon {
+    width: 72px;
+    height: 72px;
+}
+
+.admin-mediathek-folder-icon i {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.admin-mediathek-pdf-badge {
+    width: 72px;
+    height: 72px;
+    font-size: 0.75rem;
+}
+
+.admin-mediathek-dropzone {
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.admin-mediathek-dropzone:hover,
+.admin-mediathek-dropzone:focus-visible {
+    border-color: var(--bs-primary) !important;
+    outline: none;
+}
+
+.admin-mediathek-dropzone.is-dragover {
+    border-color: var(--bs-primary) !important;
+    background-color: var(--bs-primary-bg-subtle) !important;
 }
 
 .checkbox-list ul {

@@ -41,6 +41,20 @@ class MediaCopyService
             throw new BadRequestHttpException('Kopieren fehlgeschlagen.');
         }
 
+        $newOriginalRelative = null;
+        $sourceOriginal = $source->getOriginalPath();
+        if ($sourceOriginal !== null && $sourceOriginal !== '') {
+            $origSrcAbsolute = $this->storageDir . '/' . $sourceOriginal;
+            if (is_file($origSrcAbsolute)) {
+                $newOriginalRelative = 'items/' . $newId . '.original.' . $ext;
+                $origDstAbsolute = $this->storageDir . '/' . $newOriginalRelative;
+                if (!@copy($origSrcAbsolute, $origDstAbsolute)) {
+                    $this->logger->error('Media copy: original backup copy failed.', ['from' => $sourceOriginal]);
+                    $newOriginalRelative = null;
+                }
+            }
+        }
+
         $newThumbRelative = null;
         $thumbSrc = $source->getThumbnailPath();
         if ($thumbSrc !== null && $thumbSrc !== '' && is_file($this->storageDir . '/' . $thumbSrc)) {
@@ -69,6 +83,7 @@ class MediaCopyService
         $copy->setType($itemType);
         $copy->setSizeBytes((int) filesize($dstAbsolute));
         $copy->setPath($newRelative);
+        $copy->setOriginalPath($newOriginalRelative);
         $copy->setThumbnailPath($newThumbRelative);
         $copy->setDescription($source->getDescription());
 
