@@ -91,3 +91,17 @@ body {
     padding-left: 0;
     margin-bottom: 0;
 }
+
+/* EasyMDE: volle Breite im Admin-Formular, Bootstrap-Fehlerzustand am CodeMirror */
+.EasyMDEContainer {
+    display: block;
+    width: 100%;
+}
+
+.EasyMDEContainer .CodeMirror {
+    border-radius: var(--bs-border-radius);
+}
+
+.EasyMDEContainer:has(textarea.form-control.is-invalid) .CodeMirror {
+    border-color: var(--bs-form-invalid-border-color);
+}

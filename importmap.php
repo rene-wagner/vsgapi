@@ -44,4 +44,60 @@ return [
         'version' => '1.6.2',
         'type' => 'css',
     ],
+    'easymde' => [
+        'version' => '2.20.0',
+    ],
+    'codemirror' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/edit/continuelist.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/display/fullscreen.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/mode/markdown/markdown.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/mode/overlay.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/display/placeholder.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/display/autorefresh.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/selection/mark-selection.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/addon/search/searchcursor.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/mode/gfm/gfm.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror/mode/xml/xml.js' => [
+        'version' => '5.65.18',
+    ],
+    'codemirror-spell-checker' => [
+        'version' => '1.1.2',
+    ],
+    'marked' => [
+        'path' => './assets/marked-default-bridge.js',
+    ],
+    'typo-js' => [
+        'version' => '1.2.5',
+    ],
+    'codemirror/lib/codemirror.min.css' => [
+        'version' => '5.65.18',
+        'type' => 'css',
+    ],
+    'easymde/dist/easymde.min.css' => [
+        'version' => '2.20.0',
+        'type' => 'css',
+    ],
+    'marked/lib/marked.esm.js' => [
+        'version' => '4.3.0',
+    ],
 ];
