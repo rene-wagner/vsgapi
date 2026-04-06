@@ -110,6 +110,7 @@ class MediaLibraryController extends AbstractController
         Request $request,
         MediaItem $item,
         EntityManagerInterface $entityManager,
+        MediaUrlService $mediaUrlService,
     ): Response {
         $form = $this->createForm(MediaItemEditType::class, $item);
         $form->handleRequest($request);
@@ -129,6 +130,7 @@ class MediaLibraryController extends AbstractController
         return $this->render('admin/mediathek/edit.html.twig', [
             'item' => $item,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 

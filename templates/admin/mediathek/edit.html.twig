@@ -8,31 +8,58 @@
         <a href="{% if item.folder %}{{ path('admin_mediathek_index', {folder: item.folder.id}) }}{% else %}{{ path('admin_mediathek_index') }}{% endif %}" class="btn btn-secondary">Zurück</a>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            {{ form_start(form) }}
-                <div class="mb-3">
-                    {{ form_label(form.name) }}
-                    {{ form_widget(form.name) }}
-                    {{ form_errors(form.name) }}
+    {% set file_url = media_url.buildFileUrl(item.path) %}
+    {% set thumb_url = item.thumbnailPath ? media_url.buildThumbnailUrl(item.thumbnailPath) : null %}
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-5">
+            <div class="card shadow-sm h-100">
+                <div class="card-header fw-semibold">Aktuelles Medium</div>
+                <div class="card-body">
+                    {% if item.type.value == 'image' %}
+                        <div class="text-center mb-3">
+                            <img src="{{ thumb_url ?? file_url }}" alt="{{ item.name }}" class="admin-media-edit-preview rounded border">
+                        </div>
+                        <p class="small text-muted mb-0 text-break">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
+                    {% else %}
+                        <div class="text-center text-danger mb-3" aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf fa-3x"></i>
+                        </div>
+                        <p class="fw-semibold text-break mb-1">{{ item.originalFilename }}</p>
+                        <p class="small text-muted mb-2">{{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
+                        <p class="small text-muted mb-0">Für PDF-Dateien wird keine Vorschau angezeigt.</p>
+                    {% endif %}
                 </div>
-                <div class="mb-3">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                    {{ form_errors(form.description) }}
+            </div>
+        </div>
+        <div class="col-12 col-lg-7">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-3">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.description) }}
+                            {{ form_widget(form.description) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.category) }}
+                            {{ form_widget(form.category) }}
+                            {{ form_errors(form.category) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(form.folder) }}
+                            {{ form_widget(form.folder) }}
+                            {{ form_errors(form.folder) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">Speichern</button>
+                    {{ form_end(form) }}
                 </div>
-                <div class="mb-3">
-                    {{ form_label(form.category) }}
-                    {{ form_widget(form.category) }}
-                    {{ form_errors(form.category) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.folder) }}
-                    {{ form_widget(form.folder) }}
-                    {{ form_errors(form.folder) }}
-                </div>
-                <button type="submit" class="btn btn-primary">Speichern</button>
-            {{ form_end(form) }}
+            </div>
         </div>
     </div>
 {% endblock %}
