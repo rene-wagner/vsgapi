@@ -101,6 +101,9 @@ class MediaItem
     #[ORM\Column(length: 512, nullable: true)]
     private ?string $thumbnailPath = null;
 
+    #[ORM\Column(length: 512, nullable: true)]
+    private ?string $originalPath = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(max: 2000)]
     #[Groups(['media_item:read', 'media_item:write'])]
@@ -237,6 +240,18 @@ class MediaItem
     public function setThumbnailPath(?string $thumbnailPath): static
     {
         $this->thumbnailPath = $thumbnailPath;
+
+        return $this;
+    }
+
+    public function getOriginalPath(): ?string
+    {
+        return $this->originalPath;
+    }
+
+    public function setOriginalPath(?string $originalPath): static
+    {
+        $this->originalPath = $originalPath;
 
         return $this;
     }
