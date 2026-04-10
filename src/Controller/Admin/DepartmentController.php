@@ -24,7 +24,7 @@ class DepartmentController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_department_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $department = new Department();
         $form = $this->createForm(DepartmentType::class, $department);
@@ -42,7 +42,6 @@ class DepartmentController extends AbstractController
         return $this->render('admin/department/new.html.twig', [
             'department' => $department,
             'form' => $form,
-            'media_url' => $mediaUrlService,
         ]);
     }
 

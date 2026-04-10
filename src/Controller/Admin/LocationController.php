@@ -24,7 +24,7 @@ class LocationController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_location_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $location = new Location();
         $form = $this->createForm(LocationType::class, $location);
@@ -42,7 +42,6 @@ class LocationController extends AbstractController
         return $this->render('admin/location/new.html.twig', [
             'location' => $location,
             'form' => $form,
-            'media_url' => $mediaUrlService,
         ]);
     }
 

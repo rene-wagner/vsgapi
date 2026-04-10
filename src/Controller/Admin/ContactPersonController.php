@@ -24,7 +24,7 @@ class ContactPersonController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_contact_person_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $contactPerson = new ContactPerson();
         $form = $this->createForm(ContactPersonType::class, $contactPerson);
@@ -42,7 +42,6 @@ class ContactPersonController extends AbstractController
         return $this->render('admin/contact_person/new.html.twig', [
             'contact_person' => $contactPerson,
             'form' => $form,
-            'media_url' => $mediaUrlService,
         ]);
     }
 

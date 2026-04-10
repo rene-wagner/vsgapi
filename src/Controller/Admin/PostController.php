@@ -25,7 +25,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_post_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $post = new Post();
         $post->setHits(0);
@@ -52,7 +52,6 @@ class PostController extends AbstractController
         return $this->render('admin/post/new.html.twig', [
             'post' => $post,
             'form' => $form,
-            'media_url' => $mediaUrlService,
         ]);
     }
 

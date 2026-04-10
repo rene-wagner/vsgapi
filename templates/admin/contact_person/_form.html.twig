@@ -36,7 +36,7 @@
         {{ form_errors(form.address) }}
     </div>
 
-    {# Aktuelles Bild anzeigen #}
+    {# Media-Vorschau: entity property liefert das persistierte MediaItem-Objekt für die Thumbnail-Karte #}
     {% if contact_person.picture %}
         <div class="mb-3">
             {{ include('admin/_media_item_card.html.twig', {
@@ -47,6 +47,7 @@
         </div>
     {% endif %}
 
+    {# Media-Selector: form.vars.value liefert die String-ID für die Auswahl-Anzeige #}
     <div class="mb-3" data-media-selector>
         {{ form_label(form.picture) }}
         <div class="admin-media-selector-preview" data-media-selector-preview>
