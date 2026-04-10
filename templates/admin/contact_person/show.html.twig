@@ -56,6 +56,10 @@
         </div>
     </div>
 
+    {% if contact_person.picture %}
+        {% include 'admin/_media_item_card.html.twig' with { media_item: contact_person.picture, title: 'Bild' } %}
+    {% endif %}
+
     <div class="card shadow-sm border-danger">
         <h5 class="card-header text-danger">Kontaktperson löschen</h5>
         <div class="card-body">

@@ -3,6 +3,8 @@ twig:
     form_themes:
         - bootstrap_5_layout.html.twig
         - form/custom_widgets.html.twig
+    globals:
+        media_url: '@App\Service\Media\MediaUrlService'
 
 when@test:
     twig:
