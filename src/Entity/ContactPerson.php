@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
+use App\Entity\MediaItem;
 use App\Repository\ContactPersonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -71,6 +72,11 @@ class ContactPerson
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['contact_person:read'])]
     private ?string $address = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['contact_person:read'])]
+    private ?MediaItem $picture = null;
 
     public function getId(): ?int
     {
@@ -145,6 +151,18 @@ class ContactPerson
     public function setAddress(?string $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getPicture(): ?MediaItem
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?MediaItem $picture): static
+    {
+        $this->picture = $picture;
 
         return $this;
     }

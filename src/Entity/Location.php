@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\LocationRepository;
+use App\Entity\MediaItem;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -52,6 +53,11 @@ class Location
     #[Assert\Length(max: 2048)]
     #[Groups(['location:read', 'department:read'])]
     private ?string $mapsUrl = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['location:read'])]
+    private ?MediaItem $picture = null;
 
     public function getId(): ?int
     {
@@ -102,6 +108,18 @@ class Location
     public function setMapsUrl(?string $mapsUrl): static
     {
         $this->mapsUrl = $mapsUrl;
+
+        return $this;
+    }
+
+    public function getPicture(): ?MediaItem
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?MediaItem $picture): static
+    {
+        $this->picture = $picture;
 
         return $this;
     }

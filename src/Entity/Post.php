@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use App\Entity\MediaItem;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -87,6 +88,11 @@ class Post
     #[ORM\JoinTable(name: 'post_category')]
     #[Groups(['post:read'])]
     private Collection $categories;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['post:read'])]
+    private ?MediaItem $picture = null;
 
     public function __construct()
     {
@@ -240,6 +246,18 @@ class Post
         if ($this->categories->removeElement($category)) {
             $category->getPosts()->removeElement($this);
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?MediaItem
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?MediaItem $picture): static
+    {
+        $this->picture = $picture;
 
         return $this;
     }

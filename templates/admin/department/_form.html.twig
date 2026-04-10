@@ -20,6 +20,25 @@
         {{ form_errors(form.description) }}
     </div>
 
+    <div class="mb-3" data-media-selector>
+        {{ form_label(form.icon) }}
+        <div class="admin-media-selector-preview" data-media-selector-preview>
+            {% if form.icon.vars.value %}
+                <span class="text-truncate">Icon ausgewählt (ID: {{ form.icon.vars.value }})</span>
+            {% else %}
+                <span class="text-muted">Kein Icon ausgewählt</span>
+            {% endif %}
+        </div>
+        {{ form_widget(form.icon) }}
+        {{ form_errors(form.icon) }}
+        <button type="button" class="btn btn-secondary btn-sm mt-1" data-media-selector-open>
+            <i class="fa-solid fa-image" aria-hidden="true"></i> Auswählen
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm mt-1 ms-1" data-media-selector-remove {% if not form.icon.vars.value %}disabled{% endif %}>
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i> Entfernen
+        </button>
+    </div>
+
     <h3 class="h6 fw-semibold mt-4 mb-2">{{ form_label(form.departmentStats) }}</h3>
     {{ form_errors(form.departmentStats) }}
     <div

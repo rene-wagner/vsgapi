@@ -24,5 +24,24 @@
         {{ form_errors(form.mapsUrl) }}
     </div>
 
+    <div class="mb-3" data-media-selector>
+        {{ form_label(form.picture) }}
+        <div class="admin-media-selector-preview" data-media-selector-preview>
+            {% if form.picture.vars.value %}
+                <span class="text-truncate">Bild ausgewählt (ID: {{ form.picture.vars.value }})</span>
+            {% else %}
+                <span class="text-muted">Kein Bild ausgewählt</span>
+            {% endif %}
+        </div>
+        {{ form_widget(form.picture) }}
+        {{ form_errors(form.picture) }}
+        <button type="button" class="btn btn-secondary btn-sm mt-1" data-media-selector-open>
+            <i class="fa-solid fa-image" aria-hidden="true"></i> Auswählen
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-sm mt-1 ms-1" data-media-selector-remove {% if not form.picture.vars.value %}disabled{% endif %}>
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i> Entfernen
+        </button>
+    </div>
+
     <button type="submit" class="btn btn-primary">Speichern</button>
 {{ form_end(form) }}

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Department;
 use Symfony\Component\Form\AbstractType;
+use App\Form\MediaItemSelectorType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,6 +28,10 @@ class DepartmentType extends AbstractType
                 'attr' => [
                     'rows' => 10,
                 ],
+            ])
+            ->add('icon', MediaItemSelectorType::class, [
+                'required' => false,
+                'label' => 'Icon',
             ])
             ->add('departmentStats', CollectionType::class, [
                 'entry_type' => DepartmentStatisticType::class,

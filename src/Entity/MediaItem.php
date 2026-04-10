@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -47,6 +50,8 @@ use Symfony\Component\Validator\Constraints as Assert;
     security: 'is_granted("IS_AUTHENTICATED_FULLY")',
     stateless: false,
 )]
+#[ApiFilter(ExistsFilter::class, properties: ['folder'])]
+#[ApiFilter(SearchFilter::class, properties: ['folder' => 'exact'])]
 class MediaItem
 {
     #[ORM\Id]
