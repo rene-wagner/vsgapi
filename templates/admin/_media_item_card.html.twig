@@ -40,5 +40,10 @@
             </div>
         </div>
     </div>
+    {% if selector_content is defined and selector_content %}
+    <div class="card-footer bg-body-tertiary">
+        {{ selector_content|raw }}
+    </div>
+    {% endif %}
 </div>
 {% endif %}

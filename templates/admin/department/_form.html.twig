@@ -20,36 +20,45 @@
         {{ form_errors(form.description) }}
     </div>
 
-    {# Media-Vorschau: entity property liefert das persistierte MediaItem-Objekt für die Thumbnail-Karte #}
     {% if department.icon %}
-        <div class="mb-3">
+        {# Selector IN die Card verschieben #}
+        <div class="mb-3" data-media-selector>
             {{ include('admin/_media_item_card.html.twig', {
                 media_item: department.icon,
                 media_url: media_url,
-                title: 'Aktuelles Icon'
+                title: 'Aktuelles Icon'|trans,
+                selector_content: '
+                    <div class="mb-0">
+                        <label class="form-label">' ~ 'Icon auswählen'|trans ~ '</label>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-media-selector-open>
+                                <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove>
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
+                            </button>
+                        </div>
+                    </div>
+                '
             }) }}
+            {{ form_widget(form.icon) }}
+        </div>
+    {% else %}
+        {# Kein Icon: Selector separat wie bisher #}
+        <div class="mb-3" data-media-selector>
+            <label class="form-label">Icon</label>
+            <div data-media-selector-preview></div>
+            {{ form_widget(form.icon) }}
+            <div class="d-flex gap-2 mt-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" data-media-selector-open>
+                    <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove disabled>
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
+                </button>
+            </div>
         </div>
     {% endif %}
-
-    {# Media-Selector: form.vars.value liefert die String-ID für die Auswahl-Anzeige #}
-    <div class="mb-3" data-media-selector>
-        {{ form_label(form.icon) }}
-        <div class="admin-media-selector-preview" data-media-selector-preview>
-            {% if form.icon.vars.value %}
-                <span class="text-truncate">Icon ausgewählt (ID: {{ form.icon.vars.value }})</span>
-            {% else %}
-                <span class="text-muted">Kein Icon ausgewählt</span>
-            {% endif %}
-        </div>
-        {{ form_widget(form.icon) }}
-        {{ form_errors(form.icon) }}
-        <button type="button" class="btn btn-secondary btn-sm mt-1" data-media-selector-open>
-            <i class="fa-solid fa-image" aria-hidden="true"></i> Auswählen
-        </button>
-        <button type="button" class="btn btn-outline-secondary btn-sm mt-1 ms-1" data-media-selector-remove {% if not form.icon.vars.value %}disabled{% endif %}>
-            <i class="fa-solid fa-xmark" aria-hidden="true"></i> Entfernen
-        </button>
-    </div>
 
     <h3 class="h6 fw-semibold mt-4 mb-2">{{ form_label(form.departmentStats) }}</h3>
     {{ form_errors(form.departmentStats) }}
