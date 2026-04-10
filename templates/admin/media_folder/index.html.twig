@@ -26,7 +26,7 @@
                             <td>{{ folder.name }}</td>
                             <td class="text-md-end">
                                 <div class="d-flex flex-wrap gap-2 justify-content-md-end">
-                                    <a href="{{ path('admin_media_folder_edit', {id: folder.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                                    <a href="{{ path('admin_media_folder_edit', {id: folder.id}) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
                                     <form method="post" action="{{ path('admin_media_folder_delete', {id: folder.id}) }}" class="d-inline" onsubmit="return confirm('Ordner wirklich löschen?');">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete_media_folder' ~ folder.id) }}">
                                         <button type="submit" class="btn btn-danger btn-sm" aria-label="Löschen" title="Löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
