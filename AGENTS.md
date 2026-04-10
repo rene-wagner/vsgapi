@@ -4,7 +4,7 @@
 
 Symfony 7.2 API project with API Platform 4, Doctrine ORM 3, and a Twig-based admin panel.
 PHP 8.2+ required. MySQL 9 database via Docker Compose. German-language UI.
-Frontend assets are built with the **Symfony AssetMapper**; the admin UI uses **Bootstrap 5** as its CSS framework and **Font Awesome Free** (solid icons) for pictograms.
+Frontend assets are built with **Webpack Encore**; the admin UI uses **Bootstrap 5** as its CSS framework, **Font Awesome Free** (solid icons) for pictograms, and **Vue.js 3** (via Symfony UX) for interactive components.
 
 ## Architecture
 
@@ -16,11 +16,23 @@ src/
   Entity/          # Doctrine ORM entities with API Platform attributes
   Form/            # Symfony form types
   Repository/      # Doctrine repositories
-assets/            # CSS/JS entry points for AssetMapper (e.g. app.css, app.js)
+assets/
+  app.js           # Webpack Encore entry point (imports CSS, Bootstrap, Vue, lazy modules)
+  styles/app.css   # Custom CSS
+  stimulus_bootstrap.js  # Stimulus app bootstrap
+  controllers/     # Stimulus controllers (empty, for future use)
+  vue/
+    controllers/   # Vue.js controller components (Symfony UX)
+    components/    # Vue.js reusable components
+  easymde-init.js  # EasyMDE Markdown editor init (lazy)
+  media-item-crop.js  # Cropper.js init (lazy)
+  media-selector.js   # Media selector modal (lazy)
+  mediathek-dropzone.js # File dropzone (lazy)
+  marked-default-bridge.js # marked.js bridge for EasyMDE
 config/            # Symfony YAML configuration
-importmap.php      # AssetMapper import map (project root, when enabled)
 migrations/        # Doctrine migrations
 templates/         # Twig templates (admin/ with layout.html.twig base)
+webpack.config.js  # Webpack Encore configuration
 ```
 
 API Platform resources are defined via PHP attributes directly on Entity classes.
@@ -30,12 +42,11 @@ Templates follow `templates/{module}/{entity}/{action}.html.twig` — partials p
 ## Build & Run Commands
 
 ```bash
-# Install dependencies
+# Install PHP dependencies
 composer install
 
-# Download Importmap vendor assets (Bootstrap, Font Awesome, etc.) into assets/vendor/
-# Required after clone; importmap.php is committed, assets/vendor/ is gitignored
-php bin/console importmap:install
+# Install Node.js dependencies
+npm ci
 
 # Start database
 docker compose up -d
@@ -46,9 +57,11 @@ php bin/console doctrine:migrations:migrate
 # Clear cache
 php bin/console cache:clear
 
-# Frontend assets (AssetMapper)
-# Development: assets are served automatically when using symfony server or with asset mapper dev tooling
-php bin/console asset-map:compile    # production / CI — compile versioned assets
+# Frontend assets (Webpack Encore)
+npm run dev          # development build (no watch)
+npm run watch        # development build with file watcher
+npm run dev-server   # development with hot module replacement
+npm run build        # production build (minified, versioned)
 
 # Create admin user
 php bin/console app:create-admin
@@ -155,7 +168,7 @@ No linters or static analysis tools are currently installed. When adding:
 
 - Admin templates extend `admin/layout.html.twig` (which extends `base.html.twig`)
 - Blocks: `{% block title %}`, `{% block content %}`, `{% block stylesheets %}`, `{% block javascripts %}`
-- Load CSS/JS through the **AssetMapper**: use `importmap()` (and entry `stylesheet`/`javascript` tags as generated) instead of ad-hoc inline styles for application chrome; **Bootstrap 5** supplies layout, components, and utilities
+- Load CSS/JS through **Webpack Encore**: use `encore_entry_link_tags('app')` and `encore_entry_script_tags('app')` in `base.html.twig`; **Bootstrap 5** supplies layout, components, and utilities
 - **Icons**: use **Font Awesome** classes (e.g. `fa-solid fa-trash`) in markup; CSS is pulled in via `assets/app.js`. Prefer `aria-label` on icon-only controls and `aria-hidden="true"` on decorative `<i>` elements
 - Forms rendered manually with `form_label`, `form_widget`, `form_errors` (not `form_row`)
 - Use `path()` for route generation, never hardcode URLs
@@ -174,13 +187,15 @@ No linters or static analysis tools are currently installed. When adding:
 - Entities excluded from service container
 - Doctrine mapping type: `attribute`
 - API Platform defaults: stateless, `/api` route prefix, cache headers with Vary
-- **AssetMapper** (`framework.asset_mapper`): import map in `importmap.php`, sources under `assets/`; add third-party JS/CSS packages with `php bin/console importmap:require <package>` (updates `importmap.php` and downloads into `assets/vendor/`). After cloning the repo, run `php bin/console importmap:install` so `assets/vendor/` matches the lock file
+- **Webpack Encore** (`webpack.config.js`): entry point `assets/app.js`, output to `public/build/`; add npm packages with `npm install <package>` then import in JS/CSS
 
 ## Frontend & assets
 
-- **Symfony AssetMapper** is the standard way to ship and version CSS/JS (no separate Node/Webpack requirement for typical admin UI work)
-- **Bootstrap 5** is the CSS framework for the admin panel: CSS is imported from the import map in `assets/app.js`, with additional rules in `assets/styles/app.css`
-- **Font Awesome Free** (`@fortawesome/fontawesome-free`): In `assets/app.js` import both `css/fontawesome.min.css` (Icon-Definitionen) and `css/solid.min.css` (**@font-face** + `webfonts/fa-solid-900.woff2` für `fa-solid`). Ohne `solid.min.css` erscheinen keine Glyphen. Paket hinzufügen/aktualisieren: `php bin/console importmap:require …` bzw. `importmap:update`. **`importmap:install`** meldet „nichts zu installieren“, wenn `assets/vendor/` bereits zur `importmap.php` passt — das ist normal. Nur **Font Awesome Free**; Pro ist hier nicht eingerichtet
+- **Webpack Encore** builds and versions CSS/JS assets; output goes to `public/build/` (gitignored)
+- **Bootstrap 5** is the CSS framework for the admin panel: CSS is imported in `assets/app.js`, with additional rules in `assets/styles/app.css`
+- **Font Awesome Free** (`@fortawesome/fontawesome-free`): In `assets/app.js` import both `css/fontawesome.min.css` (Icon-Definitionen) and `css/solid.min.css` (**@font-face** + `webfonts/fa-solid-900.woff2` für `fa-solid`). Ohne `solid.min.css` erscheinen keine Glyphen. Add/update packages with `npm install`/`npm update`. Nur **Font Awesome Free**; Pro ist hier nicht eingerichtet
+- **Vue.js 3** (via Symfony UX): Vue controller components live in `assets/vue/controllers/` and are auto-registered via `registerVueControllerComponents()`. Use `<div data-controller="hello" data-hello-name-value="...">` in Twig to mount Vue components
+- **Stimulus** (via Symfony UX): Stimulus controllers live in `assets/controllers/` and are registered via `stimulus_bootstrap.js`
 - Prefer component-friendly markup and Bootstrap utility classes; avoid large blocks of inline CSS except for rare one-off cases
 - **Department admin form** (`templates/admin/department/_form.html.twig`): nested `CollectionType` rows use cards with a red icon-only remove control (`btn-danger`, Font Awesome trash) in the top-right corner; dynamic rows added by the inline script must mirror the same HTML structure as Twig
 
@@ -199,4 +214,4 @@ MySQL connection: `mysql://user:secret@localhost:3306/database`
 - API Platform resources defined on Entity classes directly (no separate ApiResource classes yet)
 - No `strict_types` declaration in app code — follow existing convention
 - German UI strings — keep all user-facing text in German
-- **AssetMapper** for building and serving assets; **Bootstrap 5** for CSS framework and UI primitives; **Font Awesome Free** for icons in the admin UI
+- **Webpack Encore** for building and versioning assets; **Bootstrap 5** for CSS framework and UI primitives; **Font Awesome Free** for icons; **Vue.js 3** (Symfony UX) for interactive components

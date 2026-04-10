@@ -1,3 +1,3 @@
-import { marked } from 'marked/lib/marked.esm.js';
+import { marked } from 'marked';
 
 export default { marked };

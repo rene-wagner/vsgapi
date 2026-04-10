@@ -1,0 +1,52 @@
+{
+    "devDependencies": {
+        "@babel/core": "^7.17.0",
+        "@babel/preset-env": "^7.16.0",
+        "@symfony/webpack-encore": "^6.0.0",
+        "core-js": "^3.38.0",
+        "regenerator-runtime": "^0.13.9",
+        "vue-loader": "^17.4.2",
+        "webpack": "^5.72",
+        "webpack-cli": "^6.0.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "name": "vsgapi",
+    "version": "1.0.0",
+    "description": "REST-API und Admin-Dashboard für den Sportverein **VSG Kugelberg e.V.** in Weißenfels.",
+    "main": "webpack.config.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rene-wagner/vsgapi.git"
+    },
+    "keywords": [],
+    "author": "",
+    "bugs": {
+        "url": "https://github.com/rene-wagner/vsgapi/issues"
+    },
+    "homepage": "https://github.com/rene-wagner/vsgapi#readme",
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^7.2.0",
+        "@hotwired/stimulus": "^3.2.2",
+        "@popperjs/core": "^2.11.8",
+        "@symfony/stimulus-bridge": "^4.0.1",
+        "@symfony/ux-vue": "file:vendor/symfony/ux-vue/assets",
+        "bootstrap": "^5.3.8",
+        "codemirror": "^5.65.18",
+        "codemirror-spell-checker": "^1.1.2",
+        "cropperjs": "^1.6.2",
+        "easymde": "^2.20.0",
+        "marked": "^4.3.0",
+        "typo-js": "^1.2.5",
+        "vue": "^3.5.32"
+    }
+}
