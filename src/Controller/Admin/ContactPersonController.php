@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\ContactPerson;
 use App\Form\ContactPersonType;
 use App\Repository\ContactPersonRepository;
+use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ class ContactPersonController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_contact_person_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
     {
         $contactPerson = new ContactPerson();
         $form = $this->createForm(ContactPersonType::class, $contactPerson);
@@ -41,6 +42,7 @@ class ContactPersonController extends AbstractController
         return $this->render('admin/contact_person/new.html.twig', [
             'contact_person' => $contactPerson,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 
@@ -53,7 +55,7 @@ class ContactPersonController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_contact_person_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Request $request, ContactPerson $contactPerson, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, ContactPerson $contactPerson, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
     {
         $form = $this->createForm(ContactPersonType::class, $contactPerson);
         $form->handleRequest($request);
@@ -69,6 +71,7 @@ class ContactPersonController extends AbstractController
         return $this->render('admin/contact_person/edit.html.twig', [
             'contact_person' => $contactPerson,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 

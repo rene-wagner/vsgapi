@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Department;
 use App\Form\DepartmentType;
 use App\Repository\DepartmentRepository;
+use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,7 @@ class DepartmentController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_department_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
     {
         $department = new Department();
         $form = $this->createForm(DepartmentType::class, $department);
@@ -41,6 +42,7 @@ class DepartmentController extends AbstractController
         return $this->render('admin/department/new.html.twig', [
             'department' => $department,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 
@@ -53,7 +55,7 @@ class DepartmentController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_department_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Department $department, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Department $department, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
     {
         $form = $this->createForm(DepartmentType::class, $department);
         $form->handleRequest($request);
@@ -69,6 +71,7 @@ class DepartmentController extends AbstractController
         return $this->render('admin/department/edit.html.twig', [
             'department' => $department,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 

@@ -20,6 +20,17 @@
         {{ form_errors(form.description) }}
     </div>
 
+    {# Aktuelles Icon anzeigen #}
+    {% if form.icon.vars.data %}
+        <div class="mb-3">
+            {{ include('admin/_media_item_card.html.twig', {
+                media_item: form.icon.vars.data,
+                media_url: media_url,
+                title: 'Aktuelles Icon'
+            }) }}
+        </div>
+    {% endif %}
+
     <div class="mb-3" data-media-selector>
         {{ form_label(form.icon) }}
         <div class="admin-media-selector-preview" data-media-selector-preview>
