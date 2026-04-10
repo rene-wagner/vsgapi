@@ -3,12 +3,12 @@
   title: string (e.g. 'Bild', 'Icon')
 #}
 {% if media_item %}
-<div class="card mb-3">
+<div class="card shadow-sm mb-4">
     <div class="card-header">{{ title|default('Mediendatei') }}</div>
     <div class="card-body">
         <div class="row">
             <div class="col-auto">
-                {% if media_item.type.name == 'Image' and media_item.thumbnailPath %}
+                {% if media_item.type.value == 'image' and media_item.thumbnailPath %}
                     <img src="{{ media_url.buildThumbnailUrl(media_item.thumbnailPath) }}"
                          alt="{{ media_item.name }}"
                          class="img-thumbnail"
@@ -16,7 +16,7 @@
                 {% else %}
                     <div class="bg-light rounded d-inline-flex align-items-center justify-content-center"
                          style="width: 150px; height: 150px;">
-                        {% if media_item.type.name == 'Pdf' %}
+                        {% if media_item.type.value == 'pdf' %}
                             <i class="fa-solid fa-file-pdf fa-3x text-danger" aria-hidden="true"></i>
                         {% else %}
                             <i class="fa-solid fa-file fa-3x text-secondary" aria-hidden="true"></i>
@@ -29,7 +29,7 @@
                     <dt class="col-sm-4">Name</dt>
                     <dd class="col-sm-8">{{ media_item.name }}</dd>
                     <dt class="col-sm-4">Typ</dt>
-                    <dd class="col-sm-8">{{ media_item.type.value }}</dd>
+                    <dd class="col-sm-8">{% if media_item.type.value == 'image' %}Bild{% else %}PDF{% endif %}</dd>
                     <dt class="col-sm-4">Größe</dt>
                     <dd class="col-sm-8">{{ media_url.formatSizeHuman(media_item.sizeBytes) }}</dd>
                 </dl>
