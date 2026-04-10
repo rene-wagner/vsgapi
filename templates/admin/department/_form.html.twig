@@ -63,26 +63,28 @@
     <h3 class="h6 fw-semibold mt-4 mb-2">{{ form_label(form.departmentStats) }}</h3>
     {{ form_errors(form.departmentStats) }}
     <div
-        class="collection-holder department-stats-collection"
+        class="collection-holder list-group department-stats-collection"
         data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}"
         data-index="{{ form.departmentStats|length }}"
     >
         {% for stat in form.departmentStats %}
-            <div class="collection-item card mb-3 p-3 position-relative">
-                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-collection-item" aria-label="Statistik entfernen">
-                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                </button>
-                <div class="pe-4 pt-4">
-                    <div class="mb-3">
+            <div class="list-group-item collection-item">
+                <div class="row g-2">
+                    <div class="col-12 col-md-6">
                         {{ form_label(stat.label) }}
                         {{ form_widget(stat.label) }}
                         {{ form_errors(stat.label) }}
                     </div>
-                    <div class="mb-3">
+                    <div class="col-12 col-md-6">
                         {{ form_label(stat.value) }}
                         {{ form_widget(stat.value) }}
                         {{ form_errors(stat.value) }}
                     </div>
+                </div>
+                <div class="mt-1">
+                    <button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">
+                        Entfernen
+                    </button>
                 </div>
             </div>
         {% endfor %}
@@ -170,6 +172,10 @@
         return '<button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 ' + jsClass + '" aria-label="' + ariaLabel + '"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>';
     }
 
+    function statRemoveButtonHtml() {
+        return '<div class="mt-1"><button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">Entfernen</button></div>';
+    }
+
     function bindRemoveStat(btn) {
         btn.addEventListener('click', function () {
             btn.closest('.collection-item').remove();
@@ -209,10 +215,28 @@
             var holder = document.querySelector('.department-stats-collection');
             var proto = holder.dataset.prototype;
             var idx = parseInt(holder.dataset.index, 10);
+
+            var temp = document.createElement('div');
+            temp.innerHTML = proto.replace(/__stat__/g, String(idx));
+            var inputs = temp.querySelectorAll('input');
+            var labelInput = inputs.length >= 1 ? inputs[0].outerHTML : '';
+            var valueInput = inputs.length >= 2 ? inputs[1].outerHTML : '';
+
             var div = document.createElement('div');
-            div.className = 'collection-item card mb-3 p-3 position-relative';
-            div.innerHTML = removeButtonHtml('js-remove-collection-item', 'Statistik entfernen') +
-                '<div class="pe-4 pt-4">' + proto.replace(/__stat__/g, String(idx)) + '</div>';
+            div.className = 'list-group-item collection-item';
+            div.innerHTML =
+                '<div class="row g-2">' +
+                    '<div class="col-12 col-md-6">' +
+                        '<label class="form-label">Bezeichnung</label>' +
+                        labelInput +
+                    '</div>' +
+                    '<div class="col-12 col-md-6">' +
+                        '<label class="form-label">Wert</label>' +
+                        valueInput +
+                    '</div>' +
+                '</div>' +
+                statRemoveButtonHtml();
+
             holder.appendChild(div);
             holder.dataset.index = String(idx + 1);
             bindRemoveStat(div.querySelector('.js-remove-collection-item'));
