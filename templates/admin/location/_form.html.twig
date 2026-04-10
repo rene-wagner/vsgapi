@@ -25,10 +25,10 @@
     </div>
 
     {# Aktuelles Bild anzeigen #}
-    {% if form.picture.vars.data %}
+    {% if location.picture %}
         <div class="mb-3">
             {{ include('admin/_media_item_card.html.twig', {
-                media_item: form.picture.vars.data,
+                media_item: location.picture,
                 media_url: media_url,
                 title: 'Aktuelles Bild'
             }) }}
