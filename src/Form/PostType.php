@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\Post;
 use App\Entity\User;
+use App\Form\MediaItemSelectorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -59,6 +60,10 @@ class PostType extends AbstractType
                 'expanded' => true,
                 'required' => false,
                 'by_reference' => false,
+            ])
+            ->add('picture', MediaItemSelectorType::class, [
+                'required' => false,
+                'label' => 'Bild',
             ]);
     }
 

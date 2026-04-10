@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Location;
 use App\Form\LocationType;
 use App\Repository\LocationRepository;
+use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,7 +54,7 @@ class LocationController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_location_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Location $location, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Location $location, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
     {
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
@@ -69,6 +70,7 @@ class LocationController extends AbstractController
         return $this->render('admin/location/edit.html.twig', [
             'location' => $location,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 

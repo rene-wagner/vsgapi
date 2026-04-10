@@ -15,3 +15,7 @@ if (document.querySelector('[data-media-item-crop]')) {
 if (document.querySelector('form textarea')) {
     void import('./easymde-init.js');
 }
+
+if (document.querySelector('[data-media-selector]')) {
+    void import('./media-selector.js');
+}

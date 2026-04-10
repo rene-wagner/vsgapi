@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\ContactPerson;
 use Symfony\Component\Form\AbstractType;
+use App\Form\MediaItemSelectorType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -42,6 +43,10 @@ class ContactPersonType extends AbstractType
                 'attr' => [
                     'rows' => 4,
                 ],
+            ])
+            ->add('picture', MediaItemSelectorType::class, [
+                'required' => false,
+                'label' => 'Bild',
             ]);
     }
 

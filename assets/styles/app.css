@@ -105,3 +105,59 @@ body {
 .EasyMDEContainer:has(textarea.form-control.is-invalid) .CodeMirror {
     border-color: var(--bs-form-invalid-border-color);
 }
+
+/* Media-Selector: Vorschau der aktuellen Auswahl neben dem Formularfeld */
+.admin-media-selector-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    min-height: 3rem;
+}
+
+.admin-media-selector-preview img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: var(--bs-border-radius-sm);
+}
+
+/* Media-Selector Modal: klickbare Ordner-Zeile */
+.admin-media-selector-folder {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.admin-media-selector-folder:hover {
+    background-color: var(--bs-secondary-bg);
+}
+
+/* Media-Selector Modal: klickbare Medien-Zeile */
+.admin-media-selector-item {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.admin-media-selector-item:hover {
+    background-color: var(--bs-secondary-bg);
+}
+
+.admin-media-selector-item.is-selected {
+    background-color: var(--bs-primary-bg-subtle);
+    border-color: var(--bs-primary);
+}
+
+.admin-media-selector-item img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: var(--bs-border-radius-sm);
+}
+
+.admin-media-selector-item .admin-media-selector-pdf-badge {
+    width: 48px;
+    height: 48px;
+    font-size: 0.65rem;
+}

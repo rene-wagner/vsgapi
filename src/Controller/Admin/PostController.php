@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +64,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_post_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, MediaUrlService $mediaUrlService): Response
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -79,6 +80,7 @@ class PostController extends AbstractController
         return $this->render('admin/post/edit.html.twig', [
             'post' => $post,
             'form' => $form,
+            'media_url' => $mediaUrlService,
         ]);
     }
 

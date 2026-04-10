@@ -11,3 +11,10 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+###> ai/files ###
+.claude/
+.cursor/
+.opencode/
+.sisyphus/
+###< ai/files ###

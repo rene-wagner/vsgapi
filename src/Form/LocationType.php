@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
+use App\Form\MediaItemSelectorType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,6 +29,10 @@ class LocationType extends AbstractType
                 'required' => false,
                 'empty_data' => null,
                 'help' => 'Optional: Link zu Google Maps o. Ä.',
+            ])
+            ->add('picture', MediaItemSelectorType::class, [
+                'required' => false,
+                'label' => 'Bild',
             ]);
     }
 

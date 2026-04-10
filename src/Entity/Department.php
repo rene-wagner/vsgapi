@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
+use App\Entity\MediaItem;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -57,6 +58,11 @@ class Department
     #[Assert\NotBlank]
     #[Groups(['department:read'])]
     private ?string $description = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['department:read'])]
+    private ?MediaItem $icon = null;
 
     /** @var Collection<int, DepartmentStatistic> */
     #[ORM\OneToMany(targetEntity: DepartmentStatistic::class, mappedBy: 'department', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -112,6 +118,18 @@ class Department
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getIcon(): ?MediaItem
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?MediaItem $icon): static
+    {
+        $this->icon = $icon;
 
         return $this;
     }
