@@ -1,4 +1,4 @@
 <form method="post" action="{{ path('admin_post_delete', {id: post.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diesen Beitrag löschen möchten?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-    <button type="submit" class="btn btn-danger">Beitrag löschen</button>
+    <button type="submit" class="btn btn-danger" aria-label="Beitrag löschen" title="Beitrag löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
 </form>

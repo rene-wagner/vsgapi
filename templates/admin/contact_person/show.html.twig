@@ -6,7 +6,7 @@
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
         <h1 class="h3 mb-0">{{ contact_person.firstName }} {{ contact_person.lastName }}</h1>
         <div class="d-flex flex-wrap gap-2">
-            <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="btn btn-primary">Bearbeiten</a>
+            <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="btn btn-primary" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
             <a href="{{ path('admin_contact_person_index') }}" class="btn btn-secondary">Zurück</a>
         </div>
     </div>
@@ -65,7 +65,7 @@
         <div class="card-body">
             <form method="post" action="{{ path('admin_contact_person_delete', {id: contact_person.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Kontaktperson löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact_person.id) }}">
-                <button type="submit" class="btn btn-danger">Kontaktperson löschen</button>
+                <button type="submit" class="btn btn-danger" aria-label="Kontaktperson löschen" title="Kontaktperson löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
             </form>
         </div>
     </div>

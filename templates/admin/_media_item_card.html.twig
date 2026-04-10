@@ -34,8 +34,9 @@
                     <dd class="col-sm-8">{{ media_url.formatSizeHuman(media_item.sizeBytes) }}</dd>
                 </dl>
                 <a href="{{ path('admin_mediathek_item_edit', { id: media_item.id }) }}"
-                   class="btn btn-sm btn-outline-primary mt-2">
-                    <i class="fa-solid fa-pencil" aria-hidden="true"></i> Bearbeiten
+                   class="btn btn-sm btn-outline-primary mt-2"
+                   aria-label="Bearbeiten" title="Bearbeiten">
+                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                 </a>
             </div>
         </div>

@@ -27,8 +27,8 @@
                             <td>{{ location.city }}</td>
                             <td class="text-md-end">
                                 <div class="d-flex flex-wrap gap-2 justify-content-md-end">
-                                    <a href="{{ path('admin_location_show', {id: location.id}) }}" class="btn btn-secondary btn-sm">Anzeigen</a>
-                                    <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary btn-sm">Bearbeiten</a>
+                                    <a href="{{ path('admin_location_show', {id: location.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                                    <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary btn-sm" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>
