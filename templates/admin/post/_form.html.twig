@@ -16,7 +16,7 @@
 
     <div class="mb-3">
         {{ form_label(form.content) }}
-        {{ form_widget(form.content) }}
+        {{ form_widget(form.content, { attr: { 'data-controller': 'easymde' } }) }}
         {{ form_errors(form.content) }}
     </div>
 
