@@ -38,7 +38,7 @@ body {
 .admin-media-crop-wrap img {
     display: block;
     max-width: 100%;
-    max-height: min(70vh, 520px);
+    max-height: min(80vh, 700px);
 }
 
 .admin-mediathek-row {

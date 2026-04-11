@@ -18,7 +18,7 @@
                 <div class="card-body">
                     {% if is_image %}
                         <p class="small text-muted mb-2">Ziehen Sie den Rahmen, um den gewünschten Bildausschnitt zu wählen. Beim ersten Speichern mit Zuschnitt wird ein unverändertes Original gesichert; beim Speichern wird das Bild serverseitig zugeschnitten.</p>
-                        <div class="admin-media-crop-wrap mb-3" style="height: 350px">
+                        <div class="admin-media-crop-wrap mb-3">
                             <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-target="image" crossorigin="anonymous" decoding="async">
                         </div>
                         <div class="row g-2 mb-3" aria-live="polite">
