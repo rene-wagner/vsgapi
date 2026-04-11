@@ -9,10 +9,6 @@ if (document.querySelector('[data-mediathek-dropzone]')) {
     void import('./mediathek-dropzone.js');
 }
 
-if (document.querySelector('[data-media-item-crop]')) {
-    void import('./media-item-crop.js');
-}
-
 if (document.querySelector('[data-media-selector]')) {
     void import('./media-selector.js');
 }

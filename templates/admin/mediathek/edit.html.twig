@@ -11,28 +11,28 @@
     {% set file_url = media_url.buildFileUrl(item.path) %}
     {% set is_image = item.type.value == 'image' %}
 
-    <div class="row g-4"{% if is_image %} data-media-item-crop{% endif %}>
+    <div class="row g-4"{% if is_image %} data-controller="media-item-crop"{% endif %}>
         <div class="col-12 col-lg-5">
             <div class="card shadow-sm h-100">
                 <h5 class="card-header fw-semibold">Aktuelles Medium</h5>
                 <div class="card-body">
                     {% if is_image %}
                         <p class="small text-muted mb-2">Ziehen Sie den Rahmen, um den gewünschten Bildausschnitt zu wählen. Beim ersten Speichern mit Zuschnitt wird ein unverändertes Original gesichert; beim Speichern wird das Bild serverseitig zugeschnitten.</p>
-                        <div class="admin-media-crop-wrap mb-3">
-                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-image crossorigin="anonymous" decoding="async">
+                        <div class="admin-media-crop-wrap mb-3" style="height: 350px">
+                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-target="image" crossorigin="anonymous" decoding="async">
                         </div>
                         <div class="row g-2 mb-3" aria-live="polite">
                             <div class="col-6">
                                 <label class="form-label small text-muted mb-0" for="media-item-crop-sel-w">Auswahl Breite (px)</label>
-                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-w" data-media-item-crop-selection-width readonly tabindex="-1" autocomplete="off" value="">
+                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-w" data-media-item-crop-target="selectionWidth" readonly tabindex="-1" autocomplete="off" value="">
                             </div>
                             <div class="col-6">
                                 <label class="form-label small text-muted mb-0" for="media-item-crop-sel-h">Auswahl Höhe (px)</label>
-                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-h" data-media-item-crop-selection-height readonly tabindex="-1" autocomplete="off" value="">
+                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-h" data-media-item-crop-target="selectionHeight" readonly tabindex="-1" autocomplete="off" value="">
                             </div>
                         </div>
                         <p class="small text-muted mb-2">Werte beziehen sich auf die Bildpixel der aktuellen Datei (wie beim Speichern zugeschnitten).</p>
-                        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" data-media-item-crop-reset>
+                        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" data-media-item-crop-target="reset">
                             Auswahl zurücksetzen
                         </button>
                         <p class="small text-muted mb-0 text-break">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
@@ -52,7 +52,7 @@
                 <div class="card-body">
                     {% set form_attr = {} %}
                     {% if is_image %}
-                        {% set form_attr = form_attr|merge({'data-media-item-crop-form': ''}) %}
+                        {% set form_attr = form_attr|merge({'data-media-item-crop-target': 'form'}) %}
                     {% endif %}
                     {{ form_start(form, { attr: form_attr }) }}
                         {{ form_errors(form) }}

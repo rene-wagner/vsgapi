@@ -93,4 +93,44 @@ return [
         'version' => '2.20.0',
         'type' => 'css',
     ],
+    'cropperjs' => [
+        'version' => '2.1.1',
+    ],
+    'cropperjs/dist/cropper.min.css' => [
+        'version' => '2.1.1',
+        'type' => 'css',
+    ],
+    '@cropper/utils' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/elements' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-canvas' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-image' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-shade' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-handle' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-selection' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-grid' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-crosshair' => [
+        'version' => '2.1.1',
+    ],
+    '@cropper/element-viewer' => [
+        'version' => '2.1.1',
+    ],
 ];
