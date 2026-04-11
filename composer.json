@@ -29,6 +29,7 @@
         "symfony/runtime": "7.2.*",
         "symfony/security-bundle": "7.2.*",
         "symfony/security-csrf": "7.2.*",
+        "symfony/stimulus-bundle": "^2.34",
         "symfony/twig-bundle": "7.2.*",
         "symfony/type-info": "^7.3",
         "symfony/validator": "7.2.*",

@@ -16,6 +16,9 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
+    ],
     'bootstrap' => [
         'version' => '5.3.8',
     ],
@@ -26,9 +29,6 @@ return [
         'version' => '5.3.8',
         'type' => 'css',
     ],
-    '@fortawesome/fontawesome-free' => [
-        'version' => '7.2.0',
-    ],
     '@fortawesome/fontawesome-free/css/fontawesome.min.css' => [
         'version' => '7.2.0',
         'type' => 'css',
@@ -37,67 +37,7 @@ return [
         'version' => '7.2.0',
         'type' => 'css',
     ],
-    'cropperjs' => [
-        'version' => '1.6.2',
-    ],
-    'cropperjs/dist/cropper.min.css' => [
-        'version' => '1.6.2',
-        'type' => 'css',
-    ],
-    'easymde' => [
-        'version' => '2.20.0',
-    ],
-    'codemirror' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/edit/continuelist.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/display/fullscreen.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/mode/markdown/markdown.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/mode/overlay.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/display/placeholder.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/display/autorefresh.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/selection/mark-selection.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/addon/search/searchcursor.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/mode/gfm/gfm.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror/mode/xml/xml.js' => [
-        'version' => '5.65.18',
-    ],
-    'codemirror-spell-checker' => [
-        'version' => '1.1.2',
-    ],
-    'marked' => [
-        'path' => './assets/marked-default-bridge.js',
-    ],
-    'typo-js' => [
-        'version' => '1.2.5',
-    ],
-    'codemirror/lib/codemirror.min.css' => [
-        'version' => '5.65.18',
-        'type' => 'css',
-    ],
-    'easymde/dist/easymde.min.css' => [
-        'version' => '2.20.0',
-        'type' => 'css',
-    ],
-    'marked/lib/marked.esm.js' => [
-        'version' => '4.3.0',
+    '@symfony/stimulus-bundle' => [
+        'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
 ];
