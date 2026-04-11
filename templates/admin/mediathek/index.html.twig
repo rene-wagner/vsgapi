@@ -93,9 +93,9 @@
                 <p class="small text-muted mb-3">Die Dateien werden auf der obersten Mediathek-Ebene abgelegt.</p>
             {% endif %}
             {{ form_start(upload_form, {attr: {enctype: 'multipart/form-data'}}) }}
-                <div class="mb-3" data-mediathek-dropzone>
+                <div class="mb-3" data-controller="mediathek-dropzone">
                     {{ form_label(upload_form.files) }}
-                    <button type="button" class="admin-mediathek-dropzone w-100 text-center text-muted border border-2 border-dashed rounded-3 p-4 bg-body-secondary bg-opacity-25" data-mediathek-dropzone-target aria-label="Dateien auswählen oder per Drag-and-Drop hinzufügen">
+                    <button type="button" class="admin-mediathek-dropzone w-100 text-center text-muted border border-2 border-dashed rounded-3 p-4 bg-body-secondary bg-opacity-25" data-mediathek-dropzone-target="dropzone" data-action="click->mediathek-dropzone#openPicker dragenter->mediathek-dropzone#dragEnter dragleave->mediathek-dropzone#dragLeave dragover->mediathek-dropzone#dragOver drop->mediathek-dropzone#drop" aria-label="Dateien auswählen oder per Drag-and-Drop hinzufügen">
                         <span class="d-inline-flex flex-column align-items-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up fa-2x text-body-secondary" aria-hidden="true"></i>
                             <span class="fw-medium text-body">Dateien hierher ziehen</span>
@@ -103,10 +103,10 @@
                         </span>
                     </button>
                     <div class="visually-hidden">
-                        {{ form_widget(upload_form.files) }}
+                        {{ form_widget(upload_form.files, { attr: { 'data-mediathek-dropzone-target': 'input', 'data-action': 'change->mediathek-dropzone#updateList' } }) }}
                     </div>
                     {{ form_errors(upload_form.files) }}
-                    <p class="small text-muted mt-2 mb-0 admin-mediathek-selected-files" data-mediathek-selected-list hidden></p>
+                    <p class="small text-muted mt-2 mb-0 admin-mediathek-selected-files" data-mediathek-dropzone-target="list" hidden></p>
                 </div>
                 <div class="mb-3">
                     {{ form_label(upload_form.category) }}
