@@ -1,4 +1,4 @@
-<div class="modal fade" id="mediaSelectorModal" tabindex="-1" aria-labelledby="mediaSelectorModalLabel" aria-hidden="true" data-media-selector-modal>
+<div class="modal fade" id="mediaSelectorModal" tabindex="-1" aria-labelledby="mediaSelectorModalLabel" aria-hidden="true" data-media-selector-modal data-controller="media-selector">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,16 +7,16 @@
             </div>
             <div class="modal-body">
                 <nav aria-label="Ordnerpfad" class="mb-3">
-                    <ol class="breadcrumb mb-0" data-media-selector-breadcrumb>
+                    <ol class="breadcrumb mb-0" data-media-selector-target="breadcrumb">
                         <li class="breadcrumb-item active" aria-current="page">Mediathek</li>
                     </ol>
                 </nav>
-                <div data-media-selector-folders class="mb-3"></div>
-                <div data-media-selector-items></div>
-                <div data-media-selector-empty class="text-muted text-center py-4" hidden>
+                <div data-media-selector-target="folders" class="mb-3"></div>
+                <div data-media-selector-target="items"></div>
+                <div data-media-selector-target="empty" class="text-muted text-center py-4" hidden>
                     Keine Dateien in diesem Ordner.
                 </div>
-                <div data-media-selector-loading class="text-center py-4" hidden>
+                <div data-media-selector-target="loading" class="text-center py-4" hidden>
                     <div class="spinner-border spinner-border-sm text-secondary" role="status">
                         <span class="visually-hidden">Laden…</span>
                     </div>
