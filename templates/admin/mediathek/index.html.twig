@@ -60,7 +60,11 @@
                             <div class="d-flex gap-3 flex-grow-1 min-w-0">
                                 <div class="flex-shrink-0">
                                     {% if item.type.value == 'image' %}
-                                        <img src="{{ thumb_url ?? file_url }}" alt="" class="admin-media-thumb rounded">
+                                        {% if item.mimeType == 'image/svg+xml' %}
+                                            <img src="{{ file_url }}" alt="" class="admin-media-thumb rounded">
+                                        {% else %}
+                                            <img src="{{ thumb_url ?? file_url }}" alt="" class="admin-media-thumb rounded">
+                                        {% endif %}
                                     {% else %}
                                         <span class="badge text-bg-secondary d-inline-flex align-items-center justify-content-center admin-mediathek-pdf-badge">PDF</span>
                                     {% endif %}
