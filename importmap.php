@@ -80,7 +80,7 @@ return [
         'version' => '1.1.2',
     ],
     'marked' => [
-        'version' => '4.3.0',
+        'version' => '3.0.8',
     ],
     'typo-js' => [
         'version' => '1.2.5',
@@ -93,4 +93,4 @@ return [
         'version' => '2.20.0',
         'type' => 'css',
     ],
-    ];
+];
