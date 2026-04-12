@@ -26,7 +26,7 @@
 
     {% if location.picture %}
         {# Selector IN die Card verschieben #}
-        <div class="mb-3" data-media-selector>
+        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
             {{ include('admin/_media_item_card.html.twig', {
                 media_item: location.picture,
                 media_url: media_url,
@@ -35,10 +35,10 @@
                     <div class="mb-0">
                         <label class="form-label">' ~ 'Bild auswählen'|trans ~ '</label>
                         <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-sm btn-outline-primary" data-media-selector-open>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
                                 <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
                                 <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
                             </button>
                         </div>
@@ -49,15 +49,15 @@
         </div>
     {% else %}
         {# Kein Bild: Selector separat wie bisher #}
-        <div class="mb-3" data-media-selector>
+        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
             <label class="form-label">Bild</label>
             <div data-media-selector-preview></div>
             {{ form_widget(form.picture) }}
             <div class="d-flex gap-2 mt-2">
-                <button type="button" class="btn btn-sm btn-outline-primary" data-media-selector-open>
+                <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
                     <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove disabled>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
                     <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
                 </button>
             </div>

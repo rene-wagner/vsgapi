@@ -31,6 +31,10 @@ class MediaImageCropService
             throw new \InvalidArgumentException('Zuschneiden ist nur für Bilddateien möglich.');
         }
 
+        if ($item->getMimeType() === 'image/svg+xml') {
+            throw new \InvalidArgumentException('Zuschneiden ist für SVG-Dateien nicht unterstützt.');
+        }
+
         $relativePath = $item->getPath();
         if ($relativePath === null || $relativePath === '') {
             throw new \InvalidArgumentException('Kein gültiger Dateipfad für dieses Medium.');

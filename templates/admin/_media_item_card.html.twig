@@ -8,8 +8,13 @@
     <div class="card-body">
         <div class="row">
             <div class="col-auto">
-                {% if media_item.type.value == 'image' and media_item.thumbnailPath %}
+                {% if media_item.type.value == 'image' and media_item.thumbnailPath and media_item.mimeType != 'image/svg+xml' %}
                     <img src="{{ media_url.buildThumbnailUrl(media_item.thumbnailPath) }}"
+                         alt="{{ media_item.name }}"
+                         class="img-thumbnail"
+                         style="max-width: 150px; max-height: 150px;">
+                {% elseif media_item.type.value == 'image' and media_item.mimeType == 'image/svg+xml' %}
+                    <img src="{{ media_url.buildFileUrl(media_item.path) }}"
                          alt="{{ media_item.name }}"
                          class="img-thumbnail"
                          style="max-width: 150px; max-height: 150px;">

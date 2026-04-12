@@ -41,6 +41,15 @@ final class MediaFileServeController
             throw new NotFoundHttpException();
         }
 
+        if (str_ends_with($resolved, '.svg')) {
+            $response = new Response(file_get_contents($resolved));
+            $response->headers->set('Content-Type', 'image/svg+xml');
+            $response->headers->set('X-Content-Type-Options', 'nosniff');
+            $response->headers->set('Content-Disposition', 'inline');
+
+            return $response;
+        }
+
         return new BinaryFileResponse($resolved);
     }
 }

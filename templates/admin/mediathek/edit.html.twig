@@ -10,31 +10,39 @@
 
     {% set file_url = media_url.buildFileUrl(item.path) %}
     {% set is_image = item.type.value == 'image' %}
+    {% set is_croppable = is_image and item.mimeType != 'image/svg+xml' %}
 
-    <div class="row g-4"{% if is_image %} data-media-item-crop{% endif %}>
+    <div class="row g-4"{% if is_croppable %} data-controller="media-item-crop"{% endif %}>
         <div class="col-12 col-lg-5">
             <div class="card shadow-sm h-100">
                 <h5 class="card-header fw-semibold">Aktuelles Medium</h5>
                 <div class="card-body">
                     {% if is_image %}
-                        <p class="small text-muted mb-2">Ziehen Sie den Rahmen, um den gewünschten Bildausschnitt zu wählen. Beim ersten Speichern mit Zuschnitt wird ein unverändertes Original gesichert; beim Speichern wird das Bild serverseitig zugeschnitten.</p>
-                        <div class="admin-media-crop-wrap mb-3">
-                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-image crossorigin="anonymous" decoding="async">
-                        </div>
-                        <div class="row g-2 mb-3" aria-live="polite">
-                            <div class="col-6">
-                                <label class="form-label small text-muted mb-0" for="media-item-crop-sel-w">Auswahl Breite (px)</label>
-                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-w" data-media-item-crop-selection-width readonly tabindex="-1" autocomplete="off" value="">
+                        {% if is_croppable %}
+                            <p class="small text-muted mb-2">Ziehen Sie den Rahmen, um den gewünschten Bildausschnitt zu wählen. Beim ersten Speichern mit Zuschnitt wird ein unverändertes Original gesichert; beim Speichern wird das Bild serverseitig zugeschnitten.</p>
+                            <div class="admin-media-crop-wrap mb-3">
+                                <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-target="image" crossorigin="anonymous" decoding="async">
                             </div>
-                            <div class="col-6">
-                                <label class="form-label small text-muted mb-0" for="media-item-crop-sel-h">Auswahl Höhe (px)</label>
-                                <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-h" data-media-item-crop-selection-height readonly tabindex="-1" autocomplete="off" value="">
+                            <div class="row g-2 mb-3" aria-live="polite">
+                                <div class="col-6">
+                                    <label class="form-label small text-muted mb-0" for="media-item-crop-sel-w">Auswahl Breite (px)</label>
+                                    <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-w" data-media-item-crop-target="selectionWidth" readonly tabindex="-1" autocomplete="off" value="">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small text-muted mb-0" for="media-item-crop-sel-h">Auswahl Höhe (px)</label>
+                                    <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-h" data-media-item-crop-target="selectionHeight" readonly tabindex="-1" autocomplete="off" value="">
+                                </div>
                             </div>
-                        </div>
-                        <p class="small text-muted mb-2">Werte beziehen sich auf die Bildpixel der aktuellen Datei (wie beim Speichern zugeschnitten).</p>
-                        <button type="button" class="btn btn-outline-secondary btn-sm mb-3" data-media-item-crop-reset>
-                            Auswahl zurücksetzen
-                        </button>
+                            <p class="small text-muted mb-2">Werte beziehen sich auf die Bildpixel der aktuellen Datei (wie beim Speichern zugeschnitten).</p>
+                            <button type="button" class="btn btn-outline-secondary btn-sm mb-3" data-media-item-crop-target="reset">
+                                Auswahl zurücksetzen
+                            </button>
+                        {% else %}
+                            <div class="text-center mb-3">
+                                <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" style="max-width: 100%; max-height: 300px;">
+                            </div>
+                            <p class="small text-muted mb-0">Zuschneiden ist für SVG-Dateien nicht unterstützt.</p>
+                        {% endif %}
                         <p class="small text-muted mb-0 text-break">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
                     {% else %}
                         <div class="text-center text-danger mb-3" aria-hidden="true">
@@ -51,12 +59,12 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     {% set form_attr = {} %}
-                    {% if is_image %}
-                        {% set form_attr = form_attr|merge({'data-media-item-crop-form': ''}) %}
+                    {% if is_croppable %}
+                        {% set form_attr = form_attr|merge({'data-media-item-crop-target': 'form'}) %}
                     {% endif %}
                     {{ form_start(form, { attr: form_attr }) }}
                         {{ form_errors(form) }}
-                        {% if is_image %}
+                        {% if is_croppable %}
                             <div class="visually-hidden" aria-hidden="true">
                                 {{ form_widget(form.crop_x) }}
                                 {{ form_widget(form.crop_y) }}
@@ -73,7 +81,7 @@
                         </div>
                         <div class="mb-3">
                             {{ form_label(form.description) }}
-                            {{ form_widget(form.description) }}
+                            {{ form_widget(form.description, { attr: { 'data-controller': 'easymde' } }) }}
                             {{ form_errors(form.description) }}
                         </div>
                         <div class="mb-3">
