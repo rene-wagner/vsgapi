@@ -10,39 +10,16 @@
 
     {% set file_url = media_url.buildFileUrl(item.path) %}
     {% set is_image = item.type.value == 'image' %}
-    {% set is_croppable = is_image and item.mimeType != 'image/svg+xml' %}
 
-    <div class="row g-4"{% if is_croppable %} data-controller="media-item-crop"{% endif %}>
+    <div class="row g-4">
         <div class="col-12 col-lg-5">
             <div class="card shadow-sm h-100">
                 <h5 class="card-header fw-semibold">Aktuelles Medium</h5>
                 <div class="card-body">
                     {% if is_image %}
-                        {% if is_croppable %}
-                            <p class="small text-muted mb-2">Ziehen Sie den Rahmen, um den gewünschten Bildausschnitt zu wählen. Beim ersten Speichern mit Zuschnitt wird ein unverändertes Original gesichert; beim Speichern wird das Bild serverseitig zugeschnitten.</p>
-                            <div class="admin-media-crop-wrap mb-3">
-                                <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" data-media-item-crop-target="image" crossorigin="anonymous" decoding="async">
-                            </div>
-                            <div class="row g-2 mb-3" aria-live="polite">
-                                <div class="col-6">
-                                    <label class="form-label small text-muted mb-0" for="media-item-crop-sel-w">Auswahl Breite (px)</label>
-                                    <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-w" data-media-item-crop-target="selectionWidth" readonly tabindex="-1" autocomplete="off" value="">
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label small text-muted mb-0" for="media-item-crop-sel-h">Auswahl Höhe (px)</label>
-                                    <input type="text" class="form-control form-control-sm" id="media-item-crop-sel-h" data-media-item-crop-target="selectionHeight" readonly tabindex="-1" autocomplete="off" value="">
-                                </div>
-                            </div>
-                            <p class="small text-muted mb-2">Werte beziehen sich auf die Bildpixel der aktuellen Datei (wie beim Speichern zugeschnitten).</p>
-                            <button type="button" class="btn btn-outline-secondary btn-sm mb-3" data-media-item-crop-target="reset">
-                                Auswahl zurücksetzen
-                            </button>
-                        {% else %}
-                            <div class="text-center mb-3">
-                                <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="rounded border" style="max-width: 100%; max-height: 300px;">
-                            </div>
-                            <p class="small text-muted mb-0">Zuschneiden ist für SVG-Dateien nicht unterstützt.</p>
-                        {% endif %}
+                        <div class="text-center mb-3">
+                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="admin-media-edit-preview rounded border">
+                        </div>
                         <p class="small text-muted mb-0 text-break">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
                     {% else %}
                         <div class="text-center text-danger mb-3" aria-hidden="true">
@@ -58,22 +35,8 @@
         <div class="col-12 col-lg-7">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    {% set form_attr = {} %}
-                    {% if is_croppable %}
-                        {% set form_attr = form_attr|merge({'data-media-item-crop-target': 'form'}) %}
-                    {% endif %}
-                    {{ form_start(form, { attr: form_attr }) }}
+                    {{ form_start(form) }}
                         {{ form_errors(form) }}
-                        {% if is_croppable %}
-                            <div class="visually-hidden" aria-hidden="true">
-                                {{ form_widget(form.crop_x) }}
-                                {{ form_widget(form.crop_y) }}
-                                {{ form_widget(form.crop_w) }}
-                                {{ form_widget(form.crop_h) }}
-                                {{ form_widget(form.crop_natural_w) }}
-                                {{ form_widget(form.crop_natural_h) }}
-                            </div>
-                        {% endif %}
                         <div class="mb-3">
                             {{ form_label(form.name) }}
                             {{ form_widget(form.name) }}
@@ -94,14 +57,8 @@
                             {{ form_widget(form.folder) }}
                             {{ form_errors(form.folder) }}
                         </div>
-                        {% if show_restore_original %}
-                            <p class="small text-muted mb-2">Ein unverändertes Original ist gespeichert. Mit der folgenden Aktion wird die aktuelle Datei durch dieses Original ersetzt und die Sicherung entfernt.</p>
-                        {% endif %}
                         <div class="d-flex flex-wrap gap-2 mb-2">
                             <button type="submit" class="btn btn-primary">Speichern</button>
-                            {% if show_restore_original %}
-                                {{ form_widget(form.restore_original) }}
-                            {% endif %}
                         </div>
                         {{ form_widget(form._token) }}
                     {{ form_end(form, { render_rest: false }) }}

@@ -47,11 +47,6 @@ services:
         arguments:
             $storageDir: '%media.storage_dir%'
 
-    App\Service\Media\MediaImageCropService:
-        arguments:
-            $storageDir: '%media.storage_dir%'
-            $thumbnailMaxEdge: '%media.thumbnail_max_edge%'
-
     App\Serializer\MediaItemNormalizer:
         tags:
             - { name: serializer.normalizer, priority: 64 }
