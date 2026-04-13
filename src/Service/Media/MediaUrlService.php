@@ -2,11 +2,13 @@
 
 namespace App\Service\Media;
 
+use App\Entity\MediaItem;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 class MediaUrlService
 {
     public function __construct(
-        private readonly string $mediaHost,
-        private readonly string $publicPathPrefix,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -27,26 +29,82 @@ class MediaUrlService
         return round($value, 1) . ' ' . $units[$i];
     }
 
-    public function buildFileUrl(string $relativePath): string
+    public function buildOriginalUrl(MediaItem $item): ?string
     {
-        return $this->joinPublicUrl($relativePath);
-    }
-
-    public function buildThumbnailUrl(?string $relativePath): ?string
-    {
-        if ($relativePath === null || $relativePath === '') {
+        if ($item->getId() === null || $item->getPath() === null || $item->getPath() === '') {
             return null;
         }
 
-        return $this->joinPublicUrl($relativePath);
+        $url = $this->urlGenerator->generate('media_original', [
+            'id' => $item->getId(),
+            'slug' => $item->getSlug(),
+            'ext' => $item->getExtension(),
+        ], UrlGeneratorInterface::ABSOLUTE_PATH);
+
+        return $this->appendVersion($url, $item);
     }
 
-    private function joinPublicUrl(string $relativePath): string
+    public function buildThumbnailUrl(MediaItem $item): ?string
     {
-        $host = rtrim($this->mediaHost, '/');
-        $prefix = '/' . trim($this->publicPathPrefix, '/');
-        $path = ltrim(str_replace('\\', '/', $relativePath), '/');
+        if ($item->getId() === null || $item->getThumbnailPath() === null || $item->getThumbnailPath() === '') {
+            return null;
+        }
 
-        return $host . $prefix . '/' . $path;
+        $url = $this->urlGenerator->generate('media_thumbnail', [
+            'id' => $item->getId(),
+            'slug' => $item->getSlug(),
+        ], UrlGeneratorInterface::ABSOLUTE_PATH);
+
+        return $this->appendVersion($url, $item);
+    }
+
+    public function buildCroppedUrl(MediaItem $item): ?string
+    {
+        if ($item->getId() === null || !$item->isCroppable() || !$item->hasCropData()) {
+            return null;
+        }
+
+        $url = $this->urlGenerator->generate('media_cropped', [
+            'id' => $item->getId(),
+            'slug' => $item->getSlug(),
+            'ext' => $item->getExtension(),
+        ], UrlGeneratorInterface::ABSOLUTE_PATH);
+
+        return $this->appendVersion($url, $item);
+    }
+
+    public function buildCroppedThumbnailUrl(MediaItem $item): ?string
+    {
+        if ($item->getId() === null || !$item->isCroppable() || !$item->hasCropData()) {
+            return null;
+        }
+
+        $url = $this->urlGenerator->generate('media_cropped_thumbnail', [
+            'id' => $item->getId(),
+            'slug' => $item->getSlug(),
+        ], UrlGeneratorInterface::ABSOLUTE_PATH);
+
+        return $this->appendVersion($url, $item);
+    }
+
+    public function buildDisplayUrl(MediaItem $item): ?string
+    {
+        $cropped = $this->buildCroppedUrl($item);
+        if ($cropped !== null) {
+            return $cropped;
+        }
+
+        return $this->buildOriginalUrl($item);
+    }
+
+    private function appendVersion(string $url, MediaItem $item): string
+    {
+        $updatedAt = $item->getUpdatedAt();
+        if ($updatedAt !== null) {
+            $separator = str_contains($url, '?') ? '&' : '?';
+            $url .= $separator . 'v=' . $updatedAt->getTimestamp();
+        }
+
+        return $url;
     }
 }

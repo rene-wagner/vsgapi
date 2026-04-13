@@ -146,3 +146,16 @@ body {
     height: 48px;
     font-size: 0.65rem;
 }
+
+/* Cropper.js container in media edit */
+.admin-cropper-container {
+    max-height: 500px;
+    overflow: hidden;
+    background-color: var(--bs-secondary-bg);
+    border-radius: var(--bs-border-radius);
+}
+
+.admin-cropper-container .cropper-view-box {
+    outline: 2px solid var(--bs-primary);
+    outline-color: var(--bs-primary);
+}

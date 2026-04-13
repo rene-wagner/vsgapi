@@ -5,7 +5,6 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     media.storage_dir: '%kernel.project_dir%/var/media'
-    media.public_path_prefix: '/media/files'
     media.max_upload_bytes: 10485760
     media.thumbnail_max_edge: 320
 
@@ -24,14 +23,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Service\Media\MediaUrlService:
-        arguments:
-            $mediaHost: '%env(MEDIA_HOST)%'
-            $publicPathPrefix: '%media.public_path_prefix%'
-
     App\Controller\MediaFileServeController:
         arguments:
             $mediaStorageDir: '%media.storage_dir%'
+            $thumbnailMaxEdge: '%media.thumbnail_max_edge%'
 
     App\Service\Media\MediaUploadService:
         arguments:

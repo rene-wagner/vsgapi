@@ -93,4 +93,11 @@ return [
         'version' => '2.20.0',
         'type' => 'css',
     ],
+    'cropperjs' => [
+        'version' => '1.6.2',
+    ],
+    'cropperjs/dist/cropper.css' => [
+        'version' => '1.6.2',
+        'type' => 'css',
+    ],
 ];

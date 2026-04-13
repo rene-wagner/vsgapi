@@ -8,8 +8,12 @@
         <a href="{% if item.folder %}{{ path('admin_mediathek_index', {folder: item.folder.id}) }}{% else %}{{ path('admin_mediathek_index') }}{% endif %}" class="btn btn-secondary">Zurück</a>
     </div>
 
-    {% set file_url = media_url.buildFileUrl(item.path) %}
+    {% set file_url = media_url.buildOriginalUrl(item) %}
     {% set is_image = item.type.value == 'image' %}
+    {% set is_croppable = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
 
     <div class="row g-4">
         <div class="col-12 col-lg-5">
@@ -35,35 +39,93 @@
         <div class="col-12 col-lg-7">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    {{ form_start(form) }}
-                        {{ form_errors(form) }}
-                        <div class="mb-3">
-                            {{ form_label(form.name) }}
-                            {{ form_widget(form.name) }}
-                            {{ form_errors(form.name) }}
+                    <div class="mb-3">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.description) }}
+                        {{ form_widget(form.description, { attr: { 'data-controller': 'easymde' } }) }}
+                        {{ form_errors(form.description) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.category) }}
+                        {{ form_widget(form.category) }}
+                        {{ form_errors(form.category) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_label(form.folder) }}
+                        {{ form_widget(form.folder) }}
+                        {{ form_errors(form.folder) }}
+                    </div>
+
+                    {% if not is_croppable %}
+                        <div class="d-none">
+                            {{ form_widget(form.cropX) }}
+                            {{ form_widget(form.cropY) }}
+                            {{ form_widget(form.cropWidth) }}
+                            {{ form_widget(form.cropHeight) }}
                         </div>
-                        <div class="mb-3">
-                            {{ form_label(form.description) }}
-                            {{ form_widget(form.description, { attr: { 'data-controller': 'easymde' } }) }}
-                            {{ form_errors(form.description) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_label(form.category) }}
-                            {{ form_widget(form.category) }}
-                            {{ form_errors(form.category) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_label(form.folder) }}
-                            {{ form_widget(form.folder) }}
-                            {{ form_errors(form.folder) }}
-                        </div>
-                        <div class="d-flex flex-wrap gap-2 mb-2">
-                            <button type="submit" class="btn btn-primary">Speichern</button>
-                        </div>
-                        {{ form_widget(form._token) }}
-                    {{ form_end(form, { render_rest: false }) }}
+                    {% endif %}
+
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        <button type="submit" class="btn btn-primary">Speichern</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    {% if is_croppable %}
+    <div class="row g-4 mt-0">
+        <div class="col-12">
+            <div class="card shadow-sm"
+                 data-controller="image-cropper"
+                 data-image-cropper-initial-x-value="{{ form.cropX.vars.value|default('0') }}"
+                 data-image-cropper-initial-y-value="{{ form.cropY.vars.value|default('0') }}"
+                 data-image-cropper-initial-width-value="{{ form.cropWidth.vars.value|default('0') }}"
+                 data-image-cropper-initial-height-value="{{ form.cropHeight.vars.value|default('0') }}">
+                <h5 class="card-header fw-semibold">Bildeditor</h5>
+                <div class="card-body">
+                    <div class="admin-cropper-container mb-3">
+                        <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" data-image-cropper-target="image" style="max-width: 100%; display: block;">
+                    </div>
+
+                    <div class="row g-3 align-items-end">
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="{{ form.cropX.vars.id }}">X</label>
+                            {{ form_widget(form.cropX, { attr: { 'data-image-cropper-target': 'cropX', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
+                            {{ form_errors(form.cropX) }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="{{ form.cropY.vars.id }}">Y</label>
+                            {{ form_widget(form.cropY, { attr: { 'data-image-cropper-target': 'cropY', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
+                            {{ form_errors(form.cropY) }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="{{ form.cropWidth.vars.id }}">Breite</label>
+                            {{ form_widget(form.cropWidth, { attr: { 'data-image-cropper-target': 'cropWidth', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
+                            {{ form_errors(form.cropWidth) }}
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="form-label" for="{{ form.cropHeight.vars.id }}">Höhe</label>
+                            {{ form_widget(form.cropHeight, { attr: { 'data-image-cropper-target': 'cropHeight', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
+                            {{ form_errors(form.cropHeight) }}
+                        </div>
+                    </div>
+
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" data-action="image-cropper#resetCrop">
+                            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Zurücksetzen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {{ form_widget(form._token) }}
+    {{ form_end(form, { render_rest: false }) }}
 {% endblock %}

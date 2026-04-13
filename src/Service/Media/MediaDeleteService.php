@@ -17,7 +17,6 @@ class MediaDeleteService
 
     public function delete(MediaItem $item): void
     {
-        $this->removeFileIfExists($item->getOriginalPath());
         $this->removeFileIfExists($item->getPath());
         $this->removeFileIfExists($item->getThumbnailPath());
 

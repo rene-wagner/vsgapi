@@ -53,8 +53,8 @@
                     </a>
                 {% endfor %}
                 {% for item in items %}
-                    {% set file_url = media_url.buildFileUrl(item.path) %}
-                    {% set thumb_url = item.thumbnailPath ? media_url.buildThumbnailUrl(item.thumbnailPath) : null %}
+                    {% set file_url = media_url.buildOriginalUrl(item) %}
+                    {% set thumb_url = media_url.buildThumbnailUrl(item) %}
                     <div class="list-group-item border-start-0 border-end-0 px-0 py-0">
                         <div class="admin-mediathek-row d-flex flex-column flex-md-row gap-3 px-3 py-3 border-bottom align-items-md-start">
                             <div class="d-flex gap-3 flex-grow-1 min-w-0">
