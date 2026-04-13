@@ -1,202 +1,126 @@
 # AGENTS.md — VSG API
 
-## Project Overview
+Symfony 7.2 + API Platform 4 + Doctrine ORM 3 + Twig admin panel. PHP 8.2+, MySQL 9 via Docker Compose. German-language UI. AssetMapper (no Node.js/Webpack).
 
-Symfony 7.2 API project with API Platform 4, Doctrine ORM 3, and a Twig-based admin panel.
-PHP 8.2+ required. MySQL 9 database via Docker Compose. German-language UI.
-Frontend assets are built with the **Symfony AssetMapper**; the admin UI uses **Bootstrap 5** as its CSS framework and **Font Awesome Free** (solid icons) for pictograms.
+## Setup After Clone
+
+```bash
+composer install
+php bin/console importmap:install   # downloads assets/vendor/ from importmap.php (gitignored)
+docker compose up -d
+php bin/console doctrine:migrations:migrate
+php bin/console app:create-admin
+symfony server:start                 # or: php -S localhost:8000 -t public/
+```
+
+`importmap:install` saying "nothing to install" is normal when `assets/vendor/` already matches `importmap.php` — not an error.
+
+## Key Commands
+
+```bash
+php bin/console make:migration                # after entity changes
+php bin/console doctrine:migrations:migrate    # apply migrations
+php bin/console doctrine:schema:validate      # check mapping
+php bin/console cache:clear
+php bin/console asset-map:compile              # production/CI: compile versioned assets
+php bin/console importmap:require <package>   # add a JS/CSS package (updates importmap.php)
+php bin/console app:create-admin               # create admin user interactively
+```
+
+No test framework or linter is configured yet. PHPUnit via `symfony/phpunit-bridge` when adding tests.
 
 ## Architecture
 
 ```
 src/
-  ApiResource/     # API Platform resource classes (empty, entities used directly for now)
+  Api/             # empty — not used
+  ApiResource/     # empty — API resources live on Entity classes via #[ApiResource]
   Command/         # Symfony console commands
-  Controller/      # HTTP controllers (Admin/ subdirectory for admin panel)
-  Entity/          # Doctrine ORM entities with API Platform attributes
-  Form/            # Symfony form types
-  Repository/      # Doctrine repositories
-assets/            # CSS/JS entry points for AssetMapper (e.g. app.css, app.js)
-config/            # Symfony YAML configuration
-importmap.php      # AssetMapper import map (project root, when enabled)
+  Controller/
+    Admin/         # admin panel controllers (ROLE_ADMIN required)
+    Api/           # custom API Platform controllers (MediaItemUpload, MediaItemCopy)
+  Entity/          # Doctrine entities with #[ApiResource], #[ORM\*], #[Assert\*] attributes
+  Enum/            # PHP enums (e.g. MediaItemType)
+  Form/            # Symfony form types + DataTransformer/
+  Repository/      # ServiceEntityRepository<Entity>
+  Serializer/      # MediaItemNormalizer (tagged priority 64)
+  Service/Media/   # upload, copy, move, delete, URL generation, SVG sanitization
+  State/           # API Platform state processors (MediaItemDeleteProcessor)
+templates/
+  admin/           # extends admin/layout.html.twig → base.html.twig
+  form/            # shared form partials
+  security/        # login
+config/packages/  # Symfony YAML config
+importmap.php      # AssetMapper import map (project root)
 migrations/        # Doctrine migrations
-templates/         # Twig templates (admin/ with layout.html.twig base)
 ```
 
-API Platform resources are defined via PHP attributes directly on Entity classes.
-Admin panel controllers live under `App\Controller\Admin`, standard controllers in `App\Controller`.
-Templates follow `templates/{module}/{entity}/{action}.html.twig` — partials prefixed with `_`.
+API Platform resources are defined via `#[ApiResource]` directly on Entity classes — do **not** create files in `src/ApiResource/`. Serialization groups follow the `{entity}:read` / `{entity}:write` pattern.
 
-## Build & Run Commands
+Custom API Platform endpoints (upload, copy) use the `controller:` option with `deserialize: false`, see `MediaItem` entity for the pattern.
 
-```bash
-# Install dependencies
-composer install
+## Conventions That Differ From Defaults
 
-# Download Importmap vendor assets (Bootstrap, Font Awesome, etc.) into assets/vendor/
-# Required after clone; importmap.php is committed, assets/vendor/ is gitignored
-php bin/console importmap:install
+- **No `declare(strict_types=1)`** in application code. Migrations do use it — follow existing files.
+- **Setter methods return `static`**, not `self`: `public function setEmail(string $email): static`
+- **Controller actions use method injection** (autowired parameters), not constructor injection.
+- **Forms rendered manually** with `form_label`, `form_widget`, `form_errors` — never `form_row`.
+- **No `form_row`** anywhere in templates.
+- **All user-facing strings in German**: flash messages, labels, validation errors, template text.
+- **One `use` statement per class** — no grouped imports (`use A, B`).
+- **Import order**: PHP built-in → third-party (ApiPlatform, Doctrine, Symfony) → App namespace.
+- **Trailing comma** on multi-line parameter lists.
+- Properties are `private` with getter/setter pairs; IDs: `private ?int $id = null`.
 
-# Start database
-docker compose up -d
+## AssetMapper & Frontend
 
-# Run migrations
-php bin/console doctrine:migrations:migrate
+- **AssetMapper** handles all CSS/JS — no Node.js, no Webpack Encore.
+- **Bootstrap 5** CSS imported in `assets/app.js` from the import map.
+- **Font Awesome Free** (not Pro): must import **both** `fontawesome.min.css` and `solid.min.css` in `assets/app.js`. Without `solid.min.css`, icons appear as blank squares — this is an easy mistake.
+- Additional app styles in `assets/styles/app.css`.
+- **EasyMDE** (Markdown editor) and **Cropper.js** (image cropping) are in the importmap for admin use.
+- After adding packages: `php bin/console importmap:require <package>`, then `importmap:install` to download.
+- Production build: `php bin/console asset-map:compile`.
+- Admin templates use `importmap('app')` — see `admin/layout.html.twig`.
 
-# Clear cache
-php bin/console cache:clear
+## Media Subsystem
 
-# Frontend assets (AssetMapper)
-# Development: assets are served automatically when using symfony server or with asset mapper dev tooling
-php bin/console asset-map:compile    # production / CI — compile versioned assets
+Configured in `config/services.yaml` with parameters:
 
-# Create admin user
-php bin/console app:create-admin
+| Parameter | Value | Purpose |
+|-----------|-------|---------|
+| `media.storage_dir` | `%kernel.project_dir%/var/media` | File storage on disk |
+| `media.public_path_prefix` | `/media/files` | URL path prefix |
+| `media.max_upload_bytes` | 10485760 (10 MB) | Upload size limit |
+| `media.thumbnail_max_edge` | 320px | Thumbnail max dimension |
 
-# Start dev server
-symfony server:start    # or: php -S localhost:8000 -t public/
-```
+`MEDIA_HOST` env var (default `http://localhost:8000`) is injected into `MediaUrlService` for absolute URL generation.
 
-## Database
+File serving: `App\Controller\MediaFileServeController` serves from `var/media` at `/media/files/{path}` — these routes are **PUBLIC_ACCESS** (no auth required).
 
-```bash
-# Create a new migration after entity changes
-php bin/console make:migration
+## Security
 
-# Run pending migrations
-php bin/console doctrine:migrations:migrate
+- `/login` — public (form_login with CSRF)
+- `/media/` — public (serves stored files without auth)
+- `/admin` — requires `ROLE_ADMIN`
+- API under `/api` — stateless; individual `#[ApiResource]` operations enforce `IS_AUTHENTICATED_FULLY` where needed
+- Admin panel is stateful (sessions)
 
-# Validate schema
-php bin/console doctrine:schema:validate
-```
+## Doctrine
 
-Doctrine mapping uses **PHP 8 attributes** (not annotations or XML).
-Naming strategy: `underscore` (camelCase properties → snake_case columns).
+- Mapping type: **PHP 8 attributes** only (no XML, no annotations).
+- Naming strategy: **underscore** — `camelCase` properties → `snake_case` columns automatically.
+- Reserved table names use backticks: `#[ORM\Table(name: '`user`')]`.
+- Create migration after entity changes: `php bin/console make:migration`.
 
-## Testing
+## Environment
 
-No test framework is currently configured. When adding tests:
+| Variable | Source | Notes |
+|----------|--------|-------|
+| `APP_ENV` | `.env` → `dev` | Determines which `.env.*` files load |
+| `APP_SECRET` | `.env` | Replace in production |
+| `DATABASE_URL` | `.env` | MySQL 9; Docker Compose: `mysql://user:secret@localhost:3306/database` |
+| `DEFAULT_URI` | `.env` | URL generation in CLI contexts |
+| `MEDIA_HOST` | `.env` | Base URL for absolute media links (no trailing slash) |
 
-- Use PHPUnit via `symfony/phpunit-bridge`
-- Test namespace: `App\Tests\` → `tests/`
-- Run: `php bin/phpunit` or `./vendor/bin/phpunit`
-- Single test: `php bin/phpunit tests/Path/To/TestFile.php`
-- Single method: `php bin/phpunit --filter testMethodName`
-
-## Linting & Static Analysis
-
-No linters or static analysis tools are currently installed. When adding:
-
-- PHPStan: `composer require --dev phpstan/phpstan` → `vendor/bin/phpstan analyse src/`
-- PHP-CS-Fixer: `composer require --dev friendsofphp/php-cs-fixer` → `vendor/bin/php-cs-fixer fix`
-
-## Code Style
-
-### PHP General
-
-- **No `declare(strict_types=1)`** in application code (migrations do use it)
-- Use PHP 8.2+ features: named arguments, readonly properties, enums, fibers where appropriate
-- One class per file, PSR-4 autoloading under `App\` namespace
-
-### Imports
-
-- Group order: PHP built-in → third-party (ApiPlatform, Doctrine, Symfony) → App namespace
-- One `use` statement per class — no grouped imports
-- Aliased imports for constraints: `Doctrine\ORM\Mapping as ORM`, `Symfony\Component\Validator\Constraints as Assert`
-
-### Type Hints
-
-- **All** method parameters and return types must be type-hinted
-- Nullable properties use `?Type` syntax: `private ?string $email = null`
-- Setters return `static` for fluent API: `public function setEmail(string $email): static`
-- Getters return nullable when property is nullable: `public function getEmail(): ?string`
-- Use `@var` and `@return` docblocks only for generic types: `/** @var list<string> */`
-- `void` return type for methods with no return value
-- `never` return type where appropriate (e.g., logout stubs)
-
-### Naming
-
-- Classes: `PascalCase` — `UserController`, `CreateAdminCommand`
-- Methods/properties: `camelCase` — `getFullName()`, `$firstName`
-- Routes: `snake_case` with module prefix — `admin_user_index`, `admin_user_edit`
-- Route paths: lowercase kebab or simple — `/admin/users`, `/admin/users/{id}/edit`
-- Console commands: `kebab-case` with app prefix — `app:create-admin`
-- Form options: `snake_case` — `is_edit`, `data_class`
-- Twig templates: `snake_case.html.twig`, partials prefixed with `_`
-
-### Classes & Methods
-
-- Controllers extend `AbstractController`
-- Repositories extend `ServiceEntityRepository<Entity>`
-- Forms extend `AbstractType`
-- Commands extend `Command` with `#[AsCommand]` attribute
-- Constructor promotion with `private readonly` for service injection in commands/services
-- Controller actions use **method injection** (autowired parameters), not constructor injection
-- Trailing comma on multi-line parameter lists
-
-### Doctrine Entities
-
-- PHP 8 attributes for mapping: `#[ORM\Entity]`, `#[ORM\Column]`, `#[ORM\Id]`
-- Validation via Symfony attributes: `#[Assert\NotBlank]`, `#[Assert\Email]`
-- API Platform via attributes: `#[ApiResource(...)]` with explicit operations list
-- Serialization groups: `{entity}:read`, `{entity}:write` pattern
-- Properties are `private` with getter/setter pairs
-- ID fields: `private ?int $id = null` with auto-generation
-- Table names quoted when matching reserved words: `#[ORM\Table(name: '`user`')]`
-
-### Error Handling
-
-- Validation errors returned via Symfony Validator (`$this->validator->validate()`)
-- CSRF protection on destructive actions: `$this->isCsrfTokenValid(...)`
-- Flash messages for user feedback: `$this->addFlash('success', '...')`
-- UX messages are in **German**: "Benutzer wurde erfolgreich erstellt."
-
-### Twig Templates
-
-- Admin templates extend `admin/layout.html.twig` (which extends `base.html.twig`)
-- Blocks: `{% block title %}`, `{% block content %}`, `{% block stylesheets %}`, `{% block javascripts %}`
-- Load CSS/JS through the **AssetMapper**: use `importmap()` (and entry `stylesheet`/`javascript` tags as generated) instead of ad-hoc inline styles for application chrome; **Bootstrap 5** supplies layout, components, and utilities
-- **Icons**: use **Font Awesome** classes (e.g. `fa-solid fa-trash`) in markup; CSS is pulled in via `assets/app.js`. Prefer `aria-label` on icon-only controls and `aria-hidden="true"` on decorative `<i>` elements
-- Forms rendered manually with `form_label`, `form_widget`, `form_errors` (not `form_row`)
-- Use `path()` for route generation, never hardcode URLs
-- HTML lang is `de`
-
-### Security
-
-- Authentication: form_login with CSRF
-- Admin routes (`/admin/*`) require `ROLE_ADMIN`
-- API routes served under `/api` prefix (configured in api_platform.yaml)
-- API is stateless; admin panel is stateful with sessions
-
-## Configuration
-
-- Services: autowire + autoconfigure enabled globally
-- Entities excluded from service container
-- Doctrine mapping type: `attribute`
-- API Platform defaults: stateless, `/api` route prefix, cache headers with Vary
-- **AssetMapper** (`framework.asset_mapper`): import map in `importmap.php`, sources under `assets/`; add third-party JS/CSS packages with `php bin/console importmap:require <package>` (updates `importmap.php` and downloads into `assets/vendor/`). After cloning the repo, run `php bin/console importmap:install` so `assets/vendor/` matches the lock file
-
-## Frontend & assets
-
-- **Symfony AssetMapper** is the standard way to ship and version CSS/JS (no separate Node/Webpack requirement for typical admin UI work)
-- **Bootstrap 5** is the CSS framework for the admin panel: CSS is imported from the import map in `assets/app.js`, with additional rules in `assets/styles/app.css`
-- **Font Awesome Free** (`@fortawesome/fontawesome-free`): In `assets/app.js` import both `css/fontawesome.min.css` (Icon-Definitionen) and `css/solid.min.css` (**@font-face** + `webfonts/fa-solid-900.woff2` für `fa-solid`). Ohne `solid.min.css` erscheinen keine Glyphen. Paket hinzufügen/aktualisieren: `php bin/console importmap:require …` bzw. `importmap:update`. **`importmap:install`** meldet „nichts zu installieren“, wenn `assets/vendor/` bereits zur `importmap.php` passt — das ist normal. Nur **Font Awesome Free**; Pro ist hier nicht eingerichtet
-- Prefer component-friendly markup and Bootstrap utility classes; avoid large blocks of inline CSS except for rare one-off cases
-- **Department admin form** (`templates/admin/department/_form.html.twig`): nested `CollectionType` rows use cards with a red icon-only remove control (`btn-danger`, Font Awesome trash) in the top-right corner; dynamic rows added by the inline script must mirror the same HTML structure as Twig
-
-## Docker
-
-```bash
-docker compose up -d       # Start MySQL 9
-docker compose down        # Stop
-docker compose down -v     # Stop and remove data
-```
-
-MySQL connection: `mysql://user:secret@localhost:3306/database`
-
-## Key Decisions
-
-- API Platform resources defined on Entity classes directly (no separate ApiResource classes yet)
-- No `strict_types` declaration in app code — follow existing convention
-- German UI strings — keep all user-facing text in German
-- **AssetMapper** for building and serving assets; **Bootstrap 5** for CSS framework and UI primitives; **Font Awesome Free** for icons in the admin UI
+Load order: `.env` → `.env.local` → `.env.<APP_ENV>` → `.env.<APP_ENV>.local`. Real env vars win over files.
