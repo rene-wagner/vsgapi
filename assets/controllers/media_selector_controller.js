@@ -167,10 +167,10 @@ export default class extends Controller {
             div.setAttribute('data-media-item-name', item.name || '');
 
             let thumbHtml;
-            if (item.type === 'image' && item.thumbnailPath) {
-                thumbHtml = '<img src="' + this.#escapeAttr(item.thumbnailPath) + '" alt="" class="rounded">';
-            } else if (item.type === 'image' && item.path) {
-                thumbHtml = '<img src="' + this.#escapeAttr(item.path) + '" alt="" class="rounded">';
+            if (item.type === 'image' && item.thumbnail_url) {
+                thumbHtml = '<img src="' + this.#escapeAttr(item.thumbnail_url) + '" alt="" class="rounded">';
+            } else if (item.type === 'image' && item.original_url) {
+                thumbHtml = '<img src="' + this.#escapeAttr(item.original_url) + '" alt="" class="rounded">';
             } else {
                 thumbHtml = '<span class="badge text-bg-secondary d-inline-flex align-items-center justify-content-center admin-media-selector-pdf-badge">' + this.#escapeHtml(item.extension || 'PDF') + '</span>';
             }

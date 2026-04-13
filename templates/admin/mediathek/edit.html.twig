@@ -8,7 +8,7 @@
         <a href="{% if item.folder %}{{ path('admin_mediathek_index', {folder: item.folder.id}) }}{% else %}{{ path('admin_mediathek_index') }}{% endif %}" class="btn btn-secondary">Zurück</a>
     </div>
 
-    {% set file_url = media_url.buildFileUrl(item.path) %}
+    {% set file_url = media_url.buildOriginalUrl(item) %}
     {% set is_image = item.type.value == 'image' %}
     {% set is_croppable = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
 

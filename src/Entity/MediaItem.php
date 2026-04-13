@@ -211,6 +211,17 @@ class MediaItem
         return $this->extension;
     }
 
+    public function getSlug(): string
+    {
+        $name = $this->name ?? '';
+        $slug = strtolower($name);
+        $slug = str_replace(['ä', 'ö', 'ü', 'ß'], ['ae', 'oe', 'ue', 'ss'], $slug);
+        $slug = (string) preg_replace('/[^a-z0-9]+/', '-', $slug);
+        $slug = trim($slug, '-');
+
+        return $slug !== '' ? $slug : (string) $this->id;
+    }
+
     public function setExtension(string $extension): static
     {
         $this->extension = $extension;
