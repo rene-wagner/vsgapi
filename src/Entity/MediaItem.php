@@ -111,6 +111,26 @@ class MediaItem
     #[Groups(['media_item:read', 'media_item:write'])]
     private ?string $description = null;
 
+    #[ORM\Column(nullable: true)]
+    #[SerializedName('crop_x')]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private ?int $cropX = null;
+
+    #[ORM\Column(nullable: true)]
+    #[SerializedName('crop_y')]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private ?int $cropY = null;
+
+    #[ORM\Column(nullable: true)]
+    #[SerializedName('crop_width')]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private ?int $cropWidth = null;
+
+    #[ORM\Column(nullable: true)]
+    #[SerializedName('crop_height')]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private ?int $cropHeight = null;
+
     #[ORM\Column]
     #[SerializedName('created_at')]
     #[Groups(['media_item:read'])]
@@ -280,6 +300,67 @@ class MediaItem
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getCropX(): ?int
+    {
+        return $this->cropX;
+    }
+
+    public function setCropX(?int $cropX): static
+    {
+        $this->cropX = $cropX;
+
+        return $this;
+    }
+
+    public function getCropY(): ?int
+    {
+        return $this->cropY;
+    }
+
+    public function setCropY(?int $cropY): static
+    {
+        $this->cropY = $cropY;
+
+        return $this;
+    }
+
+    public function getCropWidth(): ?int
+    {
+        return $this->cropWidth;
+    }
+
+    public function setCropWidth(?int $cropWidth): static
+    {
+        $this->cropWidth = $cropWidth;
+
+        return $this;
+    }
+
+    public function getCropHeight(): ?int
+    {
+        return $this->cropHeight;
+    }
+
+    public function setCropHeight(?int $cropHeight): static
+    {
+        $this->cropHeight = $cropHeight;
+
+        return $this;
+    }
+
+    public function hasCropData(): bool
+    {
+        return $this->cropX !== null
+            && $this->cropY !== null
+            && $this->cropWidth !== null
+            && $this->cropHeight !== null;
+    }
+
+    public function isCroppable(): bool
+    {
+        return \in_array($this->mimeType, ['image/jpeg', 'image/png', 'image/webp'], true);
     }
 
     #[ORM\PrePersist]

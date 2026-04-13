@@ -2,11 +2,15 @@
 
 namespace App\Service\Media;
 
+use App\Entity\MediaItem;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 class MediaUrlService
 {
     public function __construct(
         private readonly string $mediaHost,
         private readonly string $publicPathPrefix,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -39,6 +43,15 @@ class MediaUrlService
         }
 
         return $this->joinPublicUrl($relativePath);
+    }
+
+    public function buildCroppedUrl(MediaItem $item): ?string
+    {
+        if (!$item->isCroppable() || !$item->hasCropData()) {
+            return null;
+        }
+
+        return $this->urlGenerator->generate('media_file_cropped', ['id' => $item->getId()], UrlGeneratorInterface::ABSOLUTE_PATH);
     }
 
     private function joinPublicUrl(string $relativePath): string

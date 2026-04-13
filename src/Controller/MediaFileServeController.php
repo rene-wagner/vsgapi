@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\MediaItem;
+use Doctrine\ORM\EntityManagerInterface;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -48,6 +53,79 @@ final class MediaFileServeController
             $response->headers->set('Content-Disposition', 'inline');
 
             return $response;
+        }
+
+        return new BinaryFileResponse($resolved);
+    }
+
+    #[Route(
+        path: '/media/cropped/{id}',
+        name: 'media_file_cropped',
+        requirements: ['id' => '\d+'],
+        methods: ['GET'],
+    )]
+    public function cropped(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $item = $entityManager->getRepository(MediaItem::class)->find($id);
+        if ($item === null) {
+            throw new NotFoundHttpException();
+        }
+
+        if (!$item->isCroppable() || !$item->hasCropData()) {
+            return $this->serveOriginal($item->getPath());
+        }
+
+        $base = realpath($this->mediaStorageDir);
+        if ($base === false || !is_dir($base)) {
+            throw new NotFoundHttpException();
+        }
+
+        $absolutePath = $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $item->getPath());
+        $resolved = realpath($absolutePath);
+        if ($resolved === false || !str_starts_with($resolved, $base) || !is_file($resolved)) {
+            throw new NotFoundHttpException();
+        }
+
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($resolved);
+        $image->crop(
+            (int) $item->getCropWidth(),
+            (int) $item->getCropHeight(),
+            (int) $item->getCropX(),
+            (int) $item->getCropY(),
+        );
+
+        $mimeType = $item->getMimeType() ?? 'image/jpeg';
+        $encoded = match ($mimeType) {
+            'image/png' => $image->toPng(),
+            'image/webp' => $image->toWebp(quality: 82),
+            default => $image->toJpeg(quality: 82),
+        };
+
+        return new StreamedResponse(static function () use ($encoded): void {
+            echo $encoded->toString();
+        }, Response::HTTP_OK, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
+    private function serveOriginal(?string $relativePath): Response
+    {
+        if ($relativePath === null || $relativePath === '') {
+            throw new NotFoundHttpException();
+        }
+
+        $base = realpath($this->mediaStorageDir);
+        if ($base === false || !is_dir($base)) {
+            throw new NotFoundHttpException();
+        }
+
+        $absolutePath = $base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relativePath);
+        $resolved = realpath($absolutePath);
+        if ($resolved === false || !str_starts_with($resolved, $base) || !is_file($resolved)) {
+            throw new NotFoundHttpException();
         }
 
         return new BinaryFileResponse($resolved);
