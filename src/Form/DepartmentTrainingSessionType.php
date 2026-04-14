@@ -23,14 +23,12 @@ class DepartmentTrainingSessionType extends AbstractType
                 'label' => 'Zeit',
                 'help' => 'z. B. 17:00 – 22:00 Uhr',
             ])
-            ->add('locations', EntityType::class, [
+            ->add('location', EntityType::class, [
                 'class' => Location::class,
                 'choice_label' => 'name',
-                'label' => 'Sportstätten',
-                'multiple' => true,
-                'expanded' => true,
+                'label' => 'Sportstätte',
                 'required' => false,
-                'by_reference' => false,
+                'placeholder' => '— Bitte wählen —',
             ]);
     }
 

@@ -71,7 +71,7 @@
                                     <tr>
                                         <th scope="col">Tag</th>
                                         <th scope="col">Zeit</th>
-                                        <th scope="col">Sportstätten</th>
+                                        <th scope="col">Sportstätte</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -80,10 +80,8 @@
                                             <td>{{ session.day }}</td>
                                             <td>{{ session.time }}</td>
                                             <td>
-                                                {% if session.locations|length > 0 %}
-                                                    {% for loc in session.locations %}
-                                                        {{ loc.name }}{% if not loop.last %}, {% endif %}
-                                                    {% endfor %}
+                                                {% if session.location %}
+                                                    {{ session.location.name }}
                                                 {% else %}
                                                     <span class="text-muted">—</span>
                                                 {% endif %}
