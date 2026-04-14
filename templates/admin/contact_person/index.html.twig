@@ -14,6 +14,7 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Name</th>
+                        <th scope="col">Funktion</th>
                         <th scope="col">Slug</th>
                         <th scope="col">E-Mail</th>
                         <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
@@ -23,6 +24,13 @@
                     {% for contact_person in contactPeople %}
                         <tr>
                             <td>{{ contact_person.lastName }}, {{ contact_person.firstName }}</td>
+                            <td>
+                                {% if contact_person.position %}
+                                    {{ contact_person.position }}
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
                             <td>{{ contact_person.slug }}</td>
                             <td>
                                 {% if contact_person.email %}
@@ -40,7 +48,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-5">Keine Kontaktpersonen vorhanden.</td>
+                            <td colspan="5" class="text-center text-muted py-5">Keine Kontaktpersonen vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

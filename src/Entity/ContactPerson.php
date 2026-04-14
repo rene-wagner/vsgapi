@@ -60,6 +60,11 @@ class ContactPerson
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(max: 255)]
+    #[Groups(['contact_person:read'])]
+    private ?string $position = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255)]
     #[Assert\Email]
     #[Groups(['contact_person:read'])]
     private ?string $email = null;
@@ -115,6 +120,18 @@ class ContactPerson
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(?string $position): static
+    {
+        $this->position = $position;
 
         return $this;
     }

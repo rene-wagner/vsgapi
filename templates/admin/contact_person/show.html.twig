@@ -26,6 +26,15 @@
                 <dt class="col-sm-3 text-secondary small text-uppercase">Nachname</dt>
                 <dd class="col-sm-9">{{ contact_person.lastName }}</dd>
 
+                <dt class="col-sm-3 text-secondary small text-uppercase">Funktion</dt>
+                <dd class="col-sm-9">
+                    {% if contact_person.position %}
+                        {{ contact_person.position }}
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </dd>
+
                 <dt class="col-sm-3 text-secondary small text-uppercase">E-Mail</dt>
                 <dd class="col-sm-9">
                     {% if contact_person.email %}

@@ -18,3 +18,7 @@
 .opencode/
 .sisyphus/
 ###< ai/files ###
+
+###> data/files ###
+migration_data/
+###< data/files ###
