@@ -35,7 +35,6 @@ class DepartmentTrainingGroup
 
     /** @var Collection<int, DepartmentTrainingSession> */
     #[ORM\OneToMany(targetEntity: DepartmentTrainingSession::class, mappedBy: 'departmentTrainingGroup', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['day' => 'ASC', 'time' => 'ASC'])]
     #[Groups(['department:read'])]
     private Collection $departmentTrainingSessions;
 
