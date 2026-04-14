@@ -150,6 +150,49 @@ final class Version20260414130000 extends AbstractMigration
             );
         }
 
+        // --- department_statistics ---
+        $statistics = $this->loadJson('department_statistics.json');
+        foreach ($statistics as $row) {
+            $this->addSql(
+                "INSERT INTO department_statistic (id, label, value, department_id) VALUES (?, ?, ?, ?)",
+                [
+                    $row['id'],
+                    $row['label'],
+                    $row['value'],
+                    $row['department_id'],
+                ],
+            );
+        }
+
+        // --- department_training_groups ---
+        $trainingGroups = $this->loadJson('department_training_groups.json');
+        foreach ($trainingGroups as $row) {
+            $this->addSql(
+                "INSERT INTO department_training_group (id, name, age_range, department_id) VALUES (?, ?, ?, ?)",
+                [
+                    $row['id'],
+                    $row['name'],
+                    $row['age_range'],
+                    $row['department_id'],
+                ],
+            );
+        }
+
+        // --- department_training_sessions ---
+        $trainingSessions = $this->loadJson('department_training_sessions.json');
+        foreach ($trainingSessions as $row) {
+            $this->addSql(
+                "INSERT INTO department_training_session (id, day, time, department_training_group_id, location_id) VALUES (?, ?, ?, ?, ?)",
+                [
+                    $row['id'],
+                    $row['day'],
+                    $row['time'],
+                    $row['department_training_group_id'],
+                    $row['location_id'],
+                ],
+            );
+        }
+
         // --- Reset auto-increment values to max(id) + 1 per table ---
         // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
         // so we compute the next value from the imported data.
@@ -161,6 +204,9 @@ final class Version20260414130000 extends AbstractMigration
             'contact_person' => max(array_column($contacts, 'id')) + 1,
             'location' => max(array_column($locations, 'id')) + 1,
             'department' => max(array_column($departments, 'id')) + 1,
+            'department_statistic' => max(array_column($statistics, 'id')) + 1,
+            'department_training_group' => max(array_column($trainingGroups, 'id')) + 1,
+            'department_training_session' => max(array_column($trainingSessions, 'id')) + 1,
         ];
         foreach ($autoIncrement as $table => $nextId) {
             $this->addSql(sprintf('ALTER TABLE %s AUTO_INCREMENT = %d', $table, $nextId));
@@ -171,6 +217,9 @@ final class Version20260414130000 extends AbstractMigration
     {
         // Delete imported data in reverse FK dependency order.
         // Does NOT drop tables — that is the schema migration's responsibility.
+        $this->addSql('DELETE FROM department_training_session');
+        $this->addSql('DELETE FROM department_training_group');
+        $this->addSql('DELETE FROM department_statistic');
         $this->addSql('DELETE FROM department');
         $this->addSql('DELETE FROM location');
         $this->addSql('DELETE FROM contact_person');

@@ -71,7 +71,6 @@ class Department
 
     /** @var Collection<int, DepartmentTrainingGroup> */
     #[ORM\OneToMany(targetEntity: DepartmentTrainingGroup::class, mappedBy: 'department', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    #[ORM\OrderBy(['name' => 'ASC'])]
     #[Groups(['department:read'])]
     private Collection $trainingGroups;
 
