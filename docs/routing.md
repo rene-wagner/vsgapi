@@ -3,7 +3,7 @@
 Diese Übersicht listet die in Symfony registrierten Routen. API Platform ergängt automatisch weitere Endpunkte, sobald neue Ressourcen (`#[ApiResource]`) hinzukommen. Aktuellen Stand liefert:
 
 ```bash
-php bin/console debug:router
+symfony console debug:router
 ```
 
 ## Konfiguration

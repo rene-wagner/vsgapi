@@ -49,7 +49,7 @@ Konfiguration liegt überwiegend in `config/packages/` (u. a. `api_platform.ya
 
 - **Mapping:** ausschließlich **PHP-8-Attribute** (keine Annotations, kein XML).
 - **Naming:** Underscore-Strategie — Eigenschaften in `camelCase` werden zu `snake_case`-Spalten.
-- **Migrationen:** Änderungen am Schema über `php bin/console make:migration` und `doctrine:migrations:migrate`.
+- **Migrationen:** Änderungen am Schema über `symfony console make:migration` und `doctrine:migrations:migrate`.
 
 ---
 
@@ -75,8 +75,8 @@ Typische Entwicklungsschritte:
 ```bash
 composer install
 docker compose up -d
-php bin/console doctrine:migrations:migrate
-php bin/console app:create-admin
+symfony console doctrine:migrations:migrate
+symfony console app:create-admin
 symfony server:start
 # oder: php -S localhost:8000 -t public/
 ```

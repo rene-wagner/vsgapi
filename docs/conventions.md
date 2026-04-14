@@ -102,7 +102,7 @@ Dieses Dokument fasst verbindliche und empfohlene Arbeitsweisen für Code, Templ
 ## Produkt- und Technikentscheidungen
 
 - API-Ressourcen zunächst **auf den Entitäten**, nicht als separate API-Ressourcen-Klassen.
-- **Frontend:** Symfony **AssetMapper** + `importmap.php` — kein Webpack Encore. Nach `composer install` **`php bin/console importmap:install`** ausführen, damit Pakete aus der Importmap (u. a. Bootstrap, Font Awesome) unter `assets/vendor/` liegen; für Produktion/CI ggf. `php bin/console asset-map:compile`.
+- **Frontend:** Symfony **AssetMapper** + `importmap.php` — kein Webpack Encore. Nach `composer install` **`symfony console importmap:install`** ausführen, damit Pakete aus der Importmap (u. a. Bootstrap, Font Awesome) unter `assets/vendor/` liegen; für Produktion/CI ggf. `symfony console asset-map:compile`.
 
 ---
 

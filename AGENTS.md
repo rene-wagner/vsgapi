@@ -65,10 +65,10 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ```bash
 composer install
-php bin/console importmap:install   # downloads assets/vendor/ from importmap.php (gitignored)
+symfony console importmap:install   # downloads assets/vendor/ from importmap.php (gitignored)
 docker compose up -d
-php bin/console doctrine:migrations:migrate
-php bin/console app:create-admin
+symfony console doctrine:migrations:migrate
+symfony console app:create-admin
 symfony server:start                 # or: php -S localhost:8000 -t public/
 ```
 
@@ -77,13 +77,13 @@ symfony server:start                 # or: php -S localhost:8000 -t public/
 ## Key Commands
 
 ```bash
-php bin/console make:migration                # after entity changes
-php bin/console doctrine:migrations:migrate    # apply migrations
-php bin/console doctrine:schema:validate      # check mapping
-php bin/console cache:clear
-php bin/console asset-map:compile              # production/CI: compile versioned assets
-php bin/console importmap:require <package>   # add a JS/CSS package (updates importmap.php)
-php bin/console app:create-admin               # create admin user interactively
+symfony console make:migration                # after entity changes
+symfony console doctrine:migrations:migrate    # apply migrations
+symfony console doctrine:schema:validate      # check mapping
+symfony console cache:clear
+symfony console asset-map:compile              # production/CI: compile versioned assets
+symfony console importmap:require <package>   # add a JS/CSS package (updates importmap.php)
+symfony console app:create-admin               # create admin user interactively
 ```
 
 No test framework or linter is configured yet. PHPUnit via `symfony/phpunit-bridge` when adding tests.
@@ -138,8 +138,8 @@ Custom API Platform endpoints (upload, copy) use the `controller:` option with `
 - **Font Awesome Free** (not Pro): must import **both** `fontawesome.min.css` and `solid.min.css` in `assets/app.js`. Without `solid.min.css`, icons appear as blank squares — this is an easy mistake.
 - Additional app styles in `assets/styles/app.css`.
 - **EasyMDE** (Markdown editor) and **Cropper.js** (image cropping) are in the importmap for admin use.
-- After adding packages: `php bin/console importmap:require <package>`, then `importmap:install` to download.
-- Production build: `php bin/console asset-map:compile`.
+- After adding packages: `symfony console importmap:require <package>`, then `importmap:install` to download.
+- Production build: `symfony console asset-map:compile`.
 - Admin templates use `importmap('app')` — see `admin/layout.html.twig`.
 
 ## Media Subsystem
@@ -170,7 +170,7 @@ File serving: `App\Controller\MediaFileServeController` serves from `var/media` 
 - Mapping type: **PHP 8 attributes** only (no XML, no annotations).
 - Naming strategy: **underscore** — `camelCase` properties → `snake_case` columns automatically.
 - Reserved table names use backticks: `#[ORM\Table(name: '`user`')]`.
-- Create migration after entity changes: `php bin/console make:migration`.
+- Create migration after entity changes: `symfony console make:migration`.
 
 ## Environment
 

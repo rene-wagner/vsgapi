@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\DepartmentTrainingSessionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,16 +32,10 @@ class DepartmentTrainingSession
     #[ORM\JoinColumn(nullable: false)]
     private ?DepartmentTrainingGroup $departmentTrainingGroup = null;
 
-    /** @var Collection<int, Location> */
-    #[ORM\ManyToMany(targetEntity: Location::class)]
-    #[ORM\JoinTable(name: 'department_training_session_location')]
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     #[Groups(['department:read'])]
-    private Collection $locations;
-
-    public function __construct()
-    {
-        $this->locations = new ArrayCollection();
-    }
+    private ?Location $location = null;
 
     public function getId(): ?int
     {
@@ -86,37 +78,14 @@ class DepartmentTrainingSession
         return $this;
     }
 
-    /** @return Collection<int, Location> */
-    public function getLocations(): Collection
+    public function getLocation(): ?Location
     {
-        return $this->locations;
+        return $this->location;
     }
 
-    /** @param iterable<Location> $locations */
-    public function setLocations(iterable $locations): static
+    public function setLocation(?Location $location): static
     {
-        foreach ($this->locations->toArray() as $existing) {
-            $this->removeLocation($existing);
-        }
-        foreach ($locations as $location) {
-            $this->addLocation($location);
-        }
-
-        return $this;
-    }
-
-    public function addLocation(Location $location): static
-    {
-        if (!$this->locations->contains($location)) {
-            $this->locations->add($location);
-        }
-
-        return $this;
-    }
-
-    public function removeLocation(Location $location): static
-    {
-        $this->locations->removeElement($location);
+        $this->location = $location;
 
         return $this;
     }
