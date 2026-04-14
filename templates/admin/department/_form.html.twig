@@ -60,108 +60,110 @@
         </div>
     {% endif %}
 
-    <h3 class="h6 fw-semibold mt-4 mb-2">{{ form_label(form.departmentStats) }}</h3>
-    {{ form_errors(form.departmentStats) }}
-    <div
-        class="collection-holder list-group department-stats-collection"
-        data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}"
-        data-index="{{ form.departmentStats|length }}"
-    >
-        {% for stat in form.departmentStats %}
-            <div class="list-group-item collection-item">
-                <div class="row g-2">
-                    <div class="col-12 col-md-6">
-                        {{ form_label(stat.label) }}
-                        {{ form_widget(stat.label) }}
-                        {{ form_errors(stat.label) }}
+    <div class="mb-3">
+        {{ form_label(form.departmentStats) }}
+        <div
+            class="collection-holder list-group department-stats-collection mb-2"
+            data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}"
+            data-index="{{ form.departmentStats|length }}"
+        >
+            {% for stat in form.departmentStats %}
+                <div class="list-group-item collection-item">
+                    <div class="row g-2">
+                        <div class="col-12 col-md-6">
+                            {{ form_label(stat.label) }}
+                            {{ form_widget(stat.label) }}
+                            {{ form_errors(stat.label) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_label(stat.value) }}
+                            {{ form_widget(stat.value) }}
+                            {{ form_errors(stat.value) }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ form_label(stat.value) }}
-                        {{ form_widget(stat.value) }}
-                        {{ form_errors(stat.value) }}
+                    <div class="mt-1">
+                        <button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">
+                            Entfernen
+                        </button>
                     </div>
                 </div>
-                <div class="mt-1">
-                    <button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">
-                        Entfernen
-                    </button>
-                </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+        <p class="mb-4">
+            <button type="button" class="btn btn-secondary js-add-stat">Statistik hinzufügen</button>
+        </p>
     </div>
-    <p class="mb-4">
-        <button type="button" class="btn btn-secondary js-add-stat">Statistik hinzufügen</button>
-    </p>
 
-    <h3 class="h6 fw-semibold mb-2">{{ form_label(form.trainingGroups) }}</h3>
-    {{ form_errors(form.trainingGroups) }}
-    <div
-        class="collection-holder department-training-groups-collection"
-        data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}"
-        data-index="{{ form.trainingGroups|length }}"
-    >
-        {% for group in form.trainingGroups %}
-            <div class="collection-item card mb-4 p-3 position-relative">
-                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-group" aria-label="Trainingsgruppe entfernen">
-                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                </button>
-                <div class="pe-4 pt-4">
-                    <div class="mb-3">
-                        {{ form_label(group.name) }}
-                        {{ form_widget(group.name) }}
-                        {{ form_help(group.name) }}
-                        {{ form_errors(group.name) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_label(group.ageRange) }}
-                        {{ form_widget(group.ageRange) }}
-                        {{ form_help(group.ageRange) }}
-                        {{ form_errors(group.ageRange) }}
-                    </div>
-                    <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
-                    {{ form_errors(group.departmentTrainingSessions) }}
-                    <div
-                        class="collection-holder department-training-sessions-collection"
-                        data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}"
-                        data-index="{{ group.departmentTrainingSessions|length }}"
-                    >
-                        {% for session in group.departmentTrainingSessions %}
-                            <div class="collection-item card mb-3 p-3 bg-body-secondary position-relative">
-                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-session" aria-label="Trainingseinheit entfernen">
-                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                                </button>
-                                <div class="pe-4 pt-4">
-                                    <div class="mb-3">
-                                        {{ form_label(session.day) }}
-                                        {{ form_widget(session.day) }}
-                                        {{ form_help(session.day) }}
-                                        {{ form_errors(session.day) }}
-                                    </div>
-                                    <div class="mb-3">
-                                        {{ form_label(session.time) }}
-                                        {{ form_widget(session.time) }}
-                                        {{ form_help(session.time) }}
-                                        {{ form_errors(session.time) }}
-                                    </div>
-                                    <div class="mb-3">
-                                        {{ form_label(session.location) }}
-                                        {{ form_widget(session.location) }}
-                                        {{ form_errors(session.location) }}
+    <div class="mb-3">
+        {{ form_label(form.trainingGroups) }}
+        <div
+            class="collection-holder department-training-groups-collection"
+            data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}"
+            data-index="{{ form.trainingGroups|length }}"
+        >
+            {% for group in form.trainingGroups %}
+                <div class="collection-item card mb-4 p-3 position-relative">
+                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-group" aria-label="Trainingsgruppe entfernen">
+                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                    </button>
+                    <div class="pe-4 pt-4">
+                        <div class="mb-3">
+                            {{ form_label(group.name) }}
+                            {{ form_widget(group.name) }}
+                            {{ form_help(group.name) }}
+                            {{ form_errors(group.name) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_label(group.ageRange) }}
+                            {{ form_widget(group.ageRange) }}
+                            {{ form_help(group.ageRange) }}
+                            {{ form_errors(group.ageRange) }}
+                        </div>
+                        <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
+                        {{ form_errors(group.departmentTrainingSessions) }}
+                        <div
+                            class="collection-holder department-training-sessions-collection"
+                            data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}"
+                            data-index="{{ group.departmentTrainingSessions|length }}"
+                        >
+                            {% for session in group.departmentTrainingSessions %}
+                                <div class="collection-item card mb-3 p-3 bg-body-secondary position-relative">
+                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-session" aria-label="Trainingseinheit entfernen">
+                                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                    <div class="pe-4 pt-4">
+                                        <div class="mb-3">
+                                            {{ form_label(session.day) }}
+                                            {{ form_widget(session.day) }}
+                                            {{ form_help(session.day) }}
+                                            {{ form_errors(session.day) }}
+                                        </div>
+                                        <div class="mb-3">
+                                            {{ form_label(session.time) }}
+                                            {{ form_widget(session.time) }}
+                                            {{ form_help(session.time) }}
+                                            {{ form_errors(session.time) }}
+                                        </div>
+                                        <div class="mb-3">
+                                            {{ form_label(session.location) }}
+                                            {{ form_widget(session.location) }}
+                                            {{ form_errors(session.location) }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        <p class="mb-2">
+                            <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
+                        </p>
                     </div>
-                    <p class="mb-2">
-                        <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
-                    </p>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+        <p class="mb-4">
+            <button type="button" class="btn btn-secondary js-add-group">Trainingsgruppe hinzufügen</button>
+        </p>
     </div>
-    <p class="mb-4">
-        <button type="button" class="btn btn-secondary js-add-group">Trainingsgruppe hinzufügen</button>
-    </p>
 
     <button type="submit" class="btn btn-primary">Speichern</button>
 {{ form_end(form) }}
