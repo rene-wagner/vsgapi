@@ -19,6 +19,12 @@
     </div>
 
     <div class="mb-3">
+        {{ form_label(form.position) }}
+        {{ form_widget(form.position) }}
+        {{ form_errors(form.position) }}
+    </div>
+
+    <div class="mb-3">
         {{ form_label(form.email) }}
         {{ form_widget(form.email) }}
         {{ form_errors(form.email) }}

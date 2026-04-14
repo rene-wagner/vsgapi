@@ -26,6 +26,11 @@ class ContactPersonType extends AbstractType
             ->add('lastName', TextType::class, [
                 'label' => 'Nachname',
             ])
+            ->add('position', TextType::class, [
+                'label' => 'Funktion',
+                'required' => false,
+                'empty_data' => null,
+            ])
             ->add('email', EmailType::class, [
                 'label' => 'E-Mail',
                 'required' => false,
