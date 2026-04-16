@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'], message: 'Dieser Slug wird bereits verwendet.')]
 #[ApiResource(
     operations: [
-        new GetCollection(),
+        new GetCollection(paginationItemsPerPage: 30),
         new Get(),
     ],
     normalizationContext: ['groups' => ['post:read']],
