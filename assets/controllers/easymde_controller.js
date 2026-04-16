@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import EasyMDE from 'easymde';
+import { parse as markedParse } from 'marked';
 import 'easymde/dist/easymde.min.css';
 
 /* stimulusFetch: 'lazy' */
@@ -10,6 +11,7 @@ export default class extends Controller {
             element: this.element,
             spellChecker: false,
             autoDownloadFontAwesome: false,
+            previewRender: (plainText) => markedParse(plainText, { breaks: true }),
         });
     }
 
