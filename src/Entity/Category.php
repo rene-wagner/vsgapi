@@ -55,6 +55,7 @@ class Category
 
     /** @var Collection<int, Post> */
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'categories')]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     #[Groups(['category:read'])]
     private Collection $posts;
 

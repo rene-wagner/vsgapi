@@ -193,6 +193,34 @@ final class Version20260414130000 extends AbstractMigration
             );
         }
 
+        // --- posts ---
+        $posts = $this->loadJson('posts.json');
+        foreach ($posts as $row) {
+            $this->addSql(
+                "INSERT INTO post (id, title, slug, content, published, hits, old_post, created_at, updated_at, author_id, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)",
+                [
+                    $row['id'],
+                    $row['title'],
+                    $row['slug'],
+                    $row['content'],
+                    $row['published'],
+                    $row['hits'],
+                    $row['old_post'],
+                    $row['created'],
+                    $row['modified'],
+                    $row['author_id'],
+                ],
+            );
+        }
+
+        // --- post_categories ---
+        foreach ($posts as $row) {
+            $this->addSql(
+                'INSERT INTO post_category (post_id, category_id) VALUES (?, ?)',
+                [$row['id'], $row['catid']],
+            );
+        }
+
         // --- Reset auto-increment values to max(id) + 1 per table ---
         // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
         // so we compute the next value from the imported data.
@@ -207,6 +235,7 @@ final class Version20260414130000 extends AbstractMigration
             'department_statistic' => max(array_column($statistics, 'id')) + 1,
             'department_training_group' => max(array_column($trainingGroups, 'id')) + 1,
             'department_training_session' => max(array_column($trainingSessions, 'id')) + 1,
+            'post' => max(array_column($posts, 'id')) + 1,
         ];
         foreach ($autoIncrement as $table => $nextId) {
             $this->addSql(sprintf('ALTER TABLE %s AUTO_INCREMENT = %d', $table, $nextId));
@@ -223,6 +252,8 @@ final class Version20260414130000 extends AbstractMigration
         $this->addSql('DELETE FROM department');
         $this->addSql('DELETE FROM location');
         $this->addSql('DELETE FROM contact_person');
+        $this->addSql('DELETE FROM post_category');
+        $this->addSql('DELETE FROM post');
         $this->addSql('DELETE FROM media_item');
         $this->addSql('DELETE FROM media_folder');
         $this->addSql('DELETE FROM category');
