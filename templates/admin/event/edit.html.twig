@@ -1,0 +1,16 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ event.title }} bearbeiten - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ event.title }} bearbeiten</h1>
+        <a href="{{ path('admin_event_index') }}" class="btn btn-secondary">Zurück</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {{ include('admin/event/_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

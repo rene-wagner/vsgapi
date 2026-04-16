@@ -100,4 +100,31 @@ return [
         'version' => '1.6.2',
         'type' => 'css',
     ],
+    '@fullcalendar/core' => [
+        'version' => '6.1.20',
+    ],
+    'preact' => [
+        'version' => '10.12.1',
+    ],
+    'preact/compat' => [
+        'version' => '10.12.1',
+    ],
+    'preact/hooks' => [
+        'version' => '10.12.1',
+    ],
+    '@fullcalendar/daygrid' => [
+        'version' => '6.1.20',
+    ],
+    '@fullcalendar/core/index.js' => [
+        'version' => '6.1.20',
+    ],
+    '@fullcalendar/core/internal.js' => [
+        'version' => '6.1.20',
+    ],
+    '@fullcalendar/core/preact.js' => [
+        'version' => '6.1.20',
+    ],
+    '@fullcalendar/interaction' => [
+        'version' => '6.1.20',
+    ],
 ];

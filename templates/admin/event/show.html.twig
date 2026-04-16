@@ -1,0 +1,47 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ event.title }} - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ event.title }}</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Bearbeiten</a>
+            <a href="{{ path('admin_event_index') }}" class="btn btn-secondary">Zurück</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Titel</dt>
+                <dd class="col-sm-9">{{ event.title }}</dd>
+
+                <dt class="col-sm-3">Beschreibung</dt>
+                <dd class="col-sm-9">{{ event.description|default('—') }}</dd>
+
+                <dt class="col-sm-3">Beginn</dt>
+                <dd class="col-sm-9">{{ event.startsAt|date('d.m.Y H:i') }}</dd>
+
+                <dt class="col-sm-3">Ende</dt>
+                <dd class="col-sm-9">{{ event.endsAt|date('d.m.Y H:i') }}</dd>
+
+                <dt class="col-sm-3">Ort</dt>
+                <dd class="col-sm-9">{{ event.location|default('—') }}</dd>
+
+                <dt class="col-sm-3">Wiederholung</dt>
+                <dd class="col-sm-9">
+                    {% if event.recurrence is null %}
+                        Einzeltermin
+                    {% else %}
+                        {% set recurrence_labels = {DAILY: 'Täglich', WEEKLY: 'Wöchentlich', MONTHLY: 'Monatlich', YEARLY: 'Jährlich'} %}
+                        {{ recurrence_labels[event.recurrence.value] ?? event.recurrence.value }}
+                        {% if event.recurrenceUntil %}
+                            bis {{ event.recurrenceUntil|date('d.m.Y') }}
+                        {% endif %}
+                    {% endif %}
+                </dd>
+            </dl>
+        </div>
+    </div>
+{% endblock %}
