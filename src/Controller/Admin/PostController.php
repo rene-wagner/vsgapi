@@ -11,16 +11,30 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin/posts')]
 class PostController extends AbstractController
 {
     #[Route('', name: 'admin_post_index', methods: ['GET'])]
-    public function index(PostRepository $postRepository): Response
-    {
+    public function index(
+        PostRepository $postRepository,
+        #[MapQueryParameter] int $page = 1,
+    ): Response {
+        $limit = 30;
+
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        [$posts, $total] = $postRepository->findPaginatedOrderByCreatedAtDesc($page, $limit);
+
         return $this->render('admin/post/index.html.twig', [
-            'posts' => $postRepository->findBy([], ['createdAt' => 'DESC']),
+            'posts' => $posts,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
         ]);
     }
 
