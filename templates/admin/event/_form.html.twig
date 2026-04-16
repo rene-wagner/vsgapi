@@ -83,8 +83,5 @@
 
     <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary">Speichern</button>
-        {% if event.id is not null %}
-            {{ include('admin/event/_delete_form.html.twig') }}
-        {% endif %}
     </div>
 {{ form_end(form) }}
