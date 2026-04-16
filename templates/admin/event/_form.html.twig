@@ -1,0 +1,90 @@
+{{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.title) }}
+        {{ form_widget(form.title) }}
+        {{ form_errors(form.title) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.description) }}
+        {{ form_widget(form.description) }}
+        {{ form_errors(form.description) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.startsAt) }}
+            {{ form_widget(form.startsAt) }}
+            {{ form_errors(form.startsAt) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.endsAt) }}
+            {{ form_widget(form.endsAt) }}
+            {{ form_errors(form.endsAt) }}
+        </div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.location) }}
+        {{ form_widget(form.location) }}
+        {{ form_errors(form.location) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.recurrence) }}
+            {{ form_widget(form.recurrence) }}
+            {{ form_errors(form.recurrence) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.recurrenceUntil) }}
+            {{ form_widget(form.recurrenceUntil) }}
+            {{ form_errors(form.recurrenceUntil) }}
+        </div>
+    </div>
+
+    {% if event.picture is defined and event.picture %}
+        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
+            {{ include('admin/_media_item_card.html.twig', {
+                media_item: event.picture,
+                media_url: media_url,
+                title: 'Aktuelles Bild'|trans,
+                selector_content: '
+                    <div class="mb-0">
+                        <label class="form-label">' ~ 'Bild auswählen'|trans ~ '</label>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
+                                <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
+                            </button>
+                        </div>
+                    </div>
+                '
+            }) }}
+            {{ form_widget(form.picture) }}
+        </div>
+    {% else %}
+        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
+            <label class="form-label">Bild</label>
+            <div data-media-selector-preview></div>
+            {{ form_widget(form.picture) }}
+            <div class="d-flex gap-2 mt-2">
+                <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
+                    <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
+                </button>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        {% if event.id is not null %}
+            {{ include('admin/event/_delete_form.html.twig') }}
+        {% endif %}
+    </div>
+{{ form_end(form) }}

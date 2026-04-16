@@ -1,6 +1,6 @@
 # AGENTS.md — VSG API
 
-Symfony 7.2 + API Platform 4 + Doctrine ORM 3 + Twig admin panel. PHP 8.2+, MySQL 9 via Docker Compose. German-language UI. AssetMapper (no Node.js/Webpack).
+Symfony 7.2 + API Platform 4 + Doctrine ORM 3 + Twig admin panel. PHP 8.2+, Node.js 18+, MySQL 9 via Docker Compose. German-language UI. Webpack Encore for frontend assets.
 
 ## Working Principles
 
@@ -65,14 +65,15 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ```bash
 composer install
-symfony console importmap:install   # downloads assets/vendor/ from importmap.php (gitignored)
+npm install
+npm run dev                          # compile assets (public/build/)
 docker compose up -d
 symfony console doctrine:migrations:migrate
 symfony console app:create-admin
 symfony server:start                 # or: php -S localhost:8000 -t public/
 ```
 
-`importmap:install` saying "nothing to install" is normal when `assets/vendor/` already matches `importmap.php` — not an error.
+During development use `npm run watch` to recompile assets automatically on file changes.
 
 ## Key Commands
 
@@ -81,8 +82,9 @@ symfony console make:migration                # after entity changes
 symfony console doctrine:migrations:migrate    # apply migrations
 symfony console doctrine:schema:validate      # check mapping
 symfony console cache:clear
-symfony console asset-map:compile              # production/CI: compile versioned assets
-symfony console importmap:require <package>   # add a JS/CSS package (updates importmap.php)
+npm run dev                                    # compile assets for development
+npm run build                                  # production build (minified, versioned)
+npm install <package>                          # add a JS/CSS package
 symfony console app:create-admin               # create admin user interactively
 ```
 
@@ -110,7 +112,8 @@ templates/
   form/            # shared form partials
   security/        # login
 config/packages/  # Symfony YAML config
-importmap.php      # AssetMapper import map (project root)
+webpack.config.js  # Webpack Encore configuration (project root)
+package.json       # npm dependencies and build scripts (project root)
 migrations/        # Doctrine migrations
 ```
 
@@ -131,16 +134,19 @@ Custom API Platform endpoints (upload, copy) use the `controller:` option with `
 - **Trailing comma** on multi-line parameter lists.
 - Properties are `private` with getter/setter pairs; IDs: `private ?int $id = null`.
 
-## AssetMapper & Frontend
+## Webpack Encore & Frontend
 
-- **AssetMapper** handles all CSS/JS — no Node.js, no Webpack Encore.
-- **Bootstrap 5** CSS imported in `assets/app.js` from the import map.
+- **Webpack Encore** handles all CSS/JS — requires Node.js 18+.
+- Single entrypoint `app` defined in `webpack.config.js` → `assets/app.js`.
+- **Bootstrap 5** CSS imported in `assets/app.js` from npm.
 - **Font Awesome Free** (not Pro): must import **both** `fontawesome.min.css` and `solid.min.css` in `assets/app.js`. Without `solid.min.css`, icons appear as blank squares — this is an easy mistake.
 - Additional app styles in `assets/styles/app.css`.
-- **EasyMDE** (Markdown editor) and **Cropper.js** (image cropping) are in the importmap for admin use.
-- After adding packages: `symfony console importmap:require <package>`, then `importmap:install` to download.
-- Production build: `symfony console asset-map:compile`.
-- Admin templates use `importmap('app')` — see `admin/layout.html.twig`.
+- **EasyMDE** (Markdown editor) and **Cropper.js** (image cropping) are npm dependencies for admin use.
+- **Stimulus controllers** in `assets/controllers/` are auto-registered via `enableStimulusBridge()` in `webpack.config.js`.
+- After adding packages: `npm install <package>`, then import in JS.
+- Development: `npm run dev` (single build) or `npm run watch` (auto-recompile).
+- Production build: `npm run build`.
+- Compiled output in `public/build/` (gitignored). Templates use `encore_entry_link_tags('app')` and `encore_entry_script_tags('app')`.
 
 ## Media Subsystem
 
