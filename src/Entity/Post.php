@@ -25,6 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new Get(),
     ],
     normalizationContext: ['groups' => ['post:read']],
+    order: ['createdAt' => 'DESC'],
 )]
 class Post
 {

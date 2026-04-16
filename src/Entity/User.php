@@ -68,6 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /** @var Collection<int, Post> */
     #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author')]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $posts;
 
     public function __construct()
