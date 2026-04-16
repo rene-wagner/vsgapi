@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/media_items'),
+        new GetCollection(uriTemplate: '/media_items', paginationItemsPerPage: 20),
         new Get(uriTemplate: '/media_items/{id}'),
         new Post(
             uriTemplate: '/media_items/upload',
@@ -51,7 +51,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     stateless: false,
 )]
 #[ApiFilter(ExistsFilter::class, properties: ['folder'])]
-#[ApiFilter(SearchFilter::class, properties: ['folder' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['folder' => 'exact', 'category' => 'exact'])]
 class MediaItem
 {
     #[ORM\Id]
