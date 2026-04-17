@@ -47,8 +47,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
     normalizationContext: ['groups' => ['media_item:read']],
     denormalizationContext: ['groups' => ['media_item:write']],
-    security: 'is_granted("IS_AUTHENTICATED_FULLY")',
-    stateless: false,
 )]
 #[ApiFilter(ExistsFilter::class, properties: ['folder'])]
 #[ApiFilter(SearchFilter::class, properties: ['folder' => 'exact', 'category' => 'exact'])]

@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Get(),
     ],
-    normalizationContext: ['groups' => ['department:read']],
+    normalizationContext: ['groups' => ['department:read', 'media_item:read']],
 )]
 #[ApiFilter(PropertyFilter::class)]
 class Department

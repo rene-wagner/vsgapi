@@ -56,7 +56,7 @@ class Location
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    #[Groups(['location:read'])]
+    #[Groups(['location:read', 'department:read'])]
     private ?MediaItem $picture = null;
 
     public function getId(): ?int
