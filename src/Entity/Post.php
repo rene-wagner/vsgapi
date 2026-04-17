@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -27,6 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['post:read']],
     order: ['createdAt' => 'DESC'],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['categories' => 'exact'])]
 class Post
 {
     #[ORM\Id]
