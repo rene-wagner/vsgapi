@@ -1,0 +1,10 @@
+{
+    auto_https off
+    admin off
+}
+
+{$SERVER_NAME} {
+    root * {$SERVER_ROOT}
+    encode zstd gzip
+    php_server
+}
