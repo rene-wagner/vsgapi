@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -21,12 +23,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: ['slug'], message: 'Dieser Slug wird bereits verwendet.')]
 #[ApiResource(
     operations: [
-        new GetCollection(paginationItemsPerPage: 30),
+        new GetCollection(paginationItemsPerPage: 20, paginationClientItemsPerPage: true, paginationMaximumItemsPerPage: 20),
         new Get(),
     ],
     normalizationContext: ['groups' => ['post:read']],
     order: ['createdAt' => 'DESC'],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['categories' => 'exact'])]
 class Post
 {
     #[ORM\Id]

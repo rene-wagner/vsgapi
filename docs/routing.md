@@ -141,7 +141,7 @@ Konfiguriert in `src/Entity/MediaItem.php`. Zugriff nur für authentifizierte Be
 
 | Name | Methoden | Pfad | Hinweis |
 |------|----------|------|---------|
-| `_api_/api/media_items_get_collection` | GET | `/api/media_items` | Liste (ohne `{._format}`-Suffix im Pfad; Format über `Accept` / Content-Negotiation) |
+| `_api_/api/media_items_get_collection` | GET | `/api/media_items` | Paginierte Liste (20 pro Seite). Filter: `?category=/api/categories/{slug}` (nach Kategorie), `?folder=<id>` (nach Ordner). `page`-Parameter für Pagination. |
 | `_api_/api/media_items/{id}_get` | GET | `/api/media_items/{id}` | Einzelnes Medium |
 | `media_item_upload` | POST | `/api/media_items/upload` | Multipart: `file` (Pflicht), optional `folder`, `category`, `description`, `name` |
 | `media_item_copy` | POST | `/api/media_items/{id}/copy` | Optionaler JSON-Body: `{"folder": <numerische Ordner-ID>}` |

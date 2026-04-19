@@ -59,6 +59,13 @@
                         {{ form_widget(form.folder) }}
                         {{ form_errors(form.folder) }}
                     </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form_widget(form.isHiddenInApi, { attr: { class: 'form-check-input' } }) }}
+                            {{ form_label(form.isHiddenInApi, null, { label_attr: { class: 'form-check-label' } }) }}
+                        </div>
+                        {{ form_errors(form.isHiddenInApi) }}
+                    </div>
 
                     {% if not is_croppable %}
                         <div class="d-none">

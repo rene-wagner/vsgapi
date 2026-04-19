@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Get(),
     ],
-    normalizationContext: ['groups' => ['contact_person:read']],
+    normalizationContext: ['groups' => ['contact_person:read', 'media_item:read']],
 )]
 #[ApiFilter(PropertyFilter::class)]
 class ContactPerson
