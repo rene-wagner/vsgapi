@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
     operations: [
-        new GetCollection(uriTemplate: '/media_items', paginationItemsPerPage: 20),
+        new GetCollection(uriTemplate: '/media_items', paginationItemsPerPage: 20, paginationClientItemsPerPage: false),
         new Get(uriTemplate: '/media_items/{id}'),
         new Post(
             uriTemplate: '/media_items/upload',
@@ -49,7 +49,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['media_item:write']],
 )]
 #[ApiFilter(ExistsFilter::class, properties: ['folder'])]
-#[ApiFilter(SearchFilter::class, properties: ['folder' => 'exact', 'category' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['folder' => 'exact', 'category' => 'exact', 'type' => 'exact'])]
 class MediaItem
 {
     #[ORM\Id]
@@ -128,6 +128,11 @@ class MediaItem
     #[SerializedName('crop_height')]
     #[Groups(['media_item:read', 'media_item:write'])]
     private ?int $cropHeight = null;
+
+    #[ORM\Column]
+    #[SerializedName('is_hidden_in_api')]
+    #[Groups(['media_item:read', 'media_item:write'])]
+    private bool $isHiddenInApi = false;
 
     #[ORM\Column]
     #[SerializedName('created_at')]
@@ -283,6 +288,18 @@ class MediaItem
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function isHiddenInApi(): bool
+    {
+        return $this->isHiddenInApi;
+    }
+
+    public function setIsHiddenInApi(bool $isHiddenInApi): static
+    {
+        $this->isHiddenInApi = $isHiddenInApi;
 
         return $this;
     }

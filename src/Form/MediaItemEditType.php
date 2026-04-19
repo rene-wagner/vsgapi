@@ -7,6 +7,7 @@ use App\Entity\MediaFolder;
 use App\Entity\MediaItem;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -60,6 +61,10 @@ class MediaItemEditType extends AbstractType
                 'label' => 'Höhe',
                 'required' => false,
                 'attr' => ['min' => 1],
+            ])
+            ->add('isHiddenInApi', CheckboxType::class, [
+                'label' => 'In Galerie-API ausblenden',
+                'required' => false,
             ]);
     }
 

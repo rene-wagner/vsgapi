@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\MediaFolder;
 use App\Entity\MediaItem;
+use App\Enum\MediaItemType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -33,5 +36,27 @@ class MediaItemRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @return Paginator<MediaItem>
+     */
+    public function findGalleryPaginated(int $page, int $perPage, ?Category $category = null): Paginator
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->andWhere('m.type = :type')
+            ->setParameter('type', MediaItemType::Image)
+            ->andWhere('m.isHiddenInApi = false')
+            ->orderBy('m.createdAt', 'DESC');
+
+        if ($category !== null) {
+            $qb->andWhere('m.category = :category')
+                ->setParameter('category', $category);
+        }
+
+        $qb->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
+
+        return new Paginator($qb->getQuery(), true);
     }
 }
