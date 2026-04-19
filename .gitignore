@@ -14,7 +14,9 @@
 
 ###> data/files ###
 migration_data/
+001-initial-dump.sql
 ###< data/files ###
+
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
