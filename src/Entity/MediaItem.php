@@ -28,6 +28,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(uriTemplate: '/media_items', paginationItemsPerPage: 20, paginationClientItemsPerPage: false),
+        new GetCollection(uriTemplate: '/gallery', name: 'gallery', paginationItemsPerPage: 20, paginationClientItemsPerPage: false),
         new Get(uriTemplate: '/media_items/{id}'),
         new Post(
             uriTemplate: '/media_items/upload',
