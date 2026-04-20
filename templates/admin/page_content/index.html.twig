@@ -1,0 +1,18 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Seiteninhalt - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="mb-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
+        <div>
+            <h1 class="h3 mb-1">Seiteninhalt</h1>
+            <p class="text-body-secondary mb-0">Eingebettete Ansicht von <a href="{{ iframe_url }}" target="_blank" rel="noopener noreferrer">{{ iframe_url }}</a>.</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm overflow-hidden">
+        <div class="card-body p-0">
+            <iframe src="{{ iframe_url }}" title="Seiteninhalt" class="w-100 d-block border-0" style="min-height: 82vh;"></iframe>
+        </div>
+    </div>
+{% endblock %}
