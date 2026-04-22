@@ -27,6 +27,10 @@ Die folgenden Variablen werden in der Konfiguration unter `config/packages/` ref
 | `APP_SECRET` | Geheimer Schlüssel für CSRF, Sessions, signierte URLs etc. — **in Production durch sicheren, zufälligen Wert ersetzen** | Platzhalter in `.env` |
 | `DEFAULT_URI` | Basis-URL für URL-Generierung außerhalb von HTTP (z. B. CLI), siehe `config/packages/routing.yaml` | `http://localhost` |
 | `DATABASE_URL` | Doctrine-DBAL-Verbindung (MySQL), siehe `config/packages/doctrine.yaml` | `mysql://user:secret:@localhost:3306/database?serverVersion=9.6&charset=utf8mb4` |
+| `PAGE_CONTENT_IFRAME_URL` | Basis-URL der eingebetteten Vue-Seite fuer `/admin/page-content`; Symfony haengt serverseitig `embed_token` an | `http://localhost:5173` |
+| `EMBED_TOKEN_SECRET` | Geheimer Schluessel fuer die Signatur kurzlebiger Embed-Tokens; in Production sicher setzen | `change-me-in-production` |
+| `EMBED_TOKEN_TTL` | Lebensdauer des Embed-Tokens in Sekunden | `300` |
+| `EMBED_TOKEN_AUDIENCE` | Erwartete Audience des Embed-Tokens fuer die eingebettete Anwendung | `vsg-web-embed` |
 
 ### Nur in bestimmten Kontexten
 
@@ -54,3 +58,16 @@ Aktuell existiert im Repository u. a. `.env` und `.env.dev`; eine `.env.prod` 
 - `APP_SECRET` → `config/packages/framework.yaml` (`secret`)
 - `DATABASE_URL` → `config/packages/doctrine.yaml` (`dbal.url`, mit `resolve:`)
 - `DEFAULT_URI` → `config/packages/routing.yaml` (`default_uri`)
+- `PAGE_CONTENT_IFRAME_URL` → `config/services.yaml` (`page_content.iframe_url`)
+- `EMBED_TOKEN_SECRET` → `config/services.yaml` (`embed.token_secret`)
+- `EMBED_TOKEN_TTL` → `config/services.yaml` (`embed.token_ttl`)
+- `EMBED_TOKEN_AUDIENCE` → `config/services.yaml` (`embed.token_audience`)
+
+## Hinweise zum Embed-Betrieb
+
+Der Embed-Verify-Flow funktioniert nur, wenn der Symfony-Session-Cookie bei der Anfrage des eingebetteten Frontends mitgesendet wird. Vor dem Rollout deshalb mindestens pruefen:
+
+- Domain- und Cookie-Scope zwischen Symfony-API und eingebettetem Frontend
+- `SameSite`-Verhalten im echten iframe-Kontext
+- `Secure`-Anforderung hinter Reverse Proxy / HTTPS
+- CORS mit Credentials fuer `POST /api/embed/verify`

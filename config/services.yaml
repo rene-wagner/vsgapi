@@ -8,6 +8,9 @@ parameters:
     media.max_upload_bytes: 10485760
     media.thumbnail_max_edge: 320
     page_content.iframe_url: '%env(PAGE_CONTENT_IFRAME_URL)%'
+    embed.token_secret: '%env(EMBED_TOKEN_SECRET)%'
+    embed.token_ttl: '%env(int:EMBED_TOKEN_TTL)%'
+    embed.token_audience: '%env(EMBED_TOKEN_AUDIENCE)%'
 
 services:
     # default configuration for services in *this* file
@@ -46,6 +49,21 @@ services:
     App\Serializer\MediaItemNormalizer:
         tags:
             - { name: serializer.normalizer, priority: 64 }
+
+    App\Service\Embed\PageContentEmbedUrlBuilder:
+        arguments:
+            $iframeUrl: '%page_content.iframe_url%'
+
+    App\Service\Embed\EmbedTokenIssuer:
+        arguments:
+            $secret: '%embed.token_secret%'
+            $ttl: '%embed.token_ttl%'
+            $audience: '%embed.token_audience%'
+
+    App\Service\Embed\EmbedTokenVerifier:
+        arguments:
+            $secret: '%embed.token_secret%'
+            $audience: '%embed.token_audience%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

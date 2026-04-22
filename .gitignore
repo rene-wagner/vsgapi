@@ -5,11 +5,13 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
 ###> ai/files ###
 .claude/
 .cursor/
 .opencode/
 .sisyphus/
+docs/superpowers/
 ###< ai/files ###
 
 ###> data/files ###
