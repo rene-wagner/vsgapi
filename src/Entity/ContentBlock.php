@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -33,13 +35,17 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['content_block:read']],
     denormalizationContext: ['groups' => ['content_block:write']],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['url' => 'exact'])]
 class ContentBlock
 {
+    public function __construct()
+    {
+        $this->id = Uuid::v7();
+    }
+
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    #[Groups(['content_block:read'])]
+    #[Groups(['content_block:read', 'content_block:write'])]
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
@@ -56,6 +62,13 @@ class ContentBlock
     public function getId(): ?Uuid
     {
         return $this->id;
+    }
+
+    public function setId(string|Uuid $id): static
+    {
+        $this->id = $id instanceof Uuid ? $id : Uuid::fromString($id);
+
+        return $this;
     }
 
     public function getUrl(): ?string
