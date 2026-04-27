@@ -19,7 +19,7 @@ final class Version20260420080521 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE content_block (id BINARY(16) NOT NULL, url VARCHAR(255) NOT NULL, content LONGTEXT NOT NULL, INDEX content_block_idx_id (id), INDEX content_block_idx_url (url), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE content_block (pk INT AUTO_INCREMENT NOT NULL, id BINARY(16) NOT NULL, url VARCHAR(255) NOT NULL, content LONGTEXT NOT NULL, INDEX content_block_idx_id (id), INDEX content_block_idx_url (url), UNIQUE INDEX content_block_uidx_id_url (id, url), PRIMARY KEY(pk)) DEFAULT CHARACTER SET utf8mb4');
     }
 
     public function down(Schema $schema): void
