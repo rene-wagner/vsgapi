@@ -8,17 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
- * Seed initial data from migration_data/*.json.
- *
- * Import order respects FK dependencies:
- *   users → categories → media_folders → media_items → contact_persons → locations → departments
- *
- * media_folder.parent_id is a self-reference; root folders (parent_id=null) are inserted first,
- * then child folders are inserted with their parent_id set directly.
- *
- * down() deletes all imported rows but does NOT drop tables (that is the schema migration's job).
+ * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260414130000 extends AbstractMigration
+final class Version20260427152029 extends AbstractMigration
 {
     private const IMPORT_TIMESTAMP = '2026-04-14 12:00:00';
 
@@ -76,7 +68,7 @@ final class Version20260414130000 extends AbstractMigration
         $items = $this->loadJson('media_items.json');
         foreach ($items as $row) {
             $this->addSql(
-                "INSERT INTO media_item (id, name, original_filename, mime_type, extension, type, size_bytes, path, thumbnail_path, description, crop_x, crop_y, crop_width, crop_height, created_at, updated_at, folder_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO media_item (id, name, original_filename, mime_type, extension, type, size_bytes, path, thumbnail_path, description, crop_x, crop_y, crop_width, crop_height, is_hidden_in_api, created_at, updated_at, folder_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [
                     $row['id'],
                     $row['name'],
@@ -92,6 +84,7 @@ final class Version20260414130000 extends AbstractMigration
                     $row['crop_y'],
                     $row['crop_width'],
                     $row['crop_height'],
+                    $row['is_hidden_in_api'] ?? false,
                     $row['created_at'],
                     $row['updated_at'],
                     $row['folder_id'],
@@ -222,6 +215,20 @@ final class Version20260414130000 extends AbstractMigration
             );
         }
 
+        // --- content_blocks ---
+        $contentBlocks = $this->loadJson('content_blocks.json');
+        foreach ($contentBlocks as $row) {
+            $this->addSql(
+                "INSERT INTO content_block (pk, id, url, content) VALUES (?, UNHEX(REPLACE(?, '0x', '')), ?, ?)",
+                [
+                    $row['pk'],
+                    $row['id'],
+                    $row['url'],
+                    $row['content'],
+                ],
+            );
+        }
+
         // --- Reset auto-increment values to max(id) + 1 per table ---
         // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
         // so we compute the next value from the imported data.
@@ -237,6 +244,7 @@ final class Version20260414130000 extends AbstractMigration
             'department_training_group' => max(array_column($trainingGroups, 'id')) + 1,
             'department_training_session' => max(array_column($trainingSessions, 'id')) + 1,
             'post' => max(array_column($posts, 'id')) + 1,
+            'content_block' => max(array_column($contentBlocks, 'pk')) + 1,
         ];
         foreach ($autoIncrement as $table => $nextId) {
             $this->addSql(sprintf('ALTER TABLE %s AUTO_INCREMENT = %d', $table, $nextId));
@@ -255,6 +263,7 @@ final class Version20260414130000 extends AbstractMigration
         $this->addSql('DELETE FROM contact_person');
         $this->addSql('DELETE FROM post_category');
         $this->addSql('DELETE FROM post');
+        $this->addSql('DELETE FROM content_block');
         $this->addSql('DELETE FROM media_item');
         $this->addSql('DELETE FROM media_folder');
         $this->addSql('DELETE FROM category');
