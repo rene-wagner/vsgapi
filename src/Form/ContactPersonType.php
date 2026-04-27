@@ -3,8 +3,9 @@
 namespace App\Form;
 
 use App\Entity\ContactPerson;
-use Symfony\Component\Form\AbstractType;
 use App\Form\MediaItemSelectorType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -48,6 +49,10 @@ class ContactPersonType extends AbstractType
                 'attr' => [
                     'rows' => 4,
                 ],
+            ])
+            ->add('isBoard', CheckboxType::class, [
+                'label' => 'Im Vorstand',
+                'required' => false,
             ])
             ->add('picture', MediaItemSelectorType::class, [
                 'required' => false,

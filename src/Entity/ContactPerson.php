@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -26,6 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['contact_person:read', 'media_item:read']],
 )]
 #[ApiFilter(PropertyFilter::class)]
+#[ApiFilter(BooleanFilter::class, properties: ['isBoard'])]
 class ContactPerson
 {
     #[ORM\Id]
@@ -77,6 +79,10 @@ class ContactPerson
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['contact_person:read'])]
     private ?string $address = null;
+
+    #[ORM\Column(options: ['default' => false])]
+    #[Groups(['contact_person:read'])]
+    private bool $isBoard = false;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
@@ -168,6 +174,18 @@ class ContactPerson
     public function setAddress(?string $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function isBoard(): bool
+    {
+        return $this->isBoard;
+    }
+
+    public function setIsBoard(bool $isBoard): static
+    {
+        $this->isBoard = $isBoard;
 
         return $this;
     }

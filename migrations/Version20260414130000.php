@@ -104,7 +104,7 @@ final class Version20260414130000 extends AbstractMigration
         $contacts = $this->loadJson('contact_persons.json');
         foreach ($contacts as $row) {
             $this->addSql(
-                "INSERT INTO contact_person (id, slug, first_name, last_name, position, email, phone, address, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO contact_person (id, slug, first_name, last_name, position, email, phone, address, is_board, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [
                     $row['id'],
                     $row['slug'],
@@ -114,6 +114,7 @@ final class Version20260414130000 extends AbstractMigration
                     $row['email'],
                     $row['phone'],
                     $row['address'],
+                    $row['is_board'] ?? false,
                     $row['picture_id'],
                 ],
             );

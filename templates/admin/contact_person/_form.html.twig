@@ -42,6 +42,12 @@
         {{ form_errors(form.address) }}
     </div>
 
+    <div class="mb-3">
+        {{ form_label(form.isBoard) }}
+        {{ form_widget(form.isBoard) }}
+        {{ form_errors(form.isBoard) }}
+    </div>
+
     {% if contact_person.picture %}
         {# Selector IN die Card verschieben #}
         <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
