@@ -1,7 +1,5 @@
 {% set r = app.request.attributes.get('_route') ?? '' %}
 {% set nav_context = nav_context|default('default') %}
-{% set is_club_section = r starts with 'admin_club_' %}
-{% set club_menu_id = 'admin-club-menu-' ~ nav_context %}
 <a href="{{ path('admin_dashboard') }}" class="nav-link px-3 py-2 link-light {{ r == 'admin_dashboard' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Dashboard</a>
 <a href="{{ path('admin_user_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_user' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Benutzer</a>
 <a href="{{ path('admin_category_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_category' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Kategorien</a>
@@ -12,17 +10,3 @@
 <a href="{{ path('admin_event_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_event' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Veranstaltungen</a>
 <a href="{{ path('admin_mediathek_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_mediathek' or r starts with 'admin_media_folder' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Mediathek</a>
 <a href="{{ path('admin_page_content') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_page_content' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Seiteninhalt</a>
-<button
-    class="nav-link px-3 py-2 link-light w-100 text-start border-0 bg-transparent d-flex align-items-center justify-content-between {{ is_club_section ? 'active bg-white bg-opacity-10' : 'text-white-50' }}"
-    type="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#{{ club_menu_id }}"
-    aria-expanded="{{ is_club_section ? 'true' : 'false' }}"
-    aria-controls="{{ club_menu_id }}"
->
-    <span>Verein</span>
-    <i class="fa-solid fa-chevron-down small" aria-hidden="true"></i>
-</button>
-<div class="collapse {{ is_club_section ? 'show' : '' }}" id="{{ club_menu_id }}">
-    <a href="{{ path('admin_club_history') }}" class="nav-link ps-5 py-2 link-light {{ r starts with 'admin_club_history' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Geschichte</a>
-</div>
