@@ -2,10 +2,10 @@
 
 <p>Hallo {{ user.fullName }},</p>
 
-<p>über den folgenden Link können Sie ein neues Passwort für Ihren VSG-Admin-Zugang vergeben:</p>
+<p>Über den folgenden Link kannst du ein neues Passwort für deinen VSG-Admin-Zugang vergeben:</p>
 
 <p>
     <a href="{{ url('app_reset_password', { token: resetToken.token }) }}">{{ url('app_reset_password', { token: resetToken.token }) }}</a>
 </p>
 
-<p>Wenn Sie diese Anfrage nicht gestellt haben, können Sie diese E-Mail ignorieren.</p>
+<p>Wenn du diese Anfrage nicht gestellt hast, kannst du diese E-Mail ignorieren.</p>
