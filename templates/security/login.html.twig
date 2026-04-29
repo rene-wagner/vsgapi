@@ -11,6 +11,13 @@
                         <div class="card-body p-4">
                             <h1 class="h4 text-center mb-4">VSG Admin Login</h1>
 
+                            {% for type, messages in app.flashes %}
+                                {% for message in messages %}
+                                    {% set alert_type = type == 'error' ? 'danger' : type %}
+                                    <div class="alert alert-{{ alert_type }}" role="alert">{{ message }}</div>
+                                {% endfor %}
+                            {% endfor %}
+
                             {% if error %}
                                 <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                             {% endif %}
@@ -29,6 +36,10 @@
 
                                 <button type="submit" class="btn btn-primary w-100">Anmelden</button>
                             </form>
+
+                            <div class="text-center mt-3">
+                                <a href="{{ path('app_forgot_password_request') }}">Passwort vergessen?</a>
+                            </div>
                         </div>
                     </div>
                 </div>

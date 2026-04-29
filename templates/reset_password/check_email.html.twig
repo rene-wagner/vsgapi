@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}E-Mail versendet - VSG Admin{% endblock %}
+
+{% block body %}
+    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-11 col-sm-8 col-md-6 col-lg-5">
+                    <div class="card shadow">
+                        <div class="card-body p-4 text-center">
+                            <h1 class="h4 mb-3">E-Mail prüfen</h1>
+                            <p class="text-body-secondary mb-3">Wenn ein Benutzerkonto mit dieser E-Mail-Adresse existiert, wurde soeben eine Nachricht mit einem Link zum Zurücksetzen des Passworts versendet.</p>
+                            <p class="text-body-secondary mb-4">Der Link ist zeitlich begrenzt. Falls keine E-Mail ankommt, prüfen Sie bitte auch den Spam-Ordner.</p>
+                            <a href="{{ path('app_forgot_password_request') }}" class="btn btn-outline-primary w-100">Erneut versuchen</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

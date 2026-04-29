@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Neues Passwort setzen - VSG Admin{% endblock %}
+
+{% block body %}
+    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-11 col-sm-8 col-md-6 col-lg-5">
+                    <div class="card shadow">
+                        <div class="card-body p-4">
+                            <h1 class="h4 text-center mb-4">Neues Passwort setzen</h1>
+
+                            {{ form_start(resetForm) }}
+                                <div class="mb-3">
+                                    {{ form_label(resetForm.plainPassword.first) }}
+                                    {{ form_widget(resetForm.plainPassword.first, { attr: { class: 'form-control' } }) }}
+                                    {{ form_errors(resetForm.plainPassword.first) }}
+                                </div>
+                                <div class="mb-3">
+                                    {{ form_label(resetForm.plainPassword.second) }}
+                                    {{ form_widget(resetForm.plainPassword.second, { attr: { class: 'form-control' } }) }}
+                                    {{ form_errors(resetForm.plainPassword.second) }}
+                                </div>
+                                {{ form_errors(resetForm.plainPassword) }}
+
+                                <button type="submit" class="btn btn-primary w-100">Passwort speichern</button>
+                            {{ form_end(resetForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
