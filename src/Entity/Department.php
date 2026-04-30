@@ -30,6 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(PropertyFilter::class)]
 class Department
 {
+    public const AVAILABLE_COLORS = ['purple', 'green', 'red', 'blue'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -63,6 +65,12 @@ class Department
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     #[Groups(['department:read'])]
     private ?MediaItem $icon = null;
+
+    #[ORM\Column(length: 32)]
+    #[Assert\NotBlank]
+    #[Assert\Choice(choices: self::AVAILABLE_COLORS, message: 'Bitte wählen Sie eine gültige Farbe aus.')]
+    #[Groups(['department:read'])]
+    private ?string $color = 'purple';
 
     /** @var Collection<int, DepartmentStatistic> */
     #[ORM\OneToMany(targetEntity: DepartmentStatistic::class, mappedBy: 'department', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -129,6 +137,18 @@ class Department
     public function setIcon(?MediaItem $icon): static
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

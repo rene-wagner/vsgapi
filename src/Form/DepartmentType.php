@@ -3,8 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Department;
-use Symfony\Component\Form\AbstractType;
 use App\Form\MediaItemSelectorType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -22,6 +23,15 @@ class DepartmentType extends AbstractType
             ->add('slug', TextType::class, [
                 'label' => 'Slug',
                 'help' => 'Nur Kleinbuchstaben, Zahlen und Bindestriche (z. B. handball).',
+            ])
+            ->add('color', ChoiceType::class, [
+                'label' => 'Farbe',
+                'choices' => [
+                    'Lila' => 'purple',
+                    'Grün' => 'green',
+                    'Rot' => 'red',
+                    'Blau' => 'blue',
+                ],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'Beschreibung',

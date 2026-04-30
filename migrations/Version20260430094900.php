@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260427152029 extends AbstractMigration
+final class Version20260430094900 extends AbstractMigration
 {
     private const IMPORT_TIMESTAMP = '2026-04-14 12:00:00';
 
@@ -133,11 +133,12 @@ final class Version20260427152029 extends AbstractMigration
         $departments = $this->loadJson('departments.json');
         foreach ($departments as $row) {
             $this->addSql(
-                "INSERT INTO department (id, name, slug, description, icon_id) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO department (id, name, slug, color, description, icon_id) VALUES (?, ?, ?, ?, ?, ?)",
                 [
                     $row['id'],
                     $row['name'],
                     $row['slug'],
+                    $row['color'],
                     $row['description'],
                     $row['icon_id'],
                 ],
