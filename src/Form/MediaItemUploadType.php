@@ -39,11 +39,12 @@ class MediaItemUploadType extends AbstractType
                                 mimeTypes: [
                                     'image/jpeg',
                                     'image/png',
+                                    'image/gif',
                                     'image/webp',
                                     'image/svg+xml',
                                     'application/pdf',
                                 ],
-                                mimeTypesMessage: 'Nur JPG, PNG, WebP, SVG oder PDF sind erlaubt.',
+                                mimeTypesMessage: 'Nur JPG, PNG, GIF, WebP, SVG oder PDF sind erlaubt.',
                             ),
                         ],
                     ]),

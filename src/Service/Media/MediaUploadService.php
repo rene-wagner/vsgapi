@@ -19,6 +19,7 @@ class MediaUploadService
     private const ALLOWED_MIMES = [
         'image/jpeg' => ['jpg', MediaItemType::Image],
         'image/png' => ['png', MediaItemType::Image],
+        'image/gif' => ['gif', MediaItemType::Image],
         'image/webp' => ['webp', MediaItemType::Image],
         'image/svg+xml' => ['svg', MediaItemType::Image],
         'application/pdf' => ['pdf', MediaItemType::Pdf],
@@ -95,7 +96,7 @@ class MediaUploadService
         $item->setPath($relativePath);
         $item->setDescription($description);
 
-        if ($type === MediaItemType::Image && $mimeType !== 'image/svg+xml') {
+        if ($type === MediaItemType::Image && !\in_array($mimeType, ['image/svg+xml', 'image/gif'], true)) {
             $thumbRelative = 'thumbnails/' . $id . '.jpg';
             $thumbAbsolute = $this->storageDir . '/' . $thumbRelative;
             $thumbDir = dirname($thumbAbsolute);

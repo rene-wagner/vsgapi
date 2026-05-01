@@ -8,12 +8,12 @@
     <div class="card-body">
         <div class="row">
             <div class="col-auto">
-                {% if media_item.type.value == 'image' and media_item.thumbnailPath and media_item.mimeType != 'image/svg+xml' %}
+                {% if media_item.type.value == 'image' and media_item.thumbnailPath and media_item.mimeType not in ['image/svg+xml', 'image/gif'] %}
                     <img src="{{ media_url.buildThumbnailUrl(media_item) }}"
                          alt="{{ media_item.name }}"
                          class="img-thumbnail"
                          style="max-width: 150px; max-height: 150px;">
-                {% elseif media_item.type.value == 'image' and media_item.mimeType == 'image/svg+xml' %}
+                {% elseif media_item.type.value == 'image' and media_item.mimeType in ['image/svg+xml', 'image/gif'] %}
                     <img src="{{ media_url.buildOriginalUrl(media_item) }}"
                          alt="{{ media_item.name }}"
                          class="img-thumbnail"
