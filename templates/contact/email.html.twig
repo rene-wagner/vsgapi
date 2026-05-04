@@ -1,0 +1,10 @@
+<h1>Neue Nachricht aus dem Kontaktformular</h1>
+
+<p>Empfänger: {{ contactPerson.firstName }} {{ contactPerson.lastName }}</p>
+<p>Absender: {{ senderName }}</p>
+<p>E-Mail: {{ senderEmail }}</p>
+<p>Betreff: {{ subject }}</p>
+
+<h2>Nachricht</h2>
+
+<p>{{ message|nl2br }}</p>
