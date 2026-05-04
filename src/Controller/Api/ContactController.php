@@ -6,13 +6,17 @@ use App\Entity\ContactPerson;
 use App\Repository\ContactPersonRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class ContactController extends AbstractController
 {
@@ -21,6 +25,8 @@ final class ContactController extends AbstractController
         Request $request,
         ContactPersonRepository $contactPersonRepository,
         MailerInterface $mailer,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        #[Autowire(service: 'limiter.contact_form')] RateLimiterFactory $contactFormLimiter,
     ): JsonResponse {
         try {
             $payload = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -36,7 +42,15 @@ final class ContactController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        $limit = $contactFormLimiter->create($request->getClientIp() ?? 'unknown')->consume();
+        if (!$limit->isAccepted()) {
+            return $this->json([
+                'error' => 'Zu viele Anfragen. Bitte versuchen Sie es später erneut.',
+            ], Response::HTTP_TOO_MANY_REQUESTS);
+        }
+
         $contactPersonId = $payload['contactPersonId'] ?? null;
+        $csrfToken = isset($payload['csrfToken']) && \is_string($payload['csrfToken']) ? trim($payload['csrfToken']) : '';
         $senderName = isset($payload['senderName']) && \is_string($payload['senderName']) ? trim($payload['senderName']) : '';
         $senderEmail = isset($payload['senderEmail']) && \is_string($payload['senderEmail']) ? trim($payload['senderEmail']) : '';
         $subject = isset($payload['subject']) && \is_string($payload['subject']) ? trim($payload['subject']) : '';
@@ -47,6 +61,18 @@ final class ContactController extends AbstractController
             return $this->json([
                 'success' => true,
             ]);
+        }
+
+        if ($csrfToken === '') {
+            return $this->json([
+                'error' => 'CSRF-Token fehlt.',
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('contact_form_submit', $csrfToken))) {
+            return $this->json([
+                'error' => 'CSRF-Token ist ungültig.',
+            ], Response::HTTP_FORBIDDEN);
         }
 
         if (!\is_int($contactPersonId) && !ctype_digit((string) $contactPersonId)) {
