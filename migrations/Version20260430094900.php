@@ -188,6 +188,21 @@ final class Version20260430094900 extends AbstractMigration
             );
         }
 
+        // --- department_results ---
+        $departmentResults = $this->loadJson('department_results.json');
+        foreach ($departmentResults as $row) {
+            $this->addSql(
+                "INSERT INTO department_result (id, title, league, url, department_id) VALUES (?, ?, ?, ?, ?)",
+                [
+                    $row['id'],
+                    $row['title'],
+                    $row['league'],
+                    $row['url'],
+                    $row['department_id'],
+                ],
+            );
+        }
+
         // --- posts ---
         $posts = $this->loadJson('posts.json');
         foreach ($posts as $row) {

@@ -58,6 +58,21 @@ class DepartmentType extends AbstractType
                     'class' => 'department-stats-collection',
                 ],
             ])
+            ->add('departmentResults', CollectionType::class, [
+                'entry_type' => DepartmentResultType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false,
+                'label' => 'Ergebnisdienst',
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'prototype_name' => '__result__',
+                'attr' => [
+                    'class' => 'department-results-collection',
+                ],
+            ])
             ->add('trainingGroups', CollectionType::class, [
                 'entry_type' => DepartmentTrainingGroupType::class,
                 'allow_add' => true,

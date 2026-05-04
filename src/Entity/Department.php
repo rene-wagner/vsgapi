@@ -77,6 +77,11 @@ class Department
     #[Groups(['department:read'])]
     private Collection $departmentStats;
 
+    /** @var Collection<int, DepartmentResult> */
+    #[ORM\OneToMany(targetEntity: DepartmentResult::class, mappedBy: 'department', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['department:read'])]
+    private Collection $departmentResults;
+
     /** @var Collection<int, DepartmentTrainingGroup> */
     #[ORM\OneToMany(targetEntity: DepartmentTrainingGroup::class, mappedBy: 'department', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['department:read'])]
@@ -85,6 +90,7 @@ class Department
     public function __construct()
     {
         $this->departmentStats = new ArrayCollection();
+        $this->departmentResults = new ArrayCollection();
         $this->trainingGroups = new ArrayCollection();
     }
 
@@ -185,6 +191,42 @@ class Department
     public function removeDepartmentStatistic(DepartmentStatistic $statistic): static
     {
         $this->departmentStats->removeElement($statistic);
+
+        return $this;
+    }
+
+    /** @return Collection<int, DepartmentResult> */
+    public function getDepartmentResults(): Collection
+    {
+        return $this->departmentResults;
+    }
+
+    /** @param iterable<DepartmentResult> $departmentResults */
+    public function setDepartmentResults(iterable $departmentResults): static
+    {
+        foreach ($this->departmentResults->toArray() as $existing) {
+            $this->removeDepartmentResult($existing);
+        }
+        foreach ($departmentResults as $result) {
+            $this->addDepartmentResult($result);
+        }
+
+        return $this;
+    }
+
+    public function addDepartmentResult(DepartmentResult $result): static
+    {
+        if (!$this->departmentResults->contains($result)) {
+            $this->departmentResults->add($result);
+            $result->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDepartmentResult(DepartmentResult $result): static
+    {
+        $this->departmentResults->removeElement($result);
 
         return $this;
     }

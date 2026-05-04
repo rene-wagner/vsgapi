@@ -26,149 +26,230 @@
         {{ form_errors(form.description) }}
     </div>
 
-    {% if department.icon %}
-        {# Selector IN die Card verschieben #}
-        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
-            {{ include('admin/_media_item_card.html.twig', {
-                media_item: department.icon,
-                media_url: media_url,
-                title: 'Aktuelles Icon'|trans,
-                selector_content: '
-                    <div class="mb-0">
-                        <label class="form-label">' ~ 'Icon auswählen'|trans ~ '</label>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
-                                <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
-                                <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
-                            </button>
-                        </div>
-                    </div>
-                '
-            }) }}
-            {{ form_widget(form.icon) }}
-        </div>
-    {% else %}
-        {# Kein Icon: Selector separat wie bisher #}
-        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
-            <label class="form-label">Icon</label>
-            <div data-media-selector-preview></div>
-            {{ form_widget(form.icon) }}
-            <div class="d-flex gap-2 mt-2">
-                <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
-                    <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
+    <div class="accordion mb-3" id="department-icon-accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="department-icon-heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#department-icon-collapse" aria-expanded="false" aria-controls="department-icon-collapse">
+                    {{ form_label(form.icon) }}
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
-                    <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
-                </button>
-            </div>
-        </div>
-    {% endif %}
-
-    <div class="mb-3">
-        {{ form_label(form.departmentStats) }}
-        <div
-            class="collection-holder list-group department-stats-collection mb-2"
-            data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}"
-            data-index="{{ form.departmentStats|length }}"
-        >
-            {% for stat in form.departmentStats %}
-                <div class="list-group-item collection-item">
-                    <div class="row g-2">
-                        <div class="col-12 col-md-6">
-                            {{ form_label(stat.label) }}
-                            {{ form_widget(stat.label) }}
-                            {{ form_errors(stat.label) }}
-                        </div>
-                        <div class="col-12 col-md-6">
-                            {{ form_label(stat.value) }}
-                            {{ form_widget(stat.value) }}
-                            {{ form_errors(stat.value) }}
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">
-                            Entfernen
-                        </button>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        <p class="mb-4">
-            <button type="button" class="btn btn-secondary js-add-stat">Statistik hinzufügen</button>
-        </p>
-    </div>
-
-    <div class="mb-3">
-        {{ form_label(form.trainingGroups) }}
-        <div
-            class="collection-holder department-training-groups-collection"
-            data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}"
-            data-index="{{ form.trainingGroups|length }}"
-        >
-            {% for group in form.trainingGroups %}
-                <div class="collection-item card mb-4 p-3 position-relative">
-                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-group" aria-label="Trainingsgruppe entfernen">
-                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                    </button>
-                    <div class="pe-4 pt-4">
-                        <div class="mb-3">
-                            {{ form_label(group.name) }}
-                            {{ form_widget(group.name) }}
-                            {{ form_help(group.name) }}
-                            {{ form_errors(group.name) }}
-                        </div>
-                        <div class="mb-3">
-                            {{ form_label(group.ageRange) }}
-                            {{ form_widget(group.ageRange) }}
-                            {{ form_help(group.ageRange) }}
-                            {{ form_errors(group.ageRange) }}
-                        </div>
-                        <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
-                        {{ form_errors(group.departmentTrainingSessions) }}
-                        <div
-                            class="collection-holder department-training-sessions-collection"
-                            data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}"
-                            data-index="{{ group.departmentTrainingSessions|length }}"
-                        >
-                            {% for session in group.departmentTrainingSessions %}
-                                <div class="collection-item card mb-3 p-3 bg-body-secondary position-relative">
-                                    <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-session" aria-label="Trainingseinheit entfernen">
-                                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                                    </button>
-                                    <div class="pe-4 pt-4">
-                                        <div class="mb-3">
-                                            {{ form_label(session.day) }}
-                                            {{ form_widget(session.day) }}
-                                            {{ form_help(session.day) }}
-                                            {{ form_errors(session.day) }}
-                                        </div>
-                                        <div class="mb-3">
-                                            {{ form_label(session.time) }}
-                                            {{ form_widget(session.time) }}
-                                            {{ form_help(session.time) }}
-                                            {{ form_errors(session.time) }}
-                                        </div>
-                                        <div class="mb-3">
-                                            {{ form_label(session.location) }}
-                                            {{ form_widget(session.location) }}
-                                            {{ form_errors(session.location) }}
+            </h2>
+            <div id="department-icon-collapse" class="accordion-collapse collapse" aria-labelledby="department-icon-heading">
+                <div class="accordion-body">
+                    {% if department.icon %}
+                        {# Selector IN die Card verschieben #}
+                        <div data-media-selector data-controller="media-selector-wrappers">
+                            {{ include('admin/_media_item_card.html.twig', {
+                                media_item: department.icon,
+                                media_url: media_url,
+                                title: 'Aktuelles Icon'|trans,
+                                selector_content: '
+                                    <div class="mb-0">
+                                        <label class="form-label">' ~ 'Icon auswählen'|trans ~ '</label>
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
+                                                <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
+                                                <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                '
+                            }) }}
+                            {{ form_widget(form.icon) }}
                         </div>
-                        <p class="mb-2">
-                            <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
-                        </p>
-                    </div>
+                    {% else %}
+                        {# Kein Icon: Selector separat wie bisher #}
+                        <div data-media-selector data-controller="media-selector-wrappers">
+                            <div data-media-selector-preview></div>
+                            {{ form_widget(form.icon) }}
+                            <div class="d-flex gap-2 mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
+                                    <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
+                                    <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endfor %}
+            </div>
         </div>
-        <p class="mb-4">
-            <button type="button" class="btn btn-secondary js-add-group">Trainingsgruppe hinzufügen</button>
-        </p>
+    </div>
+
+    <div class="accordion mb-3" id="department-stats-accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="department-stats-heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#department-stats-collapse" aria-expanded="false" aria-controls="department-stats-collapse">
+                    {{ form_label(form.departmentStats) }}
+                </button>
+            </h2>
+            <div id="department-stats-collapse" class="accordion-collapse collapse" aria-labelledby="department-stats-heading">
+                <div class="accordion-body">
+                    <div
+                        class="collection-holder list-group department-stats-collection mb-2"
+                        data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}"
+                        data-index="{{ form.departmentStats|length }}"
+                    >
+                        {% for stat in form.departmentStats %}
+                            <div class="list-group-item collection-item">
+                                <div class="row g-2">
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(stat.label) }}
+                                        {{ form_widget(stat.label) }}
+                                        {{ form_errors(stat.label) }}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        {{ form_label(stat.value) }}
+                                        {{ form_widget(stat.value) }}
+                                        {{ form_errors(stat.value) }}
+                                    </div>
+                                </div>
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">
+                                        Entfernen
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <p class="mb-0">
+                        <button type="button" class="btn btn-secondary js-add-stat">Statistik hinzufügen</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion mb-3" id="department-training-groups-accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="department-training-groups-heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#department-training-groups-collapse" aria-expanded="false" aria-controls="department-training-groups-collapse">
+                    {{ form_label(form.trainingGroups) }}
+                </button>
+            </h2>
+            <div id="department-training-groups-collapse" class="accordion-collapse collapse" aria-labelledby="department-training-groups-heading">
+                <div class="accordion-body">
+                    <div
+                        class="collection-holder department-training-groups-collection"
+                        data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}"
+                        data-index="{{ form.trainingGroups|length }}"
+                    >
+                        {% for group in form.trainingGroups %}
+                            <div class="collection-item card mb-4 p-3 position-relative">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-group" aria-label="Trainingsgruppe entfernen">
+                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <div class="pe-4 pt-4">
+                                    <div class="mb-3">
+                                        {{ form_label(group.name) }}
+                                        {{ form_widget(group.name) }}
+                                        {{ form_help(group.name) }}
+                                        {{ form_errors(group.name) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form_label(group.ageRange) }}
+                                        {{ form_widget(group.ageRange) }}
+                                        {{ form_help(group.ageRange) }}
+                                        {{ form_errors(group.ageRange) }}
+                                    </div>
+                                    <h4 class="h6 fw-semibold mt-3 mb-2">{{ form_label(group.departmentTrainingSessions) }}</h4>
+                                    {{ form_errors(group.departmentTrainingSessions) }}
+                                    <div
+                                        class="collection-holder department-training-sessions-collection"
+                                        data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}"
+                                        data-index="{{ group.departmentTrainingSessions|length }}"
+                                    >
+                                        {% for session in group.departmentTrainingSessions %}
+                                            <div class="collection-item card mb-3 p-3 bg-body-secondary position-relative">
+                                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 js-remove-session" aria-label="Trainingseinheit entfernen">
+                                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                                <div class="pe-4 pt-4">
+                                                    <div class="mb-3">
+                                                        {{ form_label(session.day) }}
+                                                        {{ form_widget(session.day) }}
+                                                        {{ form_help(session.day) }}
+                                                        {{ form_errors(session.day) }}
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        {{ form_label(session.time) }}
+                                                        {{ form_widget(session.time) }}
+                                                        {{ form_help(session.time) }}
+                                                        {{ form_errors(session.time) }}
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        {{ form_label(session.location) }}
+                                                        {{ form_widget(session.location) }}
+                                                        {{ form_errors(session.location) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <p class="mb-2">
+                                        <button type="button" class="btn btn-secondary btn-sm js-add-session">Trainingseinheit hinzufügen</button>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <p class="mb-0">
+                        <button type="button" class="btn btn-secondary js-add-group">Trainingsgruppe hinzufügen</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion mb-3" id="department-results-accordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="department-results-heading">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#department-results-collapse" aria-expanded="false" aria-controls="department-results-collapse">
+                    {{ form_label(form.departmentResults) }}
+                </button>
+            </h2>
+            <div id="department-results-collapse" class="accordion-collapse collapse" aria-labelledby="department-results-heading">
+                <div class="accordion-body">
+                    <div
+                        class="collection-holder list-group department-results-collection mb-2"
+                        data-prototype="{{ form_widget(form.departmentResults.vars.prototype)|e('html_attr') }}"
+                        data-index="{{ form.departmentResults|length }}"
+                    >
+                        {% for result in form.departmentResults %}
+                            <div class="list-group-item collection-item">
+                                <div class="row g-2">
+                                    <div class="col-12 col-md-4">
+                                        {{ form_label(result.title) }}
+                                        {{ form_widget(result.title) }}
+                                        {{ form_errors(result.title) }}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        {{ form_label(result.league) }}
+                                        {{ form_widget(result.league) }}
+                                        {{ form_errors(result.league) }}
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        {{ form_label(result.url) }}
+                                        {{ form_widget(result.url) }}
+                                        {{ form_errors(result.url) }}
+                                    </div>
+                                </div>
+                                <div class="mt-1">
+                                    <button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Ergebnisdienst entfernen">
+                                        Entfernen
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <p class="mb-0">
+                        <button type="button" class="btn btn-secondary js-add-result">Ergebnisdienst hinzufügen</button>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <button type="submit" class="btn btn-primary">Speichern</button>
@@ -182,6 +263,10 @@
 
     function statRemoveButtonHtml() {
         return '<div class="mt-1"><button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Statistik entfernen">Entfernen</button></div>';
+    }
+
+    function resultRemoveButtonHtml() {
+        return '<div class="mt-1"><button type="button" class="btn btn-link btn-sm text-danger p-0 js-remove-collection-item" aria-label="Ergebnisdienst entfernen">Entfernen</button></div>';
     }
 
     function bindRemoveStat(btn) {
@@ -252,6 +337,46 @@
     });
 
     document.querySelectorAll('.department-stats-collection .js-remove-collection-item').forEach(bindRemoveStat);
+
+    document.querySelectorAll('.js-add-result').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var holder = document.querySelector('.department-results-collection');
+            var proto = holder.dataset.prototype;
+            var idx = parseInt(holder.dataset.index, 10);
+
+            var temp = document.createElement('div');
+            temp.innerHTML = proto.replace(/__result__/g, String(idx));
+            var inputs = temp.querySelectorAll('input');
+            var titleInput = inputs.length >= 1 ? inputs[0].outerHTML : '';
+            var leagueInput = inputs.length >= 2 ? inputs[1].outerHTML : '';
+            var urlInput = inputs.length >= 3 ? inputs[2].outerHTML : '';
+
+            var div = document.createElement('div');
+            div.className = 'list-group-item collection-item';
+            div.innerHTML =
+                '<div class="row g-2">' +
+                    '<div class="col-12 col-md-4">' +
+                        '<label class="form-label">Titel</label>' +
+                        titleInput +
+                    '</div>' +
+                    '<div class="col-12 col-md-4">' +
+                        '<label class="form-label">Liga</label>' +
+                        leagueInput +
+                    '</div>' +
+                    '<div class="col-12 col-md-4">' +
+                        '<label class="form-label">URL</label>' +
+                        urlInput +
+                    '</div>' +
+                '</div>' +
+                resultRemoveButtonHtml();
+
+            holder.appendChild(div);
+            holder.dataset.index = String(idx + 1);
+            bindRemoveStat(div.querySelector('.js-remove-collection-item'));
+        });
+    });
+
+    document.querySelectorAll('.department-results-collection .js-remove-collection-item').forEach(bindRemoveStat);
 
     document.querySelectorAll('.js-add-group').forEach(function (btn) {
         btn.addEventListener('click', function () {
