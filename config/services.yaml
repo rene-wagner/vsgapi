@@ -9,7 +9,7 @@ parameters:
     membership_application.storage_dir: '%kernel.project_dir%/public/antraege'
     media.storage_dir: '%kernel.project_dir%/public/uploads'
     media.max_upload_bytes: 10485760
-    media.thumbnail_max_edge: 320
+    media.thumbnail_max_edge: 600
     page_content.iframe_url: '%env(PAGE_CONTENT_IFRAME_URL)%'
     embed.token_secret: '%env(EMBED_TOKEN_SECRET)%'
     embed.token_ttl: '%env(int:EMBED_TOKEN_TTL)%'

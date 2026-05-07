@@ -15,7 +15,6 @@
                         <th scope="col">Nachname</th>
                         <th scope="col">Vorname</th>
                         <th scope="col">Eingegangen am</th>
-                        <th scope="col">PDF</th>
                         <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
                     </tr>
                 </thead>
@@ -25,11 +24,6 @@
                             <td>{{ membership_application.lastName }}</td>
                             <td>{{ membership_application.firstName }}</td>
                             <td>{{ membership_application.createdAt|date('d.m.Y H:i') }}</td>
-                            <td>
-                                <a href="{{ membership_application.pdfPath starts with 'antraege/' ? asset(membership_application.pdfPath) : path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer">
-                                    {{ membership_application.pdfFilename }}
-                                </a>
-                            </td>
                             <td class="text-md-end">
                                 <div class="d-flex flex-wrap gap-2 justify-content-md-end">
                                     <a href="{{ path('admin_membership_application_show', {id: membership_application.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
@@ -38,7 +32,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-5">Keine Anträge vorhanden.</td>
+                            <td colspan="4" class="text-center text-muted py-5">Keine Anträge vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

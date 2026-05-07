@@ -14,7 +14,6 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Slug</th>
                         <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
                     </tr>
                 </thead>
@@ -22,7 +21,6 @@
                     {% for department in departments %}
                         <tr>
                             <td>{{ department.name }}</td>
-                            <td><code>{{ department.slug }}</code></td>
                             <td class="text-md-end">
                                 <div class="d-flex flex-wrap gap-2 justify-content-md-end">
                                     <a href="{{ path('admin_department_show', {id: department.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
@@ -32,7 +30,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="3" class="text-center text-muted py-5">Keine Abteilungen vorhanden.</td>
+                            <td colspan="2" class="text-center text-muted py-5">Keine Abteilungen vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

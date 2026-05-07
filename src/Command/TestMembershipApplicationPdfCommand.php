@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsCommand(
     name: 'app:test-membership-application-pdf',
@@ -25,7 +24,6 @@ final class TestMembershipApplicationPdfCommand extends Command
         private readonly MembershipApplicationPayloadMapper $payloadMapper,
         private readonly MembershipApplicationPdfService $pdfService,
         private readonly MembershipApplicationStoreService $storeService,
-        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
         parent::__construct();
     }
@@ -67,13 +65,9 @@ final class TestMembershipApplicationPdfCommand extends Command
             return Command::FAILURE;
         }
 
-        $url = $this->urlGenerator->generate('membership_application_download', [
-            'token' => $this->pdfService->getToken($filename),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
-
         $io->success('Test-PDF wurde erzeugt.');
         $io->writeln('Datei: ' . $filename);
-        $io->writeln('URL: ' . $url);
+        $io->writeln('Pfad: /' . ltrim($this->pdfService->getRelativePath($filename), '/'));
 
         return Command::SUCCESS;
     }

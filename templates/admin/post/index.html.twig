@@ -14,7 +14,6 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col">Titel</th>
-                        <th scope="col">Slug</th>
                         <th scope="col">Autor</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
@@ -24,7 +23,6 @@
                     {% for post in posts %}
                         <tr>
                             <td>{{ post.title }}</td>
-                            <td><span class="badge text-bg-secondary">{{ post.slug }}</span></td>
                             <td>{{ post.author.fullName }}</td>
                             <td>
                                 {% if post.published %}
@@ -42,7 +40,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-5">Keine Beiträge vorhanden.</td>
+                            <td colspan="4" class="text-center text-muted py-5">Keine Beiträge vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -13,10 +13,10 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">Nachname</th>
+                        <th scope="col">Vorname</th>
                         <th scope="col">Funktion</th>
-                        <th scope="col">Vorstand</th>
-                        <th scope="col">Slug</th>
+                        <th scope="col" class="text-center">Vorstand</th>
                         <th scope="col">E-Mail</th>
                         <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
                     </tr>
@@ -24,7 +24,8 @@
                 <tbody>
                     {% for contact_person in contactPeople %}
                         <tr>
-                            <td>{{ contact_person.lastName }}, {{ contact_person.firstName }}</td>
+                            <td>{{ contact_person.lastName }}</td>
+                            <td>{{ contact_person.firstName }}</td>
                             <td>
                                 {% if contact_person.position %}
                                     {{ contact_person.position }}
@@ -32,8 +33,13 @@
                                     <span class="text-muted">—</span>
                                 {% endif %}
                             </td>
-                            <td>{{ contact_person.isBoard ? 'Ja' : 'Nein' }}</td>
-                            <td>{{ contact_person.slug }}</td>
+                            <td class="text-center">
+                                {% if contact_person.isBoard %}
+                                    <i class="fa-solid fa-check text-success" aria-label="Ja" title="Ja"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-xmark text-danger" aria-label="Nein" title="Nein"></i>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if contact_person.email %}
                                     {{ contact_person.email }}

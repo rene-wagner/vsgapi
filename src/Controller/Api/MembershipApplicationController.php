@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class MembershipApplicationController extends AbstractController
 {
@@ -20,7 +19,6 @@ final class MembershipApplicationController extends AbstractController
         MembershipApplicationPayloadMapper $payloadMapper,
         MembershipApplicationPdfService $membershipApplicationPdfService,
         MembershipApplicationStoreService $membershipApplicationStoreService,
-        UrlGeneratorInterface $urlGenerator,
     ): JsonResponse {
         try {
             $payload = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -71,9 +69,7 @@ final class MembershipApplicationController extends AbstractController
 
         return $this->json([
             'success' => true,
-            'url' => $urlGenerator->generate('membership_application_download', [
-                'token' => $membershipApplicationPdfService->getToken($filename),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'url' => $request->getSchemeAndHttpHost() . '/' . ltrim($membershipApplicationPdfService->getRelativePath($filename), '/'),
         ], Response::HTTP_CREATED);
     }
 }
