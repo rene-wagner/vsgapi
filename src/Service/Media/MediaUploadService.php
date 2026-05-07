@@ -12,6 +12,7 @@ use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Uid\Uuid;
 
 class MediaUploadService
 {
@@ -57,7 +58,7 @@ class MediaUploadService
             ? $displayName
             : pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
 
-        $id = bin2hex(random_bytes(16));
+        $id = Uuid::v4()->toRfc4122();
         $relativePath = 'items/' . $id . '.' . $extension;
         $absolutePath = $this->storageDir . '/' . $relativePath;
 
@@ -107,37 +108,6 @@ class MediaUploadService
         $this->entityManager->flush();
 
         return $item;
-    }
-
-    public function regenerateThumbnail(MediaItem $item): bool
-    {
-        if ($item->getType() !== MediaItemType::Image || \in_array($item->getMimeType(), ['image/svg+xml', 'image/gif'], true)) {
-            throw new BadRequestHttpException('Für dieses Medium kann kein Thumbnail erzeugt werden.');
-        }
-
-        $relativePath = $item->getPath();
-        if ($relativePath === null || $relativePath === '') {
-            throw new BadRequestHttpException('Die Quelldatei fehlt.');
-        }
-        $relativePath = $this->normalizeStorageRelativePath($relativePath);
-
-        $previousThumbRelative = $item->getThumbnailPath();
-        $thumbRelative = $this->buildThumbnailRelativePath($relativePath);
-
-        if (!$this->generateThumbnail($relativePath, $thumbRelative)) {
-            throw new BadRequestHttpException('Thumbnail konnte nicht erzeugt werden.');
-        }
-
-        if ($previousThumbRelative !== null && $previousThumbRelative !== '') {
-            $previousThumbRelative = $this->normalizeStorageRelativePath($previousThumbRelative);
-            if ($previousThumbRelative !== $thumbRelative) {
-                $this->removeFileIfExists($previousThumbRelative);
-            }
-        }
-
-        $item->setThumbnailPath($thumbRelative);
-
-        return true;
     }
 
     private function generateThumbnail(string $relativePath, string $thumbRelative): bool
@@ -195,20 +165,4 @@ class MediaUploadService
         return $path;
     }
 
-    private function removeFileIfExists(string $relativePath): void
-    {
-        $absolutePath = $this->storageDir . '/' . $relativePath;
-        if (!is_file($absolutePath)) {
-            return;
-        }
-
-        try {
-            unlink($absolutePath);
-        } catch (\Throwable $e) {
-            $this->logger->error('Thumbnail delete failed.', [
-                'exception' => $e,
-                'path' => $relativePath,
-            ]);
-        }
-    }
 }

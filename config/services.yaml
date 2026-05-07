@@ -56,8 +56,7 @@ services:
 
     App\EventSubscriber\MediaItemFileSyncSubscriber:
         tags:
-            - { name: doctrine.event_listener, event: postPersist }
-            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: onFlush }
 
     App\Service\Media\MediaCopyService:
         arguments:

@@ -9,6 +9,7 @@ use App\Form\MediaItemUploadType;
 use App\Repository\MediaFolderRepository;
 use App\Repository\MediaItemRepository;
 use App\Service\Media\MediaCopyService;
+use App\Service\Media\MediaCropService;
 use App\Service\Media\MediaDeleteService;
 use App\Service\Media\MediaUploadService;
 use App\Service\Media\MediaUrlService;
@@ -138,7 +139,7 @@ class MediaLibraryController extends AbstractController
     public function regenerateThumbnail(
         Request $request,
         MediaItem $item,
-        MediaUploadService $mediaUploadService,
+        MediaCropService $mediaCropService,
         EntityManagerInterface $entityManager,
     ): Response {
         if (!$this->isCsrfTokenValid('regenerate_thumbnail_media_item' . $item->getId(), $request->getPayload()->getString('_token'))) {
@@ -146,7 +147,7 @@ class MediaLibraryController extends AbstractController
         }
 
         try {
-            $mediaUploadService->regenerateThumbnail($item);
+            $mediaCropService->sync($item);
             $item->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
             $this->addFlash('success', 'Thumbnail wurde neu erzeugt.');

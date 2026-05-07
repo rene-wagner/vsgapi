@@ -7,6 +7,7 @@ use App\Entity\MediaItem;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Uid\Uuid;
 
 class MediaCopyService
 {
@@ -20,7 +21,7 @@ class MediaCopyService
     public function copy(MediaItem $source, ?MediaFolder $targetFolder = null): MediaItem
     {
         $folder = $targetFolder ?? $source->getFolder();
-        $newId = bin2hex(random_bytes(16));
+        $newId = Uuid::v4()->toRfc4122();
         $ext = $source->getExtension() ?? '';
         $newRelative = 'items/' . $newId . '.' . $ext;
         $srcAbsolute = $this->storageDir . '/' . $source->getPath();
@@ -42,14 +43,14 @@ class MediaCopyService
         }
 
         $newThumbRelative = null;
-        $thumbSrc = $source->getThumbnailPath();
-        if ($thumbSrc !== null && $thumbSrc !== '' && is_file($this->storageDir . '/' . $thumbSrc)) {
+        $sourceThumbRelative = 'thumbnails/' . pathinfo($source->getPath() ?? '', PATHINFO_FILENAME) . '.jpg';
+        if ($sourceThumbRelative !== 'thumbnails/.jpg' && is_file($this->storageDir . '/' . $sourceThumbRelative)) {
             $newThumbRelative = 'thumbnails/' . pathinfo($newRelative, PATHINFO_FILENAME) . '.jpg';
             $thumbDst = $this->storageDir . '/' . $newThumbRelative;
             $thumbDir = dirname($thumbDst);
             if (!is_dir($thumbDir) && !mkdir($thumbDir, 0775, true) && !is_dir($thumbDir)) {
                 $this->logger->error('Media copy: thumbnail dir failed.', ['dir' => $thumbDir]);
-            } elseif (!@copy($this->storageDir . '/' . $thumbSrc, $thumbDst)) {
+            } elseif (!@copy($this->storageDir . '/' . $sourceThumbRelative, $thumbDst)) {
                 $this->logger->error('Media copy: thumbnail copy failed.');
                 $newThumbRelative = null;
             }

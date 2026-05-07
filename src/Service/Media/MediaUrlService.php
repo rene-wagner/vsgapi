@@ -6,11 +6,6 @@ use App\Entity\MediaItem;
 
 class MediaUrlService
 {
-    public function __construct(
-        private readonly MediaCropService $mediaCropService,
-    ) {
-    }
-
     public function formatSizeHuman(int $bytes): string
     {
         if ($bytes < 1024) {
@@ -44,44 +39,6 @@ class MediaUrlService
         }
 
         return $this->buildUploadUrl($item->getThumbnailPath(), $item);
-    }
-
-    public function buildCroppedUrl(MediaItem $item): ?string
-    {
-        if ($item->getId() === null || !$item->isCroppable() || !$item->hasCropData()) {
-            return null;
-        }
-
-        $relativePath = $this->mediaCropService->getCroppedRelativePath($item);
-        if ($relativePath === null) {
-            return null;
-        }
-
-        return $this->buildUploadUrl($relativePath, $item);
-    }
-
-    public function buildCroppedThumbnailUrl(MediaItem $item): ?string
-    {
-        if ($item->getId() === null || !$item->isCroppable() || !$item->hasCropData()) {
-            return null;
-        }
-
-        $relativePath = $this->mediaCropService->getCroppedThumbnailRelativePath($item);
-        if ($relativePath === null) {
-            return null;
-        }
-
-        return $this->buildUploadUrl($relativePath, $item);
-    }
-
-    public function buildDisplayUrl(MediaItem $item): ?string
-    {
-        $cropped = $this->buildCroppedUrl($item);
-        if ($cropped !== null) {
-            return $cropped;
-        }
-
-        return $this->buildOriginalUrl($item);
     }
 
     private function buildUploadUrl(string $path, MediaItem $item): string

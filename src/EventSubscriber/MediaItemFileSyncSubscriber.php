@@ -4,8 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Entity\MediaItem;
 use App\Service\Media\MediaCropService;
-use Doctrine\ORM\Event\PostPersistEventArgs;
-use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 
 final class MediaItemFileSyncSubscriber
 {
@@ -14,22 +13,19 @@ final class MediaItemFileSyncSubscriber
     ) {
     }
 
-    public function postPersist(PostPersistEventArgs $args): void
+    public function onFlush(OnFlushEventArgs $args): void
     {
-        $this->sync($args->getObject());
-    }
+        $entityManager = $args->getObjectManager();
+        $unitOfWork = $entityManager->getUnitOfWork();
+        $classMetadata = $entityManager->getClassMetadata(MediaItem::class);
 
-    public function postUpdate(PostUpdateEventArgs $args): void
-    {
-        $this->sync($args->getObject());
-    }
+        foreach (array_merge($unitOfWork->getScheduledEntityInsertions(), $unitOfWork->getScheduledEntityUpdates()) as $entity) {
+            if (!$entity instanceof MediaItem) {
+                continue;
+            }
 
-    private function sync(object $object): void
-    {
-        if (!$object instanceof MediaItem) {
-            return;
+            $this->mediaCropService->sync($entity);
+            $unitOfWork->recomputeSingleEntityChangeSet($classMetadata, $entity);
         }
-
-        $this->mediaCropService->sync($object);
     }
 }

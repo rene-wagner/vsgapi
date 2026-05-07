@@ -43,10 +43,6 @@ final class MediaItemNormalizer implements NormalizerInterface, NormalizerAwareI
 
         $data['original_url'] = $this->mediaUrlService->buildOriginalUrl($object);
         $data['thumbnail_url'] = $this->mediaUrlService->buildThumbnailUrl($object);
-        $data['cropped_url'] = $this->mediaUrlService->buildCroppedUrl($object);
-        $data['cropped_thumbnail_url'] = $this->mediaUrlService->buildCroppedThumbnailUrl($object);
-        $data['display_url'] = $this->mediaUrlService->buildDisplayUrl($object);
-        $data['url'] = $data['display_url'];
         $data['size_human'] = $this->mediaUrlService->formatSizeHuman($object->getSizeBytes());
         $data['folder_id'] = $object->getFolder()?->getId();
         $data['category_id'] = $object->getCategory()?->getId();
