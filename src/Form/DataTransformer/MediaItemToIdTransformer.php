@@ -23,10 +23,6 @@ class MediaItemToIdTransformer implements DataTransformerInterface
             return '';
         }
 
-        if (!$value instanceof MediaItem) {
-            throw new TransformationFailedException('Expected a MediaItem instance.');
-        }
-
         return (string) $value->getId();
     }
 

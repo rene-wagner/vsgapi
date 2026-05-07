@@ -121,8 +121,13 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
+        $mailerFrom = $this->getParameter('app.mailer_from');
+        if (!\is_string($mailerFrom) || trim($mailerFrom) === '') {
+            throw new \LogicException('app.mailer_from muss gesetzt sein.');
+        }
+
         $message = (new TemplatedEmail())
-            ->from(new Address((string) $this->getParameter('app.mailer_from'), 'VSG Admin'))
+            ->from(new Address($mailerFrom, 'VSG Admin'))
             ->to((string) $user->getEmail())
             ->subject('Passwort zurücksetzen')
             ->htmlTemplate('reset_password/email.html.twig')

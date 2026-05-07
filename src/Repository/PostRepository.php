@@ -29,6 +29,6 @@ class PostRepository extends ServiceEntityRepository
 
         $paginator = new Paginator($qb, false);
 
-        return [iterator_to_array($paginator), count($paginator)];
+        return [iterator_to_array($paginator, false), count($paginator)];
     }
 }

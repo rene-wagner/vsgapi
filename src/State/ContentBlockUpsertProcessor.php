@@ -8,6 +8,7 @@ use App\Entity\ContentBlock;
 use App\Repository\ContentBlockRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
+/** @implements ProcessorInterface<ContentBlock, ContentBlock> */
 final class ContentBlockUpsertProcessor implements ProcessorInterface
 {
     public function __construct(
@@ -18,10 +19,6 @@ final class ContentBlockUpsertProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): ContentBlock
     {
-        if (!$data instanceof ContentBlock) {
-            throw new \InvalidArgumentException('Expected instance of ' . ContentBlock::class . '.');
-        }
-
         $existingContentBlock = null;
         if ($data->getId() !== null && $data->getUrl() !== null) {
             $existingContentBlock = $this->contentBlockRepository->findOneBy([

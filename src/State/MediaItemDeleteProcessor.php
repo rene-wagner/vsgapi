@@ -7,6 +7,7 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\MediaItem;
 use App\Service\Media\MediaDeleteService;
 
+/** @implements ProcessorInterface<MediaItem, null> */
 final class MediaItemDeleteProcessor implements ProcessorInterface
 {
     public function __construct(
@@ -16,9 +17,7 @@ final class MediaItemDeleteProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): null
     {
-        if ($data instanceof MediaItem) {
-            $this->mediaDeleteService->delete($data);
-        }
+        $this->mediaDeleteService->delete($data);
 
         return null;
     }

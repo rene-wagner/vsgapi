@@ -1,4 +1,8 @@
 parameters:
-    level: 5
+    level: 7
     paths:
         - src
+    ignoreErrors:
+        -
+            identifier: property.unusedType
+            path: src/Entity/*

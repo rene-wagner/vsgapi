@@ -4,6 +4,7 @@ namespace App\Service\MembershipApplication;
 
 use setasign\Fpdi\Fpdi;
 
+/** @phpstan-import-type MembershipApplicationData from MembershipApplicationPayloadMapper */
 final class MembershipApplicationPdfService
 {
     public function __construct(
@@ -12,9 +13,7 @@ final class MembershipApplicationPdfService
     ) {
     }
 
-    /**
-     * @param array<string, bool|string> $application
-     */
+    /** @param MembershipApplicationData $application */
     public function create(array $application, ?string $filename = null): string
     {
         $this->ensureStorageDirectoryExists();
@@ -37,6 +36,9 @@ final class MembershipApplicationPdfService
             $pdf->setSourceFile($normalizedTemplatePath);
             $templateId = $pdf->importPage(1);
             $templateSize = $pdf->getTemplateSize($templateId);
+            if (!\is_array($templateSize)) {
+                throw new \RuntimeException('Die PDF-Vorlage konnte nicht verarbeitet werden.');
+            }
 
             $pdf->AddPage($templateSize['orientation'], [$templateSize['width'], $templateSize['height']]);
             $pdf->useTemplate($templateId);
@@ -120,9 +122,7 @@ final class MembershipApplicationPdfService
         return $normalizedPath;
     }
 
-    /**
-     * @param array<string, bool|string> $application
-     */
+    /** @param MembershipApplicationData $application */
     private function render(Fpdi $pdf, array $application): void
     {
         $fullName = trim($application['firstName'] . ' ' . $application['lastName']);

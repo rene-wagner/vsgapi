@@ -19,6 +19,11 @@ final class MediaItemNormalizer implements NormalizerInterface, NormalizerAwareI
     ) {
     }
 
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array<string, mixed>
+     */
     public function normalize(mixed $object, ?string $format = null, array $context = []): array
     {
         if (!$object instanceof MediaItem) {
@@ -26,7 +31,9 @@ final class MediaItemNormalizer implements NormalizerInterface, NormalizerAwareI
         }
 
         if (isset($context[self::ALREADY_CALLED])) {
-            return $this->normalizer->normalize($object, $format, $context);
+            $normalized = $this->normalizer->normalize($object, $format, $context);
+
+            return \is_array($normalized) ? $normalized : [];
         }
 
         $context[self::ALREADY_CALLED] = true;
@@ -50,6 +57,7 @@ final class MediaItemNormalizer implements NormalizerInterface, NormalizerAwareI
         return $data;
     }
 
+    /** @param array<string, mixed> $context */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         if (!$data instanceof MediaItem || isset($context[self::ALREADY_CALLED])) {

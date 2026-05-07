@@ -109,8 +109,13 @@ final class ContactController extends AbstractController
 
         $recipientName = trim(($contactPerson->getFirstName() ?? '') . ' ' . ($contactPerson->getLastName() ?? ''));
 
+        $mailerFrom = $this->getParameter('app.mailer_from');
+        if (!\is_string($mailerFrom) || trim($mailerFrom) === '') {
+            throw new \LogicException('app.mailer_from muss gesetzt sein.');
+        }
+
         $email = (new TemplatedEmail())
-            ->from(new Address((string) $this->getParameter('app.mailer_from'), 'VSG Kontaktformular'))
+            ->from(new Address($mailerFrom, 'VSG Kontaktformular'))
             ->to(new Address($recipientEmail, $recipientName !== '' ? $recipientName : $recipientEmail))
             ->replyTo(new Address($senderEmail, $senderName))
             ->subject('Kontaktformular: ' . $subject)

@@ -28,8 +28,8 @@ class EventController extends AbstractController
         $start = $request->query->get('start');
         $end = $request->query->get('end');
 
-        $from = new \DateTimeImmutable($start ?? '-30 days');
-        $to = new \DateTimeImmutable($end ?? '+30 days');
+        $from = new \DateTimeImmutable(\is_string($start) ? $start : '-30 days');
+        $to = new \DateTimeImmutable(\is_string($end) ? $end : '+30 days');
 
         return new JsonResponse($occurrenceService->getCalendarEvents($from, $to));
     }

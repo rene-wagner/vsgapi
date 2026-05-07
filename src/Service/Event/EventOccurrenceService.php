@@ -88,12 +88,17 @@ class EventOccurrenceService
             return null;
         }
 
-        $monthDiff = ($target->format('Y') - $base->format('Y')) * 12 + ($target->format('n') - $base->format('n'));
+        $monthDiff = (((int) $target->format('Y')) - ((int) $base->format('Y'))) * 12 + (((int) $target->format('n')) - ((int) $base->format('n')));
         $yearDiff = (int) $target->format('Y') - (int) $base->format('Y');
 
+        $diffDays = $base->diff($target)->days;
+        if ($diffDays === false) {
+            return $base;
+        }
+
         $candidate = match ($recurrence) {
-            EventRecurrence::Daily => $this->advanceDays($base, $target->diff($base)->days),
-            EventRecurrence::Weekly => $this->advanceDays($base, (int) (floor($target->diff($base)->days / 7) * 7)),
+            EventRecurrence::Daily => $this->advanceDays($base, $diffDays),
+            EventRecurrence::Weekly => $this->advanceDays($base, (int) (floor($diffDays / 7) * 7)),
             EventRecurrence::Monthly => $this->addMonths($event, $base, $monthDiff),
             EventRecurrence::Yearly => $this->addYears($event, $base, $yearDiff),
         };

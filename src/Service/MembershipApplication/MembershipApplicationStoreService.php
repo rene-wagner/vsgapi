@@ -5,6 +5,7 @@ namespace App\Service\MembershipApplication;
 use App\Entity\MembershipApplication;
 use Doctrine\ORM\EntityManagerInterface;
 
+/** @phpstan-import-type MembershipApplicationData from MembershipApplicationPayloadMapper */
 final class MembershipApplicationStoreService
 {
     public function __construct(
@@ -12,9 +13,7 @@ final class MembershipApplicationStoreService
     ) {
     }
 
-    /**
-     * @param array<string, bool|string> $application
-     */
+    /** @param MembershipApplicationData $application */
     public function store(array $application, string $pdfFilename, string $pdfPath): void
     {
         $membershipApplication = new MembershipApplication();

@@ -2,12 +2,37 @@
 
 namespace App\Service\MembershipApplication;
 
+/**
+ * @phpstan-type MembershipApplicationData array{
+ *     department: string,
+ *     firstName: string,
+ *     lastName: string,
+ *     birthDate: string,
+ *     phone: string,
+ *     email: string,
+ *     street: string,
+ *     postalCode: string,
+ *     city: string,
+ *     otherClub: string,
+ *     bankName: string,
+ *     iban: string,
+ *     bic: string,
+ *     accountHolder: string,
+ *     place: string,
+ *     applicationDate: string,
+ *     legalGuardianName: string,
+ *     acceptsStatutes: bool,
+ *     acceptsEmailInvitation: bool,
+ *     acceptsPrivacyPolicy: bool,
+ *     confirmsMinorAttachment: bool
+ * }
+ */
 final class MembershipApplicationPayloadMapper
 {
     /**
      * @param array<string, mixed> $payload
      *
-     * @return array<string, bool|string>
+     * @return MembershipApplicationData
      */
     public function map(array $payload): array
     {

@@ -95,7 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        if ($this->email === null || $this->email === '') {
+            throw new \LogicException('Die E-Mail-Adresse des Benutzers fehlt.');
+        }
+
+        return $this->email;
     }
 
     /** @return list<string> */
@@ -104,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /** @param list<string> $roles */

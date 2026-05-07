@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -65,6 +66,7 @@ class UserType extends AbstractType
         $resolver->setAllowedTypes('is_edit', 'bool');
     }
 
+    /** @return array<int, Constraint> */
     private function getPasswordConstraints(bool $isEdit): array
     {
         if ($isEdit) {
