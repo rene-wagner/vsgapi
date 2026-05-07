@@ -134,6 +134,29 @@ class MediaLibraryController extends AbstractController
         ]);
     }
 
+    #[Route('/items/{id}/thumbnail-regenerate', name: 'admin_mediathek_item_thumbnail_regenerate', methods: ['POST'])]
+    public function regenerateThumbnail(
+        Request $request,
+        MediaItem $item,
+        MediaUploadService $mediaUploadService,
+        EntityManagerInterface $entityManager,
+    ): Response {
+        if (!$this->isCsrfTokenValid('regenerate_thumbnail_media_item' . $item->getId(), $request->getPayload()->getString('_token'))) {
+            return $this->redirectToRoute('admin_mediathek_item_edit', ['id' => $item->getId()]);
+        }
+
+        try {
+            $mediaUploadService->regenerateThumbnail($item);
+            $item->setUpdatedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+            $this->addFlash('success', 'Thumbnail wurde neu erzeugt.');
+        } catch (HttpExceptionInterface $e) {
+            $this->addFlash('danger', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('admin_mediathek_item_edit', ['id' => $item->getId()]);
+    }
+
     #[Route('/items/{id}/copy', name: 'admin_mediathek_item_copy', methods: ['POST'])]
     public function copyItem(
         Request $request,

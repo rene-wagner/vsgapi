@@ -97,25 +97,9 @@ class MediaUploadService
         $item->setDescription($description);
 
         if ($type === MediaItemType::Image && !\in_array($mimeType, ['image/svg+xml', 'image/gif'], true)) {
-            $thumbRelative = 'thumbnails/' . $id . '.jpg';
-            $thumbAbsolute = $this->storageDir . '/' . $thumbRelative;
-            $thumbDir = dirname($thumbAbsolute);
-            if (!is_dir($thumbDir) && !mkdir($thumbDir, 0775, true) && !is_dir($thumbDir)) {
-                $this->logger->error('Thumbnail directory could not be created.', ['dir' => $thumbDir]);
-            } else {
-                try {
-                    $manager = new ImageManager(new Driver());
-                    $image = $manager->read($absolutePath);
-                    $image->scaleDown(width: $this->thumbnailMaxEdge, height: $this->thumbnailMaxEdge);
-                    $encoded = $image->toJpeg(quality: 82);
-                    $encoded->save($thumbAbsolute);
-                    $item->setThumbnailPath($thumbRelative);
-                } catch (\Throwable $e) {
-                    $this->logger->error('Media thumbnail generation failed.', [
-                        'exception' => $e,
-                        'path' => $relativePath,
-                    ]);
-                }
+            $thumbRelative = $this->buildThumbnailRelativePath($relativePath);
+            if ($this->generateThumbnail($relativePath, $thumbRelative)) {
+                $item->setThumbnailPath($thumbRelative);
             }
         }
 
@@ -123,5 +107,108 @@ class MediaUploadService
         $this->entityManager->flush();
 
         return $item;
+    }
+
+    public function regenerateThumbnail(MediaItem $item): bool
+    {
+        if ($item->getType() !== MediaItemType::Image || \in_array($item->getMimeType(), ['image/svg+xml', 'image/gif'], true)) {
+            throw new BadRequestHttpException('Für dieses Medium kann kein Thumbnail erzeugt werden.');
+        }
+
+        $relativePath = $item->getPath();
+        if ($relativePath === null || $relativePath === '') {
+            throw new BadRequestHttpException('Die Quelldatei fehlt.');
+        }
+        $relativePath = $this->normalizeStorageRelativePath($relativePath);
+
+        $previousThumbRelative = $item->getThumbnailPath();
+        $thumbRelative = $this->buildThumbnailRelativePath($relativePath);
+
+        if (!$this->generateThumbnail($relativePath, $thumbRelative)) {
+            throw new BadRequestHttpException('Thumbnail konnte nicht erzeugt werden.');
+        }
+
+        if ($previousThumbRelative !== null && $previousThumbRelative !== '') {
+            $previousThumbRelative = $this->normalizeStorageRelativePath($previousThumbRelative);
+            if ($previousThumbRelative !== $thumbRelative) {
+                $this->removeFileIfExists($previousThumbRelative);
+            }
+        }
+
+        $item->setThumbnailPath($thumbRelative);
+
+        return true;
+    }
+
+    private function generateThumbnail(string $relativePath, string $thumbRelative): bool
+    {
+        $relativePath = $this->normalizeStorageRelativePath($relativePath);
+        $thumbRelative = $this->normalizeStorageRelativePath($thumbRelative);
+
+        $absolutePath = $this->storageDir . '/' . $relativePath;
+        if (!is_file($absolutePath)) {
+            $this->logger->error('Media source file for thumbnail generation is missing.', ['path' => $relativePath]);
+
+            return false;
+        }
+
+        $thumbAbsolute = $this->storageDir . '/' . $thumbRelative;
+        $thumbDir = dirname($thumbAbsolute);
+        if (!is_dir($thumbDir) && !mkdir($thumbDir, 0775, true) && !is_dir($thumbDir)) {
+            $this->logger->error('Thumbnail directory could not be created.', ['dir' => $thumbDir]);
+
+            return false;
+        }
+
+        try {
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($absolutePath);
+            $image->scaleDown(width: $this->thumbnailMaxEdge, height: $this->thumbnailMaxEdge);
+            $image->toJpeg(quality: 82)->save($thumbAbsolute);
+
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error('Media thumbnail generation failed.', [
+                'exception' => $e,
+                'path' => $relativePath,
+            ]);
+
+            return false;
+        }
+    }
+
+    private function buildThumbnailRelativePath(string $relativePath): string
+    {
+        $relativePath = $this->normalizeStorageRelativePath($relativePath);
+
+        return 'thumbnails/' . pathinfo($relativePath, PATHINFO_FILENAME) . '.jpg';
+    }
+
+    private function normalizeStorageRelativePath(string $path): string
+    {
+        $path = ltrim($path, '/');
+
+        if (str_starts_with($path, 'uploads/')) {
+            $path = substr($path, strlen('uploads/'));
+        }
+
+        return $path;
+    }
+
+    private function removeFileIfExists(string $relativePath): void
+    {
+        $absolutePath = $this->storageDir . '/' . $relativePath;
+        if (!is_file($absolutePath)) {
+            return;
+        }
+
+        try {
+            unlink($absolutePath);
+        } catch (\Throwable $e) {
+            $this->logger->error('Thumbnail delete failed.', [
+                'exception' => $e,
+                'path' => $relativePath,
+            ]);
+        }
     }
 }

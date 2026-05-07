@@ -44,7 +44,7 @@ class MediaCopyService
         $newThumbRelative = null;
         $thumbSrc = $source->getThumbnailPath();
         if ($thumbSrc !== null && $thumbSrc !== '' && is_file($this->storageDir . '/' . $thumbSrc)) {
-            $newThumbRelative = 'thumbnails/' . $newId . '.jpg';
+            $newThumbRelative = 'thumbnails/' . pathinfo($newRelative, PATHINFO_FILENAME) . '.jpg';
             $thumbDst = $this->storageDir . '/' . $newThumbRelative;
             $thumbDir = dirname($thumbDst);
             if (!is_dir($thumbDir) && !mkdir($thumbDir, 0775, true) && !is_dir($thumbDir)) {

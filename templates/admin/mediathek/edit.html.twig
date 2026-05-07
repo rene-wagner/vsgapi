@@ -11,6 +11,7 @@
     {% set file_url = media_url.buildOriginalUrl(item) %}
     {% set is_image = item.type.value == 'image' %}
     {% set is_croppable = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
+    {% set can_regenerate_thumbnail = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
 
     {{ form_start(form) }}
     {{ form_errors(form) }}
@@ -78,6 +79,11 @@
 
                     <div class="d-flex flex-wrap gap-2 mb-2">
                         <button type="submit" class="btn btn-primary">Speichern</button>
+                        {% if can_regenerate_thumbnail %}
+                            <button type="submit" class="btn btn-outline-secondary" form="regenerate-thumbnail-form">
+                                <i class="fa-solid fa-image" aria-hidden="true"></i> Thumbnail neu erzeugen
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -135,4 +141,10 @@
 
     {{ form_widget(form._token) }}
     {{ form_end(form, { render_rest: false }) }}
+
+    {% if can_regenerate_thumbnail %}
+        <form id="regenerate-thumbnail-form" method="post" action="{{ path('admin_mediathek_item_thumbnail_regenerate', {id: item.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('regenerate_thumbnail_media_item' ~ item.id) }}">
+        </form>
+    {% endif %}
 {% endblock %}

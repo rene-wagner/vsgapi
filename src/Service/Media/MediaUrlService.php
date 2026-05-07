@@ -34,7 +34,7 @@ class MediaUrlService
             return null;
         }
 
-        return $this->appendVersion('/uploads/' . ltrim($item->getPath(), '/'), $item);
+        return $this->buildUploadUrl($item->getPath(), $item);
     }
 
     public function buildThumbnailUrl(MediaItem $item): ?string
@@ -43,7 +43,7 @@ class MediaUrlService
             return null;
         }
 
-        return $this->appendVersion('/uploads/' . ltrim($item->getThumbnailPath(), '/'), $item);
+        return $this->buildUploadUrl($item->getThumbnailPath(), $item);
     }
 
     public function buildCroppedUrl(MediaItem $item): ?string
@@ -57,7 +57,7 @@ class MediaUrlService
             return null;
         }
 
-        return $this->appendVersion('/uploads/' . $relativePath, $item);
+        return $this->buildUploadUrl($relativePath, $item);
     }
 
     public function buildCroppedThumbnailUrl(MediaItem $item): ?string
@@ -71,7 +71,7 @@ class MediaUrlService
             return null;
         }
 
-        return $this->appendVersion('/uploads/' . $relativePath, $item);
+        return $this->buildUploadUrl($relativePath, $item);
     }
 
     public function buildDisplayUrl(MediaItem $item): ?string
@@ -82,6 +82,17 @@ class MediaUrlService
         }
 
         return $this->buildOriginalUrl($item);
+    }
+
+    private function buildUploadUrl(string $path, MediaItem $item): string
+    {
+        $path = ltrim($path, '/');
+
+        if (str_starts_with($path, 'uploads/')) {
+            $path = substr($path, strlen('uploads/'));
+        }
+
+        return $this->appendVersion('/uploads/' . $path, $item);
     }
 
     private function appendVersion(string $url, MediaItem $item): string
