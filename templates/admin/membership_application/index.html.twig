@@ -1,0 +1,48 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Anträge - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">Anträge</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Nachname</th>
+                        <th scope="col">Vorname</th>
+                        <th scope="col">Eingegangen am</th>
+                        <th scope="col">PDF</th>
+                        <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for membership_application in membership_applications %}
+                        <tr>
+                            <td>{{ membership_application.lastName }}</td>
+                            <td>{{ membership_application.firstName }}</td>
+                            <td>{{ membership_application.createdAt|date('d.m.Y H:i') }}</td>
+                            <td>
+                                <a href="{{ path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer">
+                                    {{ membership_application.pdfFilename }}
+                                </a>
+                            </td>
+                            <td class="text-md-end">
+                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                                    <a href="{{ path('admin_membership_application_show', {id: membership_application.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-5">Keine Anträge vorhanden.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

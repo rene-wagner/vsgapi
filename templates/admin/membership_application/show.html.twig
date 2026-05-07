@@ -1,0 +1,41 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}{{ membership_application.firstName }} {{ membership_application.lastName }} - Anträge - VSG Admin{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
+        <h1 class="h3 mb-0">{{ membership_application.firstName }} {{ membership_application.lastName }}</h1>
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ path('membership_application_download', {token: membership_application.pdfToken}) }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">PDF öffnen</a>
+            <a href="{{ path('admin_membership_application_index') }}" class="btn btn-secondary">Zurück</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
+                <dd class="col-sm-9">{{ membership_application.id }}</dd>
+
+                <dt class="col-sm-3 text-secondary small text-uppercase">Vorname</dt>
+                <dd class="col-sm-9">{{ membership_application.firstName }}</dd>
+
+                <dt class="col-sm-3 text-secondary small text-uppercase">Nachname</dt>
+                <dd class="col-sm-9">{{ membership_application.lastName }}</dd>
+
+                <dt class="col-sm-3 text-secondary small text-uppercase">Dateiname</dt>
+                <dd class="col-sm-9">
+                    <a href="{{ path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer">
+                        {{ membership_application.pdfFilename }}
+                    </a>
+                </dd>
+
+                <dt class="col-sm-3 text-secondary small text-uppercase">Relativer Pfad</dt>
+                <dd class="col-sm-9"><code>{{ membership_application.pdfPath }}</code></dd>
+
+                <dt class="col-sm-3 text-secondary small text-uppercase">Eingegangen am</dt>
+                <dd class="col-sm-9">{{ membership_application.createdAt|date('d.m.Y H:i') }}</dd>
+            </dl>
+        </div>
+    </div>
+{% endblock %}

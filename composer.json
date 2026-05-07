@@ -17,6 +17,8 @@
         "enshrined/svg-sanitize": ">=0.22",
         "intervention/image": "^3.11.7",
         "nelmio/cors-bundle": "^2.6.1",
+        "setasign/fpdf": "^1.8",
+        "setasign/fpdi": "^2.6",
         "symfony/asset": "7.3.*",
         "symfony/console": "7.3.*",
         "symfony/dotenv": "7.3.*",
