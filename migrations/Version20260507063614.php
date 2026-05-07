@@ -245,26 +245,26 @@ final class Version20260507063614 extends AbstractMigration
             );
         }
 
-        // --- Reset auto-increment values to max(id) + 1 per table ---
-        // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
-        // so we compute the next value from the imported data.
-        $autoIncrement = [
-            '`user`' => max(array_column($users, 'id')) + 1,
-            'category' => max(array_column($categories, 'id')) + 1,
-            'media_folder' => max(array_column($folders, 'id')) + 1,
-            'media_item' => max(array_column($items, 'id')) + 1,
-            'contact_person' => max(array_column($contacts, 'id')) + 1,
-            'location' => max(array_column($locations, 'id')) + 1,
-            'department' => max(array_column($departments, 'id')) + 1,
-            'department_statistic' => max(array_column($statistics, 'id')) + 1,
-            'department_training_group' => max(array_column($trainingGroups, 'id')) + 1,
-            'department_training_session' => max(array_column($trainingSessions, 'id')) + 1,
-            'post' => max(array_column($posts, 'id')) + 1,
-            'content_block' => max(array_column($contentBlocks, 'pk')) + 1,
-        ];
-        foreach ($autoIncrement as $table => $nextId) {
-            $this->addSql(sprintf('ALTER TABLE %s AUTO_INCREMENT = %d', $table, $nextId));
-        }
+        // // --- Reset auto-increment values to max(id) + 1 per table ---
+        // // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
+        // // so we compute the next value from the imported data.
+        // $autoIncrement = [
+        //     '`user`' => max(array_column($users, 'id')) + 1,
+        //     'category' => max(array_column($categories, 'id')) + 1,
+        //     'media_folder' => max(array_column($folders, 'id')) + 1,
+        //     'media_item' => max(array_column($items, 'id')) + 1,
+        //     'contact_person' => max(array_column($contacts, 'id')) + 1,
+        //     'location' => max(array_column($locations, 'id')) + 1,
+        //     'department' => max(array_column($departments, 'id')) + 1,
+        //     'department_statistic' => max(array_column($statistics, 'id')) + 1,
+        //     'department_training_group' => max(array_column($trainingGroups, 'id')) + 1,
+        //     'department_training_session' => max(array_column($trainingSessions, 'id')) + 1,
+        //     'post' => max(array_column($posts, 'id')) + 1,
+        //     'content_block' => max(array_column($contentBlocks, 'pk')) + 1,
+        // ];
+        // foreach ($autoIncrement as $table => $nextId) {
+        //     $this->addSql(sprintf('ALTER TABLE %s AUTO_INCREMENT = %d', $table, $nextId));
+        // }
     }
 
     public function down(Schema $schema): void

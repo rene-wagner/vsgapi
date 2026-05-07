@@ -3,12 +3,11 @@
 namespace App\Service\Media;
 
 use App\Entity\MediaItem;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaUrlService
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly MediaCropService $mediaCropService,
     ) {
     }
 
@@ -35,13 +34,7 @@ class MediaUrlService
             return null;
         }
 
-        $url = $this->urlGenerator->generate('media_original', [
-            'id' => $item->getId(),
-            'slug' => $item->getSlug(),
-            'ext' => $item->getExtension(),
-        ], UrlGeneratorInterface::ABSOLUTE_PATH);
-
-        return $this->appendVersion($url, $item);
+        return $this->appendVersion('/uploads/' . ltrim($item->getPath(), '/'), $item);
     }
 
     public function buildThumbnailUrl(MediaItem $item): ?string
@@ -50,12 +43,7 @@ class MediaUrlService
             return null;
         }
 
-        $url = $this->urlGenerator->generate('media_thumbnail', [
-            'id' => $item->getId(),
-            'slug' => $item->getSlug(),
-        ], UrlGeneratorInterface::ABSOLUTE_PATH);
-
-        return $this->appendVersion($url, $item);
+        return $this->appendVersion('/uploads/' . ltrim($item->getThumbnailPath(), '/'), $item);
     }
 
     public function buildCroppedUrl(MediaItem $item): ?string
@@ -64,13 +52,12 @@ class MediaUrlService
             return null;
         }
 
-        $url = $this->urlGenerator->generate('media_cropped', [
-            'id' => $item->getId(),
-            'slug' => $item->getSlug(),
-            'ext' => $item->getExtension(),
-        ], UrlGeneratorInterface::ABSOLUTE_PATH);
+        $relativePath = $this->mediaCropService->getCroppedRelativePath($item);
+        if ($relativePath === null) {
+            return null;
+        }
 
-        return $this->appendVersion($url, $item);
+        return $this->appendVersion('/uploads/' . $relativePath, $item);
     }
 
     public function buildCroppedThumbnailUrl(MediaItem $item): ?string
@@ -79,12 +66,12 @@ class MediaUrlService
             return null;
         }
 
-        $url = $this->urlGenerator->generate('media_cropped_thumbnail', [
-            'id' => $item->getId(),
-            'slug' => $item->getSlug(),
-        ], UrlGeneratorInterface::ABSOLUTE_PATH);
+        $relativePath = $this->mediaCropService->getCroppedThumbnailRelativePath($item);
+        if ($relativePath === null) {
+            return null;
+        }
 
-        return $this->appendVersion($url, $item);
+        return $this->appendVersion('/uploads/' . $relativePath, $item);
     }
 
     public function buildDisplayUrl(MediaItem $item): ?string

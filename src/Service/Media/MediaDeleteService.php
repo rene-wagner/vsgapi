@@ -11,6 +11,7 @@ class MediaDeleteService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
+        private readonly MediaCropService $mediaCropService,
         private readonly string $storageDir,
     ) {
     }
@@ -19,6 +20,7 @@ class MediaDeleteService
     {
         $this->removeFileIfExists($item->getPath());
         $this->removeFileIfExists($item->getThumbnailPath());
+        $this->mediaCropService->delete($item);
 
         $this->entityManager->remove($item);
         $this->entityManager->flush();

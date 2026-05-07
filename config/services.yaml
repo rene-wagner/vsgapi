@@ -6,8 +6,8 @@
 parameters:
     app.mailer_from: '%env(MAILER_FROM)%'
     membership_application.template_path: '%kernel.project_dir%/resources/pdf/membership-applications/Aufnahmeantrag2018.pdf'
-    membership_application.storage_dir: '%kernel.project_dir%/var/membership-applications'
-    media.storage_dir: '%kernel.project_dir%/var/media'
+    membership_application.storage_dir: '%kernel.project_dir%/public/antraege'
+    media.storage_dir: '%kernel.project_dir%/public/uploads'
     media.max_upload_bytes: 10485760
     media.thumbnail_max_edge: 320
     page_content.iframe_url: '%env(PAGE_CONTENT_IFRAME_URL)%'
@@ -30,9 +30,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Controller\MediaFileServeController:
+    App\Service\Media\MediaCropService:
         arguments:
-            $mediaStorageDir: '%media.storage_dir%'
+            $storageDir: '%media.storage_dir%'
             $thumbnailMaxEdge: '%media.thumbnail_max_edge%'
 
     App\Controller\MembershipApplicationDownloadController:
@@ -53,6 +53,11 @@ services:
     App\Service\Media\MediaDeleteService:
         arguments:
             $storageDir: '%media.storage_dir%'
+
+    App\EventSubscriber\MediaItemFileSyncSubscriber:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+            - { name: doctrine.event_listener, event: postUpdate }
 
     App\Service\Media\MediaCopyService:
         arguments:

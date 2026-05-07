@@ -54,7 +54,7 @@ final class MembershipApplicationPdfService
 
     public function getRelativePath(string $filename): string
     {
-        return 'aufnahmeantrag/' . $this->getToken($filename);
+        return 'antraege/' . $filename;
     }
 
     public function getToken(string $filename): string

@@ -62,7 +62,7 @@ COPY --from=vendor /app /app
 COPY --from=assets /app/public/build /app/public/build
 COPY .docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
 
-RUN mkdir -p var/cache var/log var/media public/bundles \
-    && chown -R www-data:www-data var public/bundles
+RUN mkdir -p var/cache var/log public/bundles public/uploads public/antraege \
+    && chown -R www-data:www-data var public/bundles public/uploads public/antraege
 
-VOLUME ["/app/var/media"]
+VOLUME ["/app/public/uploads", "/app/public/antraege"]

@@ -26,7 +26,7 @@
                             <td>{{ membership_application.firstName }}</td>
                             <td>{{ membership_application.createdAt|date('d.m.Y H:i') }}</td>
                             <td>
-                                <a href="{{ path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer">
+                                <a href="{{ membership_application.pdfPath starts with 'antraege/' ? asset(membership_application.pdfPath) : path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer">
                                     {{ membership_application.pdfFilename }}
                                 </a>
                             </td>

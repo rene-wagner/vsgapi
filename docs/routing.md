@@ -154,13 +154,14 @@ Konfiguriert in `src/Entity/MediaItem.php`. Zugriff nur für authentifizierte Be
 
 ## Öffentliche Mediendateien (kein API Platform)
 
-Auslieferung der gespeicherten Dateien aus `var/media` (relativ zu `media.storage_dir`). Die in der Datenbank gespeicherten Pfade (`path`, `thumbnail_path`) werden unter dieser URL-Präfixkette erreichbar; vollständige Links setzen sich mit `MEDIA_HOST` und `media.public_path_prefix` (Standard `/media/files`) zusammen (`MediaUrlService`).
+Gespeicherte Mediendateien liegen direkt unter `public/uploads` und werden daher statisch ausgeliefert. Relevante Unterverzeichnisse sind:
 
-| Name | Methoden | Pfad | Hinweis |
-|------|----------|------|---------|
-| `media_file_serve` | GET | `/media/files/{path}` | `{path}` ist der relative Speicherpfad (kann Schrägstriche enthalten). Öffentlich (`PUBLIC_ACCESS`). |
+- `public/uploads/items`
+- `public/uploads/thumbnails`
+- `public/uploads/cropped`
+- `public/uploads/cropped-thumbnails`
 
-Controller: `App\Controller\MediaFileServeController`.
+`MediaUrlService` erzeugt dafür direkte URLs unter `/uploads/...`.
 
 ---
 
