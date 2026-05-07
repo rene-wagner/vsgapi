@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260504091309 extends AbstractMigration
+final class Version20260507063614 extends AbstractMigration
 {
     private const IMPORT_TIMESTAMP = '2026-04-14 12:00:00';
 
