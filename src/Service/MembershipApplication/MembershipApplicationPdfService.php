@@ -27,29 +27,22 @@ final class MembershipApplicationPdfService
         $this->getToken($filename);
 
         $outputPath = $this->storageDir . DIRECTORY_SEPARATOR . $filename;
-        $normalizedTemplatePath = $this->createNormalizedTemplate();
 
-        try {
-            $pdf = new Fpdi();
-            $pdf->SetAutoPageBreak(false);
+        $pdf = new Fpdi();
+        $pdf->SetAutoPageBreak(false);
 
-            $pdf->setSourceFile($normalizedTemplatePath);
-            $templateId = $pdf->importPage(1);
-            $templateSize = $pdf->getTemplateSize($templateId);
-            if (!\is_array($templateSize)) {
-                throw new \RuntimeException('Die PDF-Vorlage konnte nicht verarbeitet werden.');
-            }
-
-            $pdf->AddPage($templateSize['orientation'], [$templateSize['width'], $templateSize['height']]);
-            $pdf->useTemplate($templateId);
-
-            $this->render($pdf, $application);
-            $pdf->Output('F', $outputPath);
-        } finally {
-            if (is_file($normalizedTemplatePath)) {
-                unlink($normalizedTemplatePath);
-            }
+        $pdf->setSourceFile($this->templatePath);
+        $templateId = $pdf->importPage(1);
+        $templateSize = $pdf->getTemplateSize($templateId);
+        if (!\is_array($templateSize)) {
+            throw new \RuntimeException('Die PDF-Vorlage konnte nicht verarbeitet werden.');
         }
+
+        $pdf->AddPage($templateSize['orientation'], [$templateSize['width'], $templateSize['height']]);
+        $pdf->useTemplate($templateId);
+
+        $this->render($pdf, $application);
+        $pdf->Output('F', $outputPath);
 
         return $filename;
     }
@@ -89,37 +82,6 @@ final class MembershipApplicationPdfService
         if (!mkdir($concurrentDirectory = $this->storageDir, 0775, true) && !is_dir($concurrentDirectory)) {
             throw new \RuntimeException('Das Zielverzeichnis fuer Aufnahmeantraege konnte nicht erstellt werden.');
         }
-    }
-
-    private function createNormalizedTemplate(): string
-    {
-        $tempFile = tempnam($this->storageDir, 'membership-template-');
-        if ($tempFile === false) {
-            throw new \RuntimeException('Es konnte keine temporaere PDF-Datei erstellt werden.');
-        }
-
-        $normalizedPath = $tempFile . '.pdf';
-        rename($tempFile, $normalizedPath);
-
-        $command = sprintf(
-            'gs -q -dNOPAUSE -dBATCH -dCompatibilityLevel=1.4 -sDEVICE=pdfwrite -sOutputFile=%s %s 2>&1',
-            escapeshellarg($normalizedPath),
-            escapeshellarg($this->templatePath),
-        );
-
-        $output = [];
-        $exitCode = 0;
-        exec($command, $output, $exitCode);
-
-        if ($exitCode !== 0 || !is_file($normalizedPath)) {
-            if (is_file($normalizedPath)) {
-                unlink($normalizedPath);
-            }
-
-            throw new \RuntimeException('Die PDF-Vorlage konnte nicht verarbeitet werden.');
-        }
-
-        return $normalizedPath;
     }
 
     /** @param MembershipApplicationData $application */
