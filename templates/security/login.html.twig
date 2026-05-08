@@ -3,45 +3,45 @@
 {% block title %}Login - VSG Admin{% endblock %}
 
 {% block body %}
-    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-11 col-sm-8 col-md-5 col-lg-4">
-                    <div class="card shadow">
-                        <div class="card-body p-4">
-                            <h1 class="h4 text-center mb-4">VSG Admin Login</h1>
+    <div class="flex min-h-screen items-center justify-center bg-gray-900 px-4 py-8">
+        <div class="w-full max-w-md">
+            <div class="rounded-2xl bg-white p-6 shadow-xl sm:p-8">
+                <h1 class="mb-6 text-center text-2xl font-semibold text-gray-900">VSG Admin Login</h1>
 
-                            {% for type, messages in app.flashes %}
-                                {% for message in messages %}
-                                    {% set alert_type = type == 'error' ? 'danger' : type %}
-                                    <div class="alert alert-{{ alert_type }}" role="alert">{{ message }}</div>
-                                {% endfor %}
-                            {% endfor %}
+                {% set alert_classes = {
+                    success: 'border-green-200 bg-green-50 text-green-800',
+                    error: 'border-red-200 bg-red-50 text-red-800',
+                    warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
+                    info: 'border-blue-200 bg-blue-50 text-blue-800'
+                } %}
 
-                            {% if error %}
-                                <div class="alert alert-danger" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
+                {% for type, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="mb-4 rounded-lg border px-4 py-3 text-sm {{ alert_classes[type] ?? 'border-gray-200 bg-white text-gray-800' }}" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endfor %}
 
-                            <form method="post">
-                                <div class="mb-3">
-                                    <label for="inputEmail" class="form-label">E-Mail</label>
-                                    <input type="email" class="form-control" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="inputPassword" class="form-label">Passwort</label>
-                                    <input type="password" class="form-control" id="inputPassword" name="_password" required autocomplete="current-password">
-                                </div>
+                {% if error %}
+                    <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                                <button type="submit" class="btn btn-primary w-100">Anmelden</button>
-                            </form>
-
-                            <div class="text-center mt-3">
-                                <a href="{{ path('app_forgot_password_request') }}">Passwort vergessen?</a>
-                            </div>
-                        </div>
+                <form method="post" class="space-y-5">
+                    <div>
+                        <label for="inputEmail" class="mb-2 block text-sm font-medium text-gray-900">E-Mail</label>
+                        <input type="email" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
                     </div>
+                    <div>
+                        <label for="inputPassword" class="mb-2 block text-sm font-medium text-gray-900">Passwort</label>
+                        <input type="password" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" id="inputPassword" name="_password" required autocomplete="current-password">
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Anmelden</button>
+                </form>
+
+                <div class="mt-5 text-center text-sm">
+                    <a href="{{ path('app_forgot_password_request') }}" class="font-medium text-blue-700 hover:underline">Passwort vergessen?</a>
                 </div>
             </div>
         </div>

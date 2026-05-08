@@ -3,39 +3,22 @@
 {% block title %}{{ membership_application.firstName }} {{ membership_application.lastName }} - Anträge - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">{{ membership_application.firstName }} {{ membership_application.lastName }}</h1>
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ membership_application.pdfPath starts with 'antraege/' ? asset(membership_application.pdfPath) : path('membership_application_download', {token: membership_application.pdfToken}) }}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">PDF öffnen</a>
-            <a href="{{ path('admin_membership_application_index') }}" class="btn btn-secondary">Zurück</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">{{ membership_application.firstName }} {{ membership_application.lastName }}</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ membership_application.pdfPath starts with 'antraege/' ? asset(membership_application.pdfPath) : path('membership_application_download', {token: membership_application.pdfToken}) }}" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300" target="_blank" rel="noopener noreferrer">PDF öffnen</a>
+            <a href="{{ path('admin_membership_application_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Zurück</a>
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <dl class="row mb-0">
-                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
-                <dd class="col-sm-9">{{ membership_application.id }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Vorname</dt>
-                <dd class="col-sm-9">{{ membership_application.firstName }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Nachname</dt>
-                <dd class="col-sm-9">{{ membership_application.lastName }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Dateiname</dt>
-                <dd class="col-sm-9">
-                    <a href="{{ membership_application.pdfPath starts with 'antraege/' ? asset(membership_application.pdfPath) : path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer">
-                        {{ membership_application.pdfFilename }}
-                    </a>
-                </dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Relativer Pfad</dt>
-                <dd class="col-sm-9"><code>{{ membership_application.pdfPath }}</code></dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Eingegangen am</dt>
-                <dd class="col-sm-9">{{ membership_application.createdAt|date('d.m.Y H:i') }}</dd>
-            </dl>
-        </div>
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <dl class="divide-y divide-gray-200">
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">ID</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ membership_application.id }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Vorname</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ membership_application.firstName }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Nachname</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ membership_application.lastName }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Dateiname</dt><dd class="sm:col-span-2"><a href="{{ membership_application.pdfPath starts with 'antraege/' ? asset(membership_application.pdfPath) : path('membership_application_download', {token: membership_application.pdfToken}) }}" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-blue-700 hover:underline">{{ membership_application.pdfFilename }}</a></dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Relativer Pfad</dt><dd class="sm:col-span-2"><code class="rounded bg-gray-100 px-2 py-1 text-sm text-gray-800">{{ membership_application.pdfPath }}</code></dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Eingegangen am</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ membership_application.createdAt|date('d.m.Y H:i') }}</dd></div>
+        </dl>
     </div>
 {% endblock %}

@@ -3,81 +3,40 @@
 {% block title %}{{ contact_person.firstName }} {{ contact_person.lastName }} - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">{{ contact_person.firstName }} {{ contact_person.lastName }}</h1>
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="btn btn-primary" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
-            <a href="{{ path('admin_contact_person_index') }}" class="btn btn-secondary">Zurück</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">{{ contact_person.firstName }} {{ contact_person.lastName }}</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
+            <a href="{{ path('admin_contact_person_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Zurück</a>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <dl class="row mb-0">
-                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
-                <dd class="col-sm-9">{{ contact_person.id }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Slug</dt>
-                <dd class="col-sm-9">{{ contact_person.slug }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Vorname</dt>
-                <dd class="col-sm-9">{{ contact_person.firstName }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Nachname</dt>
-                <dd class="col-sm-9">{{ contact_person.lastName }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Funktion</dt>
-                <dd class="col-sm-9">
-                    {% if contact_person.position %}
-                        {{ contact_person.position }}
-                    {% else %}
-                        <span class="text-muted">—</span>
-                    {% endif %}
-                </dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">E-Mail</dt>
-                <dd class="col-sm-9">
-                    {% if contact_person.email %}
-                        <a href="mailto:{{ contact_person.email }}">{{ contact_person.email }}</a>
-                    {% else %}
-                        <span class="text-muted">—</span>
-                    {% endif %}
-                </dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Telefon</dt>
-                <dd class="col-sm-9">
-                    {% if contact_person.phone %}
-                        {{ contact_person.phone }}
-                    {% else %}
-                        <span class="text-muted">—</span>
-                    {% endif %}
-                </dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Adresse</dt>
-                <dd class="col-sm-9">
-                    {% if contact_person.address %}
-                        {{ contact_person.address|nl2br }}
-                    {% else %}
-                        <span class="text-muted">—</span>
-                    {% endif %}
-                </dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Vorstand</dt>
-                <dd class="col-sm-9">{{ contact_person.isBoard ? 'Ja' : 'Nein' }}</dd>
-            </dl>
-        </div>
+    <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <dl class="divide-y divide-gray-200">
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">ID</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ contact_person.id }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Slug</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ contact_person.slug }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Vorname</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ contact_person.firstName }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Nachname</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ contact_person.lastName }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Funktion</dt><dd class="text-sm text-gray-900 sm:col-span-2">{% if contact_person.position %}{{ contact_person.position }}{% else %}<span class="text-gray-500">—</span>{% endif %}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">E-Mail</dt><dd class="sm:col-span-2">{% if contact_person.email %}<a href="mailto:{{ contact_person.email }}" class="text-sm font-medium text-blue-700 hover:underline">{{ contact_person.email }}</a>{% else %}<span class="text-sm text-gray-500">—</span>{% endif %}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Telefon</dt><dd class="text-sm text-gray-900 sm:col-span-2">{% if contact_person.phone %}{{ contact_person.phone }}{% else %}<span class="text-gray-500">—</span>{% endif %}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Adresse</dt><dd class="text-sm text-gray-900 sm:col-span-2">{% if contact_person.address %}{{ contact_person.address|nl2br }}{% else %}<span class="text-gray-500">—</span>{% endif %}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Vorstand</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ contact_person.isBoard ? 'Ja' : 'Nein' }}</dd></div>
+        </dl>
     </div>
 
     {% if contact_person.picture %}
         {% include 'admin/_media_item_card.html.twig' with { media_item: contact_person.picture, title: 'Bild' } %}
     {% endif %}
 
-    <div class="card shadow-sm border-danger">
-        <h5 class="card-header text-danger">Kontaktperson löschen</h5>
-        <div class="card-body">
+    <div class="overflow-hidden rounded-xl border border-red-200 bg-white shadow-sm">
+        <div class="border-b border-red-200 bg-red-50 px-6 py-4">
+            <h2 class="text-lg font-semibold text-red-700">Kontaktperson löschen</h2>
+        </div>
+        <div class="px-6 py-4">
             <form method="post" action="{{ path('admin_contact_person_delete', {id: contact_person.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Kontaktperson löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ contact_person.id) }}">
-                <button type="submit" class="btn btn-danger" aria-label="Kontaktperson löschen" title="Kontaktperson löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
+                <button type="submit" class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Kontaktperson löschen" title="Kontaktperson löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
             </form>
         </div>
     </div>

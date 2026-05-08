@@ -3,124 +3,89 @@
 {% block title %}{{ department.name }} - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">{{ department.name }}</h1>
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ path('admin_department_edit', {id: department.id}) }}" class="btn btn-primary" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
-            <a href="{{ path('admin_department_index') }}" class="btn btn-secondary">Zurück</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">{{ department.name }}</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ path('admin_department_edit', {id: department.id}) }}" class="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
+            <a href="{{ path('admin_department_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Zurück</a>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <dl class="row mb-0">
-                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
-                <dd class="col-sm-9">{{ department.id }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Name</dt>
-                <dd class="col-sm-9">{{ department.name }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Slug</dt>
-                <dd class="col-sm-9"><code>{{ department.slug }}</code></dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Beschreibung</dt>
-                <dd class="col-sm-9 admin-pre-content mb-0">{{ department.description }}</dd>
-            </dl>
-        </div>
+    <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <dl class="divide-y divide-gray-200">
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">ID</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ department.id }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Name</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ department.name }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Slug</dt><dd class="sm:col-span-2"><code class="rounded bg-gray-100 px-2 py-1 text-sm text-gray-800">{{ department.slug }}</code></dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Beschreibung</dt><dd class="admin-pre-content text-sm text-gray-900 sm:col-span-2">{{ department.description }}</dd></div>
+        </dl>
     </div>
 
     {% if department.departmentStats|length > 0 %}
-        <div class="card shadow-sm mb-4">
-            <h5 class="card-header">Statistiken</h5>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col">Bezeichnung</th>
-                                <th scope="col">Wert</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for stat in department.departmentStats %}
-                                <tr>
-                                    <td>{{ stat.label }}</td>
-                                    <td>{{ stat.value }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-lg font-semibold text-gray-900">Statistiken</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                    <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        <tr><th scope="col" class="px-6 py-3">Bezeichnung</th><th scope="col" class="px-6 py-3">Wert</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        {% for stat in department.departmentStats %}
+                            <tr class="hover:bg-gray-50"><td class="px-6 py-4">{{ stat.label }}</td><td class="px-6 py-4">{{ stat.value }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     {% endif %}
 
     {% if department.departmentResults|length > 0 %}
-        <div class="card shadow-sm mb-4">
-            <h5 class="card-header">Ergebnisdienst</h5>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col">Titel</th>
-                                <th scope="col">Liga</th>
-                                <th scope="col">URL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in department.departmentResults %}
-                                <tr>
-                                    <td>{{ result.title }}</td>
-                                    <td>{{ result.league }}</td>
-                                    <td><a href="{{ result.url }}" target="_blank" rel="noopener noreferrer">{{ result.url }}</a></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-lg font-semibold text-gray-900">Ergebnisdienst</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                    <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        <tr><th scope="col" class="px-6 py-3">Titel</th><th scope="col" class="px-6 py-3">Liga</th><th scope="col" class="px-6 py-3">URL</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        {% for result in department.departmentResults %}
+                            <tr class="hover:bg-gray-50"><td class="px-6 py-4">{{ result.title }}</td><td class="px-6 py-4">{{ result.league }}</td><td class="px-6 py-4"><a href="{{ result.url }}" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-700 hover:underline">{{ result.url }}</a></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     {% endif %}
 
     {% if department.trainingGroups|length > 0 %}
         {% for group in department.trainingGroups %}
-            <div class="card shadow-sm mb-4">
-                <h5 class="card-header">{{ group.name }}</h5>
-                <div class="card-body">
+            <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div class="border-b border-gray-200 px-6 py-4">
+                    <h2 class="text-lg font-semibold text-gray-900">{{ group.name }}</h2>
+                </div>
+                <div class="px-6 py-4">
                     {% if group.ageRange %}
-                        <p class="text-secondary mb-3">Altersgruppe: {{ group.ageRange }}</p>
+                        <p class="mb-4 text-sm text-gray-600">Altersgruppe: {{ group.ageRange }}</p>
                     {% endif %}
 
                     {% if group.departmentTrainingSessions|length > 0 %}
-                        <div class="table-responsive">
-                            <table class="table table-sm table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th scope="col">Tag</th>
-                                        <th scope="col">Zeit</th>
-                                        <th scope="col">Sportstätte</th>
-                                    </tr>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                                <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                    <tr><th scope="col" class="px-6 py-3">Tag</th><th scope="col" class="px-6 py-3">Zeit</th><th scope="col" class="px-6 py-3">Sportstätte</th></tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="divide-y divide-gray-200 bg-white">
                                     {% for session in group.departmentTrainingSessions %}
-                                        <tr>
-                                            <td>{{ session.day }}</td>
-                                            <td>{{ session.time }}</td>
-                                            <td>
-                                                {% if session.location %}
-                                                    {{ session.location.name }}
-                                                {% else %}
-                                                    <span class="text-muted">—</span>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
+                                        <tr class="hover:bg-gray-50"><td class="px-6 py-4">{{ session.day }}</td><td class="px-6 py-4">{{ session.time }}</td><td class="px-6 py-4">{% if session.location %}{{ session.location.name }}{% else %}<span class="text-gray-500">—</span>{% endif %}</td></tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     {% else %}
-                        <p class="text-muted mb-0">Keine Trainingseinheiten eingetragen.</p>
+                        <p class="mb-0 text-sm text-gray-500">Keine Trainingseinheiten eingetragen.</p>
                     {% endif %}
                 </div>
             </div>
@@ -131,12 +96,14 @@
         {% include 'admin/_media_item_card.html.twig' with { media_item: department.icon, title: 'Icon' } %}
     {% endif %}
 
-    <div class="card shadow-sm border-danger">
-        <h5 class="card-header text-danger">Abteilung löschen</h5>
-        <div class="card-body">
+    <div class="overflow-hidden rounded-xl border border-red-200 bg-white shadow-sm">
+        <div class="border-b border-red-200 bg-red-50 px-6 py-4">
+            <h2 class="text-lg font-semibold text-red-700">Abteilung löschen</h2>
+        </div>
+        <div class="px-6 py-4">
             <form method="post" action="{{ path('admin_department_delete', {id: department.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Abteilung löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ department.id) }}">
-                <button type="submit" class="btn btn-danger" aria-label="Abteilung löschen" title="Abteilung löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
+                <button type="submit" class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Abteilung löschen" title="Abteilung löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
             </form>
         </div>
     </div>

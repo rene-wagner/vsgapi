@@ -3,51 +3,36 @@
 {% block title %}{{ location.name }} - Sportstätten - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">{{ location.name }}</h1>
-        <div class="d-flex flex-wrap gap-2">
-            <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="btn btn-primary" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
-            <a href="{{ path('admin_location_index') }}" class="btn btn-secondary">Zurück</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">{{ location.name }}</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ path('admin_location_edit', {id: location.id}) }}" class="inline-flex items-center rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
+            <a href="{{ path('admin_location_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Zurück</a>
         </div>
     </div>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <dl class="row mb-0">
-                <dt class="col-sm-3 text-secondary small text-uppercase">ID</dt>
-                <dd class="col-sm-9">{{ location.id }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Name</dt>
-                <dd class="col-sm-9">{{ location.name }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Straße</dt>
-                <dd class="col-sm-9">{{ location.street }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Stadt</dt>
-                <dd class="col-sm-9">{{ location.city }}</dd>
-
-                <dt class="col-sm-3 text-secondary small text-uppercase">Karten-Link</dt>
-                <dd class="col-sm-9">
-                    {% if location.mapsUrl %}
-                        <a href="{{ location.mapsUrl }}" target="_blank" rel="noopener noreferrer">{{ location.mapsUrl }}</a>
-                    {% else %}
-                        <span class="text-muted">—</span>
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
+    <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <dl class="divide-y divide-gray-200">
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">ID</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ location.id }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Name</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ location.name }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Straße</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ location.street }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Stadt</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ location.city }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Karten-Link</dt><dd class="sm:col-span-2">{% if location.mapsUrl %}<a href="{{ location.mapsUrl }}" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-blue-700 hover:underline">{{ location.mapsUrl }}</a>{% else %}<span class="text-sm text-gray-500">—</span>{% endif %}</dd></div>
+        </dl>
     </div>
 
     {% if location.picture %}
         {% include 'admin/_media_item_card.html.twig' with { media_item: location.picture, title: 'Bild' } %}
     {% endif %}
 
-    <div class="card shadow-sm border-danger">
-        <h5 class="card-header text-danger">Sportstätte löschen</h5>
-        <div class="card-body">
+    <div class="overflow-hidden rounded-xl border border-red-200 bg-white shadow-sm">
+        <div class="border-b border-red-200 bg-red-50 px-6 py-4">
+            <h2 class="text-lg font-semibold text-red-700">Sportstätte löschen</h2>
+        </div>
+        <div class="px-6 py-4">
             <form method="post" action="{{ path('admin_location_delete', {id: location.id}) }}" onsubmit="return confirm('Sind Sie sicher, dass Sie diese Sportstätte löschen möchten?');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ location.id) }}">
-                <button type="submit" class="btn btn-danger" aria-label="Sportstätte löschen" title="Sportstätte löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
+                <button type="submit" class="inline-flex items-center rounded-lg bg-red-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Sportstätte löschen" title="Sportstätte löschen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
             </form>
         </div>
     </div>

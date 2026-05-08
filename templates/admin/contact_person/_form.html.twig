@@ -1,69 +1,80 @@
-{{ form_start(form) }}
-    <div class="mb-3">
-        {{ form_label(form.slug) }}
-        {{ form_widget(form.slug) }}
-        {{ form_help(form.slug) }}
-        {{ form_errors(form.slug) }}
+{% form_theme form 'form_div_layout.html.twig' %}
+
+{{ form_start(form, { attr: { class: 'space-y-6' } }) }}
+    {{ form_errors(form) }}
+
+    <div>
+        {{ form_label(form.slug, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+        {{ form_widget(form.slug, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+        {% if form.slug.vars.help %}
+            <p class="mt-2 text-sm text-gray-500">{{ form.slug.vars.help }}</p>
+        {% endif %}
+        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.slug) }}</div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.firstName) }}
-        {{ form_widget(form.firstName) }}
-        {{ form_errors(form.firstName) }}
+    <div class="grid gap-6 md:grid-cols-2">
+        <div>
+            {{ form_label(form.firstName, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.firstName, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.firstName) }}</div>
+        </div>
+
+        <div>
+            {{ form_label(form.lastName, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.lastName, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.lastName) }}</div>
+        </div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.lastName) }}
-        {{ form_widget(form.lastName) }}
-        {{ form_errors(form.lastName) }}
+    <div class="grid gap-6 md:grid-cols-2">
+        <div>
+            {{ form_label(form.position, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.position, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.position) }}</div>
+        </div>
+
+        <div>
+            {{ form_label(form.phone, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.phone, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.phone) }}</div>
+        </div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.position) }}
-        {{ form_widget(form.position) }}
-        {{ form_errors(form.position) }}
+    <div>
+        {{ form_label(form.email, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+        {{ form_widget(form.email, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.email) }}</div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
-        {{ form_errors(form.email) }}
+    <div>
+        {{ form_label(form.address, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+        {{ form_widget(form.address, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', 'data-controller': 'easymde' } }) }}
+        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.address) }}</div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.phone) }}
-        {{ form_widget(form.phone) }}
-        {{ form_errors(form.phone) }}
-    </div>
-
-    <div class="mb-3">
-        {{ form_label(form.address) }}
-        {{ form_widget(form.address, { attr: { 'data-controller': 'easymde' } }) }}
-        {{ form_errors(form.address) }}
-    </div>
-
-    <div class="mb-3">
-        {{ form_label(form.isBoard) }}
-        {{ form_widget(form.isBoard) }}
-        {{ form_errors(form.isBoard) }}
-    </div>
+    <label class="flex items-start gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-900">
+        {{ form_widget(form.isBoard, { attr: { class: 'mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500' } }) }}
+        <span>
+            <span class="block font-medium">{{ form.isBoard.vars.label }}</span>
+        </span>
+    </label>
+    <div class="text-sm text-red-600">{{ form_errors(form.isBoard) }}</div>
 
     {% if contact_person.picture %}
-        {# Selector IN die Card verschieben #}
-        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
+        <div data-media-selector data-controller="media-selector-wrappers">
             {{ include('admin/_media_item_card.html.twig', {
                 media_item: contact_person.picture,
                 media_url: media_url,
                 title: 'Aktuelles Bild'|trans,
                 selector_content: '
-                    <div class="mb-0">
-                        <label class="form-label">' ~ 'Bild auswählen'|trans ~ '</label>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
-                                <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
+                    <div class="space-y-3">
+                        <p class="text-sm font-medium text-gray-900">' ~ 'Bild auswählen'|trans ~ '</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-action="click->media-selector-wrappers#open">
+                                <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">' ~ 'Auswählen'|trans ~ '</span>
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
-                                <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
+                            <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">' ~ 'Entfernen'|trans ~ '</span>
                             </button>
                         </div>
                     </div>
@@ -72,21 +83,23 @@
             {{ form_widget(form.picture) }}
         </div>
     {% else %}
-        {# Kein Bild: Selector separat wie bisher #}
-        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
-            <label class="form-label">Bild</label>
-            <div data-media-selector-preview></div>
+        <div data-media-selector data-controller="media-selector-wrappers">
+            <label class="mb-2 block text-sm font-medium text-gray-900">Bild</label>
+            <div data-media-selector-preview class="admin-media-selector-preview"></div>
             {{ form_widget(form.picture) }}
-            <div class="d-flex gap-2 mt-2">
-                <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
-                    <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
+            <div class="mt-3 flex flex-wrap gap-2">
+                <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-action="click->media-selector-wrappers#open">
+                    <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">{{ 'Auswählen'|trans }}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
-                    <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
+                <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">{{ 'Entfernen'|trans }}</span>
                 </button>
             </div>
         </div>
     {% endif %}
 
-    <button type="submit" class="btn btn-primary">Speichern</button>
+    <div class="flex items-center gap-3">
+        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Speichern</button>
+        <a href="{{ path('admin_contact_person_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Abbrechen</a>
+    </div>
 {{ form_end(form) }}

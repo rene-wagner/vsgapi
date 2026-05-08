@@ -1,13 +1,16 @@
 {% set r = app.request.attributes.get('_route') ?? '' %}
 {% set nav_context = nav_context|default('default') %}
-<a href="{{ path('admin_dashboard') }}" class="nav-link px-3 py-2 link-light {{ r == 'admin_dashboard' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Dashboard</a>
-<a href="{{ path('admin_user_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_user' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Benutzer</a>
-<a href="{{ path('admin_category_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_category' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Kategorien</a>
-<a href="{{ path('admin_post_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_post' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Beiträge</a>
-<a href="{{ path('admin_location_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_location' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Sportstätten</a>
-<a href="{{ path('admin_department_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_department' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Sportabteilungen</a>
-<a href="{{ path('admin_contact_person_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_contact_person' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Kontaktpersonen</a>
-<a href="{{ path('admin_event_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_event' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Veranstaltungen</a>
-<a href="{{ path('admin_membership_application_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_membership_application' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Anträge</a>
-<a href="{{ path('admin_mediathek_index') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_mediathek' or r starts with 'admin_media_folder' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Mediathek</a>
-<a href="{{ path('admin_page_content') }}" class="nav-link px-3 py-2 link-light {{ r starts with 'admin_page_content' ? 'active bg-white bg-opacity-10' : 'text-white-50' }}">Seiteninhalt</a>
+{% set base_classes = 'block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-gray-700 hover:text-white' %}
+{% set active_classes = 'bg-gray-700 text-white' %}
+{% set inactive_classes = 'text-gray-300' %}
+<a href="{{ path('admin_dashboard') }}" class="{{ base_classes }} {{ r == 'admin_dashboard' ? active_classes : inactive_classes }}">Dashboard</a>
+<a href="{{ path('admin_user_index') }}" class="{{ base_classes }} {{ r starts with 'admin_user' ? active_classes : inactive_classes }}">Benutzer</a>
+<a href="{{ path('admin_category_index') }}" class="{{ base_classes }} {{ r starts with 'admin_category' ? active_classes : inactive_classes }}">Kategorien</a>
+<a href="{{ path('admin_post_index') }}" class="{{ base_classes }} {{ r starts with 'admin_post' ? active_classes : inactive_classes }}">Beiträge</a>
+<a href="{{ path('admin_location_index') }}" class="{{ base_classes }} {{ r starts with 'admin_location' ? active_classes : inactive_classes }}">Sportstätten</a>
+<a href="{{ path('admin_department_index') }}" class="{{ base_classes }} {{ r starts with 'admin_department' ? active_classes : inactive_classes }}">Sportabteilungen</a>
+<a href="{{ path('admin_contact_person_index') }}" class="{{ base_classes }} {{ r starts with 'admin_contact_person' ? active_classes : inactive_classes }}">Kontaktpersonen</a>
+<a href="{{ path('admin_event_index') }}" class="{{ base_classes }} {{ r starts with 'admin_event' ? active_classes : inactive_classes }}">Veranstaltungen</a>
+<a href="{{ path('admin_membership_application_index') }}" class="{{ base_classes }} {{ r starts with 'admin_membership_application' ? active_classes : inactive_classes }}">Anträge</a>
+<a href="{{ path('admin_mediathek_index') }}" class="{{ base_classes }} {{ r starts with 'admin_mediathek' or r starts with 'admin_media_folder' ? active_classes : inactive_classes }}">Mediathek</a>
+<a href="{{ path('admin_page_content') }}" class="{{ base_classes }} {{ r starts with 'admin_page_content' ? active_classes : inactive_classes }}">Seiteninhalt</a>

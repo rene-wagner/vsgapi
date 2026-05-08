@@ -3,60 +3,60 @@
 {% block title %}Kontaktpersonen - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">Kontaktpersonen</h1>
-        <a href="{{ path('admin_contact_person_new') }}" class="btn btn-primary">Neue Kontaktperson</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">Kontaktpersonen</h1>
+        <a href="{{ path('admin_contact_person_new') }}" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Neue Kontaktperson</a>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     <tr>
-                        <th scope="col">Nachname</th>
-                        <th scope="col">Vorname</th>
-                        <th scope="col">Funktion</th>
-                        <th scope="col" class="text-center">Vorstand</th>
-                        <th scope="col">E-Mail</th>
-                        <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
+                        <th scope="col" class="px-6 py-3">Nachname</th>
+                        <th scope="col" class="px-6 py-3">Vorname</th>
+                        <th scope="col" class="px-6 py-3">Funktion</th>
+                        <th scope="col" class="px-6 py-3 text-center">Vorstand</th>
+                        <th scope="col" class="px-6 py-3">E-Mail</th>
+                        <th scope="col" class="px-6 py-3 text-right">Aktionen</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200 bg-white">
                     {% for contact_person in contactPeople %}
-                        <tr>
-                            <td>{{ contact_person.lastName }}</td>
-                            <td>{{ contact_person.firstName }}</td>
-                            <td>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ contact_person.lastName }}</td>
+                            <td class="px-6 py-4">{{ contact_person.firstName }}</td>
+                            <td class="px-6 py-4">
                                 {% if contact_person.position %}
                                     {{ contact_person.position }}
                                 {% else %}
-                                    <span class="text-muted">—</span>
+                                    <span class="text-gray-500">—</span>
                                 {% endif %}
                             </td>
-                            <td class="text-center">
+                            <td class="px-6 py-4 text-center">
                                 {% if contact_person.isBoard %}
-                                    <i class="fa-solid fa-check text-success" aria-label="Ja" title="Ja"></i>
+                                    <i class="fa-solid fa-check text-green-600" aria-label="Ja" title="Ja"></i>
                                 {% else %}
-                                    <i class="fa-solid fa-xmark text-danger" aria-label="Nein" title="Nein"></i>
+                                    <i class="fa-solid fa-xmark text-red-600" aria-label="Nein" title="Nein"></i>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="px-6 py-4">
                                 {% if contact_person.email %}
                                     {{ contact_person.email }}
                                 {% else %}
-                                    <span class="text-muted">—</span>
+                                    <span class="text-gray-500">—</span>
                                 {% endif %}
                             </td>
-                            <td class="text-md-end">
-                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
-                                    <a href="{{ path('admin_contact_person_show', {id: contact_person.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
-                                    <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="btn btn-primary btn-sm" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap justify-end gap-2">
+                                    <a href="{{ path('admin_contact_person_show', {id: contact_person.id}) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                                    <a href="{{ path('admin_contact_person_edit', {id: contact_person.id}) }}" class="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-5">Keine Kontaktpersonen vorhanden.</td>
+                            <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">Keine Kontaktpersonen vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

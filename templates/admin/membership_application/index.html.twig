@@ -3,36 +3,36 @@
 {% block title %}Anträge - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">Anträge</h1>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">Anträge</h1>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     <tr>
-                        <th scope="col">Nachname</th>
-                        <th scope="col">Vorname</th>
-                        <th scope="col">Eingegangen am</th>
-                        <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
+                        <th scope="col" class="px-6 py-3">Nachname</th>
+                        <th scope="col" class="px-6 py-3">Vorname</th>
+                        <th scope="col" class="px-6 py-3">Eingegangen am</th>
+                        <th scope="col" class="px-6 py-3 text-right">Aktionen</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200 bg-white">
                     {% for membership_application in membership_applications %}
-                        <tr>
-                            <td>{{ membership_application.lastName }}</td>
-                            <td>{{ membership_application.firstName }}</td>
-                            <td>{{ membership_application.createdAt|date('d.m.Y H:i') }}</td>
-                            <td class="text-md-end">
-                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
-                                    <a href="{{ path('admin_membership_application_show', {id: membership_application.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ membership_application.lastName }}</td>
+                            <td class="px-6 py-4">{{ membership_application.firstName }}</td>
+                            <td class="px-6 py-4">{{ membership_application.createdAt|date('d.m.Y H:i') }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap justify-end gap-2">
+                                    <a href="{{ path('admin_membership_application_show', {id: membership_application.id}) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-5">Keine Anträge vorhanden.</td>
+                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">Keine Anträge vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

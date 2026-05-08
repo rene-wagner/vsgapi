@@ -3,45 +3,22 @@
 {% block title %}{{ event.title }} - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">{{ event.title }}</h1>
-        <div class="d-flex gap-2">
-            <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="btn btn-primary">Bearbeiten</a>
-            <a href="{{ path('admin_event_index') }}" class="btn btn-secondary">Zurück</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">{{ event.title }}</h1>
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ path('admin_event_edit', {id: event.id}) }}" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Bearbeiten</a>
+            <a href="{{ path('admin_event_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Zurück</a>
         </div>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <dl class="row mb-0">
-                <dt class="col-sm-3">Titel</dt>
-                <dd class="col-sm-9">{{ event.title }}</dd>
-
-                <dt class="col-sm-3">Beschreibung</dt>
-                <dd class="col-sm-9">{{ event.description|default('—') }}</dd>
-
-                <dt class="col-sm-3">Beginn</dt>
-                <dd class="col-sm-9">{{ event.startsAt|date('d.m.Y H:i') }}</dd>
-
-                <dt class="col-sm-3">Ende</dt>
-                <dd class="col-sm-9">{{ event.endsAt|date('d.m.Y H:i') }}</dd>
-
-                <dt class="col-sm-3">Ort</dt>
-                <dd class="col-sm-9">{{ event.location|default('—') }}</dd>
-
-                <dt class="col-sm-3">Wiederholung</dt>
-                <dd class="col-sm-9">
-                    {% if event.recurrence is null %}
-                        Einzeltermin
-                    {% else %}
-                        {% set recurrence_labels = {DAILY: 'Täglich', WEEKLY: 'Wöchentlich', MONTHLY: 'Monatlich', YEARLY: 'Jährlich'} %}
-                        {{ recurrence_labels[event.recurrence.value] ?? event.recurrence.value }}
-                        {% if event.recurrenceUntil %}
-                            bis {{ event.recurrenceUntil|date('d.m.Y') }}
-                        {% endif %}
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <dl class="divide-y divide-gray-200">
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Titel</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ event.title }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Beschreibung</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ event.description|default('—') }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Beginn</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ event.startsAt|date('d.m.Y H:i') }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Ende</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ event.endsAt|date('d.m.Y H:i') }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Ort</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ event.location|default('—') }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Wiederholung</dt><dd class="text-sm text-gray-900 sm:col-span-2">{% if event.recurrence is null %}Einzeltermin{% else %}{% set recurrence_labels = {DAILY: 'Täglich', WEEKLY: 'Wöchentlich', MONTHLY: 'Monatlich', YEARLY: 'Jährlich'} %}{{ recurrence_labels[event.recurrence.value] ?? event.recurrence.value }}{% if event.recurrenceUntil %} bis {{ event.recurrenceUntil|date('d.m.Y') }}{% endif %}{% endif %}</dd></div>
+        </dl>
     </div>
 {% endblock %}

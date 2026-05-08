@@ -3,33 +3,27 @@
 {% block title %}Neues Passwort setzen - VSG Admin{% endblock %}
 
 {% block body %}
-    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-11 col-sm-8 col-md-6 col-lg-5">
-                    <div class="card shadow">
-                        <div class="card-body p-4">
-                            <h1 class="h4 text-center mb-4">Neues Passwort setzen</h1>
+    {% form_theme resetForm 'form_div_layout.html.twig' %}
 
-                            {{ form_start(resetForm) }}
-                                <div class="mb-3">
-                                    {{ form_label(resetForm.plainPassword.first) }}
-                                    {{ form_widget(resetForm.plainPassword.first, { attr: { class: 'form-control' } }) }}
-                                    {{ form_errors(resetForm.plainPassword.first) }}
-                                </div>
-                                <div class="mb-3">
-                                    {{ form_label(resetForm.plainPassword.second) }}
-                                    {{ form_widget(resetForm.plainPassword.second, { attr: { class: 'form-control' } }) }}
-                                    {{ form_errors(resetForm.plainPassword.second) }}
-                                </div>
-                                {{ form_errors(resetForm.plainPassword) }}
+    <div class="flex min-h-screen items-center justify-center bg-gray-900 px-4 py-8">
+        <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+            <h1 class="mb-4 text-center text-2xl font-semibold text-gray-900">Neues Passwort setzen</h1>
 
-                                <button type="submit" class="btn btn-primary w-100">Passwort speichern</button>
-                            {{ form_end(resetForm) }}
-                        </div>
-                    </div>
+            {{ form_start(resetForm, { attr: { class: 'space-y-6', novalidate: 'novalidate' } }) }}
+                <div>
+                    {{ form_label(resetForm.plainPassword.first, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                    {{ form_widget(resetForm.plainPassword.first, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                    <div class="mt-2 text-sm text-red-600">{{ form_errors(resetForm.plainPassword.first) }}</div>
                 </div>
-            </div>
+                <div>
+                    {{ form_label(resetForm.plainPassword.second, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                    {{ form_widget(resetForm.plainPassword.second, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                    <div class="mt-2 text-sm text-red-600">{{ form_errors(resetForm.plainPassword.second) }}</div>
+                </div>
+                <div class="text-sm text-red-600">{{ form_errors(resetForm.plainPassword) }}</div>
+
+                <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Passwort speichern</button>
+            {{ form_end(resetForm) }}
         </div>
     </div>
 {% endblock %}
