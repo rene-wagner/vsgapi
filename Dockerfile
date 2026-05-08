@@ -46,6 +46,10 @@ FROM dunglas/frankenphp:php8.4 AS app
 
 WORKDIR /app
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ghostscript \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN install-php-extensions \
     pdo_mysql \
     gd \
