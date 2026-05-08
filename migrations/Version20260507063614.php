@@ -16,7 +16,7 @@ final class Version20260507063614 extends AbstractMigration
 
     public function getDescription(): string
     {
-        return 'Seed initial data (users, categories, media, contacts, locations, departments)';
+        return 'Seed initial data (users, categories, media, events, contacts, locations, departments)';
     }
 
     public function up(Schema $schema): void
@@ -89,6 +89,25 @@ final class Version20260507063614 extends AbstractMigration
                     $row['updated_at'],
                     $row['folder_id'],
                     $row['category_id'],
+                ],
+            );
+        }
+
+        // --- events ---
+        $events = $this->loadJson('events.json');
+        foreach ($events as $row) {
+            $this->addSql(
+                "INSERT INTO event (id, title, description, starts_at, ends_at, location, recurrence, recurrence_until, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                [
+                    $row['id'],
+                    $row['title'],
+                    $row['description'],
+                    $row['starts_at'],
+                    $row['ends_at'],
+                    $row['location'],
+                    $row['recurrence'],
+                    $row['recurrence_until'],
+                    $row['picture_id'],
                 ],
             );
         }
@@ -253,6 +272,7 @@ final class Version20260507063614 extends AbstractMigration
             'category' => max(array_column($categories, 'id')) + 1,
             'media_folder' => max(array_column($folders, 'id')) + 1,
             'media_item' => max(array_column($items, 'id')) + 1,
+            'event' => max(array_column($events, 'id')) + 1,
             'contact_person' => max(array_column($contacts, 'id')) + 1,
             'location' => max(array_column($locations, 'id')) + 1,
             'department' => max(array_column($departments, 'id')) + 1,
@@ -280,6 +300,7 @@ final class Version20260507063614 extends AbstractMigration
         $this->addSql('DELETE FROM post_category');
         $this->addSql('DELETE FROM post');
         $this->addSql('DELETE FROM content_block');
+        $this->addSql('DELETE FROM event');
         $this->addSql('DELETE FROM media_item');
         $this->addSql('DELETE FROM media_folder');
         $this->addSql('DELETE FROM category');
