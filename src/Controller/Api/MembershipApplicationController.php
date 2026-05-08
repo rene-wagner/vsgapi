@@ -56,6 +56,7 @@ final class MembershipApplicationController extends AbstractController
 
             return $this->json([
                 'error' => 'Der Aufnahmeantrag konnte nicht erstellt werden.',
+                'exeption' => $exception->getMessage(),
                 'trace' => [
                     'message' => $exception->getMessage(),
                     'trace' => $exception->getTrace(),
