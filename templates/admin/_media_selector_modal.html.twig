@@ -1,29 +1,41 @@
-<div class="modal fade" id="mediaSelectorModal" tabindex="-1" aria-labelledby="mediaSelectorModalLabel" aria-hidden="true" data-media-selector-modal data-controller="media-selector">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mediaSelectorModalLabel">Medienauswahl</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
-            </div>
-            <div class="modal-body">
-                <nav aria-label="Ordnerpfad" class="mb-3">
-                    <ol class="breadcrumb mb-0" data-media-selector-target="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">Mediathek</li>
-                    </ol>
-                </nav>
-                <div data-media-selector-target="folders" class="mb-3"></div>
-                <div data-media-selector-target="items"></div>
-                <div data-media-selector-target="empty" class="text-muted text-center py-4" hidden>
-                    Keine Dateien in diesem Ordner.
+<div id="mediaSelectorModal" tabindex="-1" aria-labelledby="mediaSelectorModalLabel" aria-hidden="true" class="fixed inset-0 z-50 hidden overflow-y-auto overflow-x-hidden p-4" data-media-selector-modal data-controller="media-selector">
+    <div class="fixed inset-0 bg-gray-900/60" aria-hidden="true"></div>
+
+    <div class="relative z-10 flex flex-1 min-h-full items-center justify-center">
+        <div class="w-full max-w-[60vw]">
+            <div class="relative flex max-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-lg bg-white shadow-xl">
+                <div class="flex items-center justify-between rounded-t border-b border-gray-200 px-4 py-3 md:px-5">
+                    <h2 class="text-lg font-semibold text-gray-900" id="mediaSelectorModalLabel">Medienauswahl</h2>
+                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" data-modal-hide="mediaSelectorModal" aria-label="Schließen">
+                        <svg class="h-4 w-4" aria-hidden="true" fill="none" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m1 1 12 12M13 1 1 13" />
+                        </svg>
+                    </button>
                 </div>
-                <div data-media-selector-target="loading" class="text-center py-4" hidden>
-                    <div class="spinner-border spinner-border-sm text-secondary" role="status">
-                        <span class="visually-hidden">Laden…</span>
+                <div class="min-h-0 flex-1 overflow-y-auto p-4 md:p-5">
+                    <div class="space-y-4">
+                        <nav aria-label="Ordnerpfad">
+                            <ol class="flex flex-wrap items-center gap-2 text-sm text-gray-500" data-media-selector-target="breadcrumb">
+                                <li class="font-medium text-gray-900" aria-current="page">Mediathek</li>
+                            </ol>
+                        </nav>
+                        <div data-media-selector-target="folders" class="space-y-2"></div>
+                        <div data-media-selector-target="items" class="space-y-2"></div>
+                        <div data-media-selector-target="empty" class="py-4 text-center text-sm text-gray-500" hidden>
+                            Keine Dateien in diesem Ordner.
+                        </div>
+                        <div data-media-selector-target="loading" class="py-4 text-center" hidden>
+                            <svg class="mx-auto h-5 w-5 animate-spin text-gray-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4Z"></path>
+                            </svg>
+                            <span class="sr-only">Laden…</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                <div class="flex items-center justify-end rounded-b border-t border-gray-200 px-4 py-3 md:px-5">
+                    <button type="button" class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200" data-modal-hide="mediaSelectorModal">Abbrechen</button>
+                </div>
             </div>
         </div>
     </div>

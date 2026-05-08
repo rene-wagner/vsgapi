@@ -3,44 +3,44 @@
 {% block title %}Beiträge - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">Beiträge</h1>
-        <a href="{{ path('admin_post_new') }}" class="btn btn-primary">Neuer Beitrag</a>
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">Beiträge</h1>
+        <a href="{{ path('admin_post_new') }}" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Neuer Beitrag</a>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+    <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+                <thead class="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     <tr>
-                        <th scope="col">Titel</th>
-                        <th scope="col">Autor</th>
-                        <th scope="col">Status</th>
-                        <th scope="col" class="text-nowrap text-md-end">Aktionen</th>
+                        <th scope="col" class="px-6 py-3">Titel</th>
+                        <th scope="col" class="px-6 py-3">Autor</th>
+                        <th scope="col" class="px-6 py-3">Status</th>
+                        <th scope="col" class="px-6 py-3 text-right">Aktionen</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-gray-200 bg-white">
                     {% for post in posts %}
-                        <tr>
-                            <td>{{ post.title }}</td>
-                            <td>{{ post.author.fullName }}</td>
-                            <td>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ post.title }}</td>
+                            <td class="px-6 py-4">{{ post.author.fullName }}</td>
+                            <td class="px-6 py-4">
                                 {% if post.published %}
-                                    <span class="badge text-bg-success">Veröffentlicht</span>
+                                    <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Veröffentlicht</span>
                                 {% else %}
-                                    <span class="badge text-bg-secondary">Entwurf</span>
+                                    <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">Entwurf</span>
                                 {% endif %}
                             </td>
-                            <td class="text-md-end">
-                                <div class="d-flex flex-wrap gap-2 justify-content-md-end">
-                                    <a href="{{ path('admin_post_show', {id: post.id}) }}" class="btn btn-secondary btn-sm" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
-                                    <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-primary btn-sm" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap justify-end gap-2">
+                                    <a href="{{ path('admin_post_show', {id: post.id}) }}" class="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200" aria-label="Anzeigen" title="Anzeigen"><i class="fa-solid fa-eye" aria-hidden="true"></i></a>
+                                    <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="inline-flex items-center rounded-lg bg-blue-700 px-3 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>
                                 </div>
                             </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-5">Keine Beiträge vorhanden.</td>
+                            <td colspan="4" class="px-6 py-10 text-center text-sm text-gray-500">Keine Beiträge vorhanden.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -50,18 +50,30 @@
 
     {% set last_page = max(1, (total / limit)|round(0, 'ceil')) %}
     {% if last_page > 1 %}
-        <nav aria-label="Beitragsseiten" class="mt-3">
-            <ul class="pagination justify-content-center mb-0">
-                <li class="page-item{% if page <= 1 %} disabled{% endif %}">
-                    <a class="page-link" href="{{ path('admin_post_index', {page: page - 1}) }}">Zurück</a>
+        <nav aria-label="Beitragsseiten" class="mt-4 flex justify-center">
+            <ul class="inline-flex -space-x-px text-sm">
+                <li>
+                    {% if page <= 1 %}
+                        <span class="flex cursor-not-allowed items-center rounded-l-lg border border-gray-300 bg-white px-3 py-2 text-gray-400">Zurück</span>
+                    {% else %}
+                        <a class="flex items-center rounded-l-lg border border-gray-300 bg-white px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700" href="{{ path('admin_post_index', {page: page - 1}) }}">Zurück</a>
+                    {% endif %}
                 </li>
                 {% for p in 1..last_page %}
-                    <li class="page-item{% if p == page %} active{% endif %}">
-                        <a class="page-link" href="{{ path('admin_post_index', {page: p}) }}">{{ p }}</a>
+                    <li>
+                        {% if p == page %}
+                            <span class="flex items-center border border-blue-300 bg-blue-50 px-3 py-2 text-blue-600">{{ p }}</span>
+                        {% else %}
+                            <a class="flex items-center border border-gray-300 bg-white px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700" href="{{ path('admin_post_index', {page: p}) }}">{{ p }}</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
-                <li class="page-item{% if page >= last_page %} disabled{% endif %}">
-                    <a class="page-link" href="{{ path('admin_post_index', {page: page + 1}) }}">Weiter</a>
+                <li>
+                    {% if page >= last_page %}
+                        <span class="flex cursor-not-allowed items-center rounded-r-lg border border-gray-300 bg-white px-3 py-2 text-gray-400">Weiter</span>
+                    {% else %}
+                        <a class="flex items-center rounded-r-lg border border-gray-300 bg-white px-3 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700" href="{{ path('admin_post_index', {page: page + 1}) }}">Weiter</a>
+                    {% endif %}
                 </li>
             </ul>
         </nav>

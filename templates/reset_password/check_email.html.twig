@@ -3,20 +3,12 @@
 {% block title %}E-Mail versendet - VSG Admin{% endblock %}
 
 {% block body %}
-    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-11 col-sm-8 col-md-6 col-lg-5">
-                    <div class="card shadow">
-                        <div class="card-body p-4 text-center">
-                            <h1 class="h4 mb-3">E-Mail prüfen</h1>
-                            <p class="text-body-secondary mb-3">Wenn ein Benutzerkonto mit dieser E-Mail-Adresse existiert, wurde soeben eine Nachricht mit einem Link zum Zurücksetzen des Passworts versendet.</p>
-                            <p class="text-body-secondary mb-4">Der Link ist zeitlich begrenzt. Falls keine E-Mail ankommt, prüfen Sie bitte auch den Spam-Ordner.</p>
-                            <a href="{{ path('app_forgot_password_request') }}" class="btn btn-outline-primary w-100">Erneut versuchen</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="flex min-h-screen items-center justify-center bg-gray-900 px-4 py-8">
+        <div class="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-xl">
+            <h1 class="mb-3 text-2xl font-semibold text-gray-900">E-Mail prüfen</h1>
+            <p class="mb-3 text-sm text-gray-500">Wenn ein Benutzerkonto mit dieser E-Mail-Adresse existiert, wurde soeben eine Nachricht mit einem Link zum Zurücksetzen des Passworts versendet.</p>
+            <p class="mb-6 text-sm text-gray-500">Der Link ist zeitlich begrenzt. Falls keine E-Mail ankommt, prüfen Sie bitte auch den Spam-Ordner.</p>
+            <a href="{{ path('app_forgot_password_request') }}" class="inline-flex w-full items-center justify-center rounded-lg border border-blue-700 px-5 py-2.5 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300">Erneut versuchen</a>
         </div>
     </div>
 {% endblock %}

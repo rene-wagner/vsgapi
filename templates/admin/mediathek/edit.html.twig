@@ -3,9 +3,11 @@
 {% block title %}Medien bearbeiten - VSG Admin{% endblock %}
 
 {% block content %}
-    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3 mb-4">
-        <h1 class="h3 mb-0">Medien bearbeiten</h1>
-        <a href="{% if item.folder %}{{ path('admin_mediathek_index', {folder: item.folder.id}) }}{% else %}{{ path('admin_mediathek_index') }}{% endif %}" class="btn btn-secondary">Zurück</a>
+    {% form_theme form 'form_div_layout.html.twig' %}
+
+    <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-2xl font-semibold text-gray-900">Medien bearbeiten</h1>
+        <a href="{% if item.folder %}{{ path('admin_mediathek_index', {folder: item.folder.id}) }}{% else %}{{ path('admin_mediathek_index') }}{% endif %}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Zurück</a>
     </div>
 
     {% set file_url = media_url.buildOriginalUrl(item) %}
@@ -13,63 +15,70 @@
     {% set is_croppable = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
     {% set can_regenerate_thumbnail = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
 
-    {{ form_start(form) }}
+    {{ form_start(form, { attr: { novalidate: 'novalidate' } }) }}
     {{ form_errors(form) }}
 
-    <div class="row g-4">
-        <div class="col-12 col-lg-5">
-            <div class="card shadow-sm h-100">
-                <h5 class="card-header fw-semibold">Aktuelles Medium</h5>
-                <div class="card-body">
+    <div class="grid gap-4 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+            <div class="h-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div class="border-b border-gray-200 px-6 py-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Aktuelles Medium</h2>
+                </div>
+                <div class="px-6 py-4">
                     {% if is_image %}
-                        <div class="text-center mb-3">
-                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="admin-media-edit-preview rounded border">
+                        <div class="mb-3 text-center">
+                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="admin-media-edit-preview rounded-lg border border-gray-200">
                         </div>
-                        <p class="small text-muted mb-0 text-break">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
+                        <p class="mb-0 break-words text-sm text-gray-500">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
                     {% else %}
-                        <div class="text-center text-danger mb-3" aria-hidden="true">
-                            <i class="fa-solid fa-file-pdf fa-3x"></i>
+                        <div class="mb-3 text-center text-red-600" aria-hidden="true">
+                            <i class="fa-solid fa-file-pdf text-5xl"></i>
                         </div>
-                        <p class="fw-semibold text-break mb-1">{{ item.originalFilename }}</p>
-                        <p class="small text-muted mb-2">{{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
-                        <p class="small text-muted mb-0">Für PDF-Dateien wird keine Vorschau angezeigt.</p>
+                        <p class="mb-1 break-words font-medium text-gray-900">{{ item.originalFilename }}</p>
+                        <p class="mb-2 text-sm text-gray-500">{{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
+                        <p class="mb-0 text-sm text-gray-500">Für PDF-Dateien wird keine Vorschau angezeigt.</p>
                     {% endif %}
                 </div>
             </div>
         </div>
-        <div class="col-12 col-lg-7">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <div class="mb-3">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {{ form_errors(form.name) }}
+
+        <div class="lg:col-span-7">
+            <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+                <div class="px-6 py-4 space-y-4">
+                    <div>
+                        {{ form_label(form.name, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                        {{ form_widget(form.name, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.name) }}</div>
                     </div>
-                    <div class="mb-3">
-                        {{ form_label(form.description) }}
-                        {{ form_widget(form.description, { attr: { 'data-controller': 'easymde' } }) }}
-                        {{ form_errors(form.description) }}
+
+                    <div>
+                        {{ form_label(form.description, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                        {{ form_widget(form.description, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', 'data-controller': 'easymde' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.description) }}</div>
                     </div>
-                    <div class="mb-3">
-                        {{ form_label(form.category) }}
-                        {{ form_widget(form.category) }}
-                        {{ form_errors(form.category) }}
+
+                    <div>
+                        {{ form_label(form.category, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                        {{ form_widget(form.category, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.category) }}</div>
                     </div>
-                    <div class="mb-3">
-                        {{ form_label(form.folder) }}
-                        {{ form_widget(form.folder) }}
-                        {{ form_errors(form.folder) }}
+
+                    <div>
+                        {{ form_label(form.folder, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                        {{ form_widget(form.folder, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.folder) }}</div>
                     </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            {{ form_widget(form.isHiddenInApi, { attr: { class: 'form-check-input' } }) }}
-                            {{ form_label(form.isHiddenInApi, null, { label_attr: { class: 'form-check-label' } }) }}
-                        </div>
-                        {{ form_errors(form.isHiddenInApi) }}
+
+                    <div>
+                        <label class="inline-flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900">
+                            {{ form_widget(form.isHiddenInApi, { attr: { class: 'h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500' } }) }}
+                            <span>{{ form.isHiddenInApi.vars.label }}</span>
+                        </label>
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.isHiddenInApi) }}</div>
                     </div>
 
                     {% if not is_croppable %}
-                        <div class="d-none">
+                        <div class="hidden">
                             {{ form_widget(form.cropX) }}
                             {{ form_widget(form.cropY) }}
                             {{ form_widget(form.cropWidth) }}
@@ -77,11 +86,11 @@
                         </div>
                     {% endif %}
 
-                    <div class="d-flex flex-wrap gap-2 mb-2">
-                        <button type="submit" class="btn btn-primary">Speichern</button>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Speichern</button>
                         {% if can_regenerate_thumbnail %}
-                            <button type="submit" class="btn btn-outline-secondary" form="regenerate-thumbnail-form">
-                                <i class="fa-solid fa-image" aria-hidden="true"></i> Thumbnail neu erzeugen
+                            <button type="submit" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200" form="regenerate-thumbnail-form">
+                                <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">Thumbnail neu erzeugen</span>
                             </button>
                         {% endif %}
                     </div>
@@ -91,52 +100,50 @@
     </div>
 
     {% if is_croppable %}
-    <div class="row g-4 mt-0">
-        <div class="col-12">
-            <div class="card shadow-sm"
-                 data-controller="image-cropper"
-                 data-image-cropper-initial-x-value="{{ form.cropX.vars.value|default('0') }}"
-                 data-image-cropper-initial-y-value="{{ form.cropY.vars.value|default('0') }}"
-                 data-image-cropper-initial-width-value="{{ form.cropWidth.vars.value|default('0') }}"
-                 data-image-cropper-initial-height-value="{{ form.cropHeight.vars.value|default('0') }}">
-                <h5 class="card-header fw-semibold">Bildeditor</h5>
-                <div class="card-body">
-                    <div class="admin-cropper-container mb-3">
-                        <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" data-image-cropper-target="image" style="max-width: 100%; display: block;">
-                    </div>
+        <div class="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm"
+             data-controller="image-cropper"
+             data-image-cropper-initial-x-value="{{ form.cropX.vars.value|default('0') }}"
+             data-image-cropper-initial-y-value="{{ form.cropY.vars.value|default('0') }}"
+             data-image-cropper-initial-width-value="{{ form.cropWidth.vars.value|default('0') }}"
+             data-image-cropper-initial-height-value="{{ form.cropHeight.vars.value|default('0') }}">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-lg font-semibold text-gray-900">Bildeditor</h2>
+            </div>
+            <div class="px-6 py-4">
+                <div class="admin-cropper-container mb-4">
+                    <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" data-image-cropper-target="image" style="max-width: 100%; display: block;">
+                </div>
 
-                    <div class="row g-3 align-items-end">
-                        <div class="col-6 col-md-3">
-                            <label class="form-label" for="{{ form.cropX.vars.id }}">X</label>
-                            {{ form_widget(form.cropX, { attr: { 'data-image-cropper-target': 'cropX', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
-                            {{ form_errors(form.cropX) }}
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <label class="form-label" for="{{ form.cropY.vars.id }}">Y</label>
-                            {{ form_widget(form.cropY, { attr: { 'data-image-cropper-target': 'cropY', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
-                            {{ form_errors(form.cropY) }}
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <label class="form-label" for="{{ form.cropWidth.vars.id }}">Breite</label>
-                            {{ form_widget(form.cropWidth, { attr: { 'data-image-cropper-target': 'cropWidth', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
-                            {{ form_errors(form.cropWidth) }}
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <label class="form-label" for="{{ form.cropHeight.vars.id }}">Höhe</label>
-                            {{ form_widget(form.cropHeight, { attr: { 'data-image-cropper-target': 'cropHeight', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'form-control form-control-sm' } }) }}
-                            {{ form_errors(form.cropHeight) }}
-                        </div>
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-900" for="{{ form.cropX.vars.id }}">X</label>
+                        {{ form_widget(form.cropX, { attr: { 'data-image-cropper-target': 'cropX', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.cropX) }}</div>
                     </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-900" for="{{ form.cropY.vars.id }}">Y</label>
+                        {{ form_widget(form.cropY, { attr: { 'data-image-cropper-target': 'cropY', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.cropY) }}</div>
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-900" for="{{ form.cropWidth.vars.id }}">Breite</label>
+                        {{ form_widget(form.cropWidth, { attr: { 'data-image-cropper-target': 'cropWidth', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.cropWidth) }}</div>
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-900" for="{{ form.cropHeight.vars.id }}">Höhe</label>
+                        {{ form_widget(form.cropHeight, { attr: { 'data-image-cropper-target': 'cropHeight', 'data-action': 'input->image-cropper#syncCropperFromFields', 'class': 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.cropHeight) }}</div>
+                    </div>
+                </div>
 
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" data-action="image-cropper#resetCrop">
-                            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Zurücksetzen
-                        </button>
-                    </div>
+                <div class="mt-4">
+                    <button type="button" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200" data-action="image-cropper#resetCrop">
+                        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i><span class="ml-2">Zurücksetzen</span>
+                    </button>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
     {{ form_widget(form._token) }}

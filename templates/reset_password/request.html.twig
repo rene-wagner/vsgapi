@@ -3,35 +3,29 @@
 {% block title %}Passwort zurücksetzen - VSG Admin{% endblock %}
 
 {% block body %}
-    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-dark px-3 py-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-11 col-sm-8 col-md-6 col-lg-5">
-                    <div class="card shadow">
-                        <div class="card-body p-4">
-                            <h1 class="h4 text-center mb-3">Passwort zurücksetzen</h1>
-                            <p class="text-body-secondary text-center mb-4">Geben Sie Ihre E-Mail-Adresse ein. Wenn ein Konto dazu existiert, senden wir Ihnen einen Link zum Zurücksetzen Ihres Passworts.</p>
+    {% form_theme requestForm 'form_div_layout.html.twig' %}
 
-                            {% for flash_error in app.flashes('reset_password_error') %}
-                                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-                            {% endfor %}
+    <div class="flex min-h-screen items-center justify-center bg-gray-900 px-4 py-8">
+        <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+            <h1 class="mb-3 text-center text-2xl font-semibold text-gray-900">Passwort zurücksetzen</h1>
+            <p class="mb-4 text-center text-sm text-gray-500">Geben Sie Ihre E-Mail-Adresse ein. Wenn ein Konto dazu existiert, senden wir Ihnen einen Link zum Zurücksetzen Ihres Passworts.</p>
 
-                            {{ form_start(requestForm) }}
-                                <div class="mb-3">
-                                    {{ form_label(requestForm.email) }}
-                                    {{ form_widget(requestForm.email, { attr: { class: 'form-control' } }) }}
-                                    {{ form_errors(requestForm.email) }}
-                                </div>
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ flash_error }}</div>
+            {% endfor %}
 
-                                <button type="submit" class="btn btn-primary w-100">Link zum Zurücksetzen senden</button>
-                            {{ form_end(requestForm) }}
-
-                            <div class="text-center mt-3">
-                                <a href="{{ path('app_login') }}">Zurück zum Login</a>
-                            </div>
-                        </div>
-                    </div>
+            {{ form_start(requestForm, { attr: { class: 'space-y-6', novalidate: 'novalidate' } }) }}
+                <div>
+                    {{ form_label(requestForm.email, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                    {{ form_widget(requestForm.email, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                    <div class="mt-2 text-sm text-red-600">{{ form_errors(requestForm.email) }}</div>
                 </div>
+
+                <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Link zum Zurücksetzen senden</button>
+            {{ form_end(requestForm) }}
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('app_login') }}" class="text-sm font-medium text-blue-700 hover:underline">Zurück zum Login</a>
             </div>
         </div>
     </div>

@@ -4,12 +4,10 @@
 
 {% block content %}
     <div class="mb-4">
-        <h1 class="h3 mb-0">Dashboard</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <p class="mb-0">Willkommen im Administrationsbereich, {{ app.user.firstName }}.</p>
-        </div>
+    <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <p class="text-sm text-gray-700">Willkommen im Administrationsbereich, {{ app.user.firstName }}.</p>
     </div>
 {% endblock %}

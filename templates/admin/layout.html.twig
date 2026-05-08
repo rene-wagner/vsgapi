@@ -1,60 +1,68 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <nav class="navbar navbar-dark bg-dark shadow-sm d-lg-none">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 fs-5">VSG Admin</span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminOffcanvas" aria-controls="adminOffcanvas" aria-label="Menü öffnen">
-                <span class="navbar-toggler-icon"></span>
+    <header class="sticky top-0 z-30 border-b border-gray-200 bg-white lg:hidden">
+        <div class="flex items-center justify-between px-4 py-3">
+            <a href="{{ path('admin_dashboard') }}" class="text-lg font-semibold text-gray-900">VSG Admin</a>
+            <button type="button" class="inline-flex items-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" data-drawer-target="admin-sidebar-mobile" data-drawer-show="admin-sidebar-mobile" data-drawer-placement="left" aria-controls="admin-sidebar-mobile" aria-label="Menü öffnen">
+                <svg class="h-6 w-6" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
             </button>
         </div>
-    </nav>
+    </header>
 
-    <div class="offcanvas offcanvas-start text-bg-dark d-lg-none" tabindex="-1" id="adminOffcanvas" aria-labelledby="adminOffcanvasLabel">
-        <div class="offcanvas-header border-bottom border-secondary">
-            <h2 class="offcanvas-title h5 mb-0" id="adminOffcanvasLabel">VSG Admin</h2>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Schließen"></button>
-        </div>
-        <div class="offcanvas-body d-flex flex-column p-0">
-            <nav class="nav flex-column flex-grow-1 py-2">
+    <aside id="admin-sidebar-mobile" class="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-gray-700 bg-gray-800 transition-transform lg:hidden" tabindex="-1" aria-labelledby="admin-sidebar-mobile-label">
+        <div class="flex h-full flex-col">
+            <div class="flex items-center justify-between border-b border-gray-700 px-4 py-3">
+                <h2 id="admin-sidebar-mobile-label" class="text-lg font-semibold text-white">VSG Admin</h2>
+                <button type="button" class="inline-flex items-center rounded-lg p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" data-drawer-hide="admin-sidebar-mobile" aria-controls="admin-sidebar-mobile" aria-label="Schließen">
+                    <svg class="h-5 w-5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
                 {% include 'admin/_nav_links.html.twig' with { nav_context: 'mobile' } %}
             </nav>
-            <div class="border-top border-secondary p-3 small text-white-50">
+            <div class="border-t border-gray-700 px-4 py-3 text-sm text-gray-300">
                 {{ app.user.fullName }}
                 &middot;
-                <a href="{{ path('app_logout') }}" class="link-light">Abmelden</a>
+                <a href="{{ path('app_logout') }}" class="font-medium text-white hover:underline">Abmelden</a>
             </div>
         </div>
-    </div>
+    </aside>
 
-    <div class="container-fluid px-0">
-        <div class="row g-0 flex-lg-nowrap min-vh-100">
-            <aside class="col-lg-3 col-xl-2 d-none d-lg-flex flex-column flex-shrink-0 bg-dark text-white border-end border-secondary">
-                <div class="p-3 border-bottom border-secondary">
-                    <a href="{{ path('admin_dashboard') }}" class="text-white text-decoration-none fw-semibold fs-5">VSG Admin</a>
-                </div>
-                <nav class="nav flex-column flex-grow-1 py-2">
-                    {% include 'admin/_nav_links.html.twig' with { nav_context: 'desktop' } %}
-                </nav>
-                <div class="p-3 border-top border-secondary small text-white-50">
-                    {{ app.user.fullName }}
-                    &middot;
-                    <a href="{{ path('app_logout') }}" class="link-light">Abmelden</a>
-                </div>
-            </aside>
-            <main class="admin-main col-lg-9 col-xl-10 ms-auto px-2 px-md-3 py-3 py-lg-4">
-                {% for type, messages in app.flashes %}
-                    {% for message in messages %}
-                        {% set alert_type = type == 'error' ? 'danger' : type %}
-                        <div class="alert alert-{{ alert_type }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
-                        </div>
-                    {% endfor %}
+    <div class="min-h-screen lg:flex">
+        <aside class="hidden w-72 flex-shrink-0 border-r border-gray-700 bg-gray-800 text-white lg:flex lg:flex-col">
+            <div class="border-b border-gray-700 px-4 py-4">
+                <a href="{{ path('admin_dashboard') }}" class="text-xl font-semibold text-white">VSG Admin</a>
+            </div>
+            <nav class="flex-1 space-y-1 px-3 py-4">
+                {% include 'admin/_nav_links.html.twig' with { nav_context: 'desktop' } %}
+            </nav>
+            <div class="border-t border-gray-700 px-4 py-3 text-sm text-gray-300">
+                {{ app.user.fullName }}
+                &middot;
+                <a href="{{ path('app_logout') }}" class="font-medium text-white hover:underline">Abmelden</a>
+            </div>
+        </aside>
+        <main class="admin-main flex-1 px-4 py-4 lg:px-6 lg:py-6">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    {% set alert_classes = {
+                        success: 'border-green-200 bg-green-50 text-green-800',
+                        error: 'border-red-200 bg-red-50 text-red-800',
+                        warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
+                        info: 'border-blue-200 bg-blue-50 text-blue-800'
+                    } %}
+                    <div class="mb-4 rounded-lg border px-4 py-3 {{ alert_classes[type] ?? 'border-gray-200 bg-white text-gray-800' }}" role="alert">
+                        {{ message }}
+                    </div>
                 {% endfor %}
-                {% block content %}{% endblock %}
-            </main>
-        </div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </main>
     </div>
 
     {{ include('admin/_media_selector_modal.html.twig') }}

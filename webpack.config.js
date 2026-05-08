@@ -56,6 +56,8 @@ Encore
         config.corejs = '3.38';
     })
 
+    .enablePostCssLoader()
+
     // enables Stimulus controllers auto-registration from assets/controllers/
     .enableStimulusBridge('./assets/controllers.json')
 ;

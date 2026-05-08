@@ -1,63 +1,67 @@
-{{ form_start(form) }}
-    <div class="mb-3">
-        {{ form_label(form.title) }}
-        {{ form_widget(form.title) }}
-        {{ form_errors(form.title) }}
+{% form_theme form 'form_div_layout.html.twig' %}
+
+{{ form_start(form, { attr: { class: 'space-y-6' } }) }}
+    {{ form_errors(form) }}
+
+    <div>
+        {{ form_label(form.title, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+        {{ form_widget(form.title, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.title) }}</div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.description) }}
-        {{ form_widget(form.description) }}
-        {{ form_errors(form.description) }}
+    <div>
+        {{ form_label(form.description, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+        {{ form_widget(form.description, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', rows: 5 } }) }}
+        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.description) }}</div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.startsAt) }}
-            {{ form_widget(form.startsAt) }}
-            {{ form_errors(form.startsAt) }}
+    <div class="grid gap-6 md:grid-cols-2">
+        <div>
+            {{ form_label(form.startsAt, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.startsAt, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.startsAt) }}</div>
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.endsAt) }}
-            {{ form_widget(form.endsAt) }}
-            {{ form_errors(form.endsAt) }}
+        <div>
+            {{ form_label(form.endsAt, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.endsAt, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.endsAt) }}</div>
         </div>
     </div>
 
-    <div class="mb-3">
-        {{ form_label(form.location) }}
-        {{ form_widget(form.location) }}
-        {{ form_errors(form.location) }}
+    <div>
+        {{ form_label(form.location, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+        {{ form_widget(form.location, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.location) }}</div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.recurrence) }}
-            {{ form_widget(form.recurrence) }}
-            {{ form_errors(form.recurrence) }}
+    <div class="grid gap-6 md:grid-cols-2">
+        <div>
+            {{ form_label(form.recurrence, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.recurrence, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.recurrence) }}</div>
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.recurrenceUntil) }}
-            {{ form_widget(form.recurrenceUntil) }}
-            {{ form_errors(form.recurrenceUntil) }}
+        <div>
+            {{ form_label(form.recurrenceUntil, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+            {{ form_widget(form.recurrenceUntil, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+            <div class="mt-2 text-sm text-red-600">{{ form_errors(form.recurrenceUntil) }}</div>
         </div>
     </div>
 
     {% if event.picture is defined and event.picture %}
-        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
+        <div data-media-selector>
             {{ include('admin/_media_item_card.html.twig', {
                 media_item: event.picture,
                 media_url: media_url,
                 title: 'Aktuelles Bild'|trans,
                 selector_content: '
-                    <div class="mb-0">
-                        <label class="form-label">' ~ 'Bild auswählen'|trans ~ '</label>
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
-                                <i class="fa-solid fa-image" aria-hidden="true"></i> ' ~ 'Auswählen'|trans ~ '
+                    <div class="space-y-3">
+                        <p class="text-sm font-medium text-gray-900">' ~ 'Bild auswählen'|trans ~ '</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-media-selector-open>
+                                <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">' ~ 'Auswählen'|trans ~ '</span>
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove">
-                                <i class="fa-solid fa-trash" aria-hidden="true"></i> ' ~ 'Entfernen'|trans ~ '
+                            <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove >
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">' ~ 'Entfernen'|trans ~ '</span>
                             </button>
                         </div>
                     </div>
@@ -66,22 +70,23 @@
             {{ form_widget(form.picture) }}
         </div>
     {% else %}
-        <div class="mb-3" data-media-selector data-controller="media-selector-wrappers">
-            <label class="form-label">Bild</label>
-            <div data-media-selector-preview></div>
+        <div data-media-selector>
+            <label class="mb-2 block text-sm font-medium text-gray-900">Bild</label>
+            <div data-media-selector-preview class="admin-media-selector-preview"></div>
             {{ form_widget(form.picture) }}
-            <div class="d-flex gap-2 mt-2">
-                <button type="button" class="btn btn-sm btn-outline-primary" data-action="click->media-selector-wrappers#open">
-                    <i class="fa-solid fa-image" aria-hidden="true"></i> {{ 'Auswählen'|trans }}
+            <div class="mt-3 flex flex-wrap gap-2">
+                <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-media-selector-open>
+                    <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">{{ 'Auswählen'|trans }}</span>
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger" data-media-selector-remove data-action="click->media-selector-wrappers#remove" disabled>
-                    <i class="fa-solid fa-trash" aria-hidden="true"></i> {{ 'Entfernen'|trans }}
+                <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove  disabled>
+                    <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">{{ 'Entfernen'|trans }}</span>
                 </button>
             </div>
         </div>
     {% endif %}
 
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Speichern</button>
+    <div class="flex items-center gap-3">
+        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Speichern</button>
+        <a href="{{ path('admin_event_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Abbrechen</a>
     </div>
 {{ form_end(form) }}

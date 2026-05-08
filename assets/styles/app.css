@@ -1,8 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
     min-height: 100vh;
 }
 
-/* Flex/grid child: allow main column to shrink so table-responsive scrolls inside */
+/* Flex/grid child: allow the main column to shrink correctly inside the admin layout */
 .admin-main {
     min-width: 0;
 }
@@ -23,15 +27,15 @@ body {
     max-width: 100%;
     max-height: 320px;
     object-fit: contain;
-    background-color: var(--bs-secondary-bg);
+    background-color: rgb(243 244 246);
 }
 
 .admin-mediathek-row {
     min-width: 0;
 }
 
-.admin-mediathek-row:not(.list-group-item-action):hover {
-    background-color: var(--bs-secondary-bg);
+.admin-mediathek-row:hover {
+    background-color: rgb(243 244 246);
 }
 
 .admin-mediathek-row-actions {
@@ -62,13 +66,13 @@ body {
 
 .admin-mediathek-dropzone:hover,
 .admin-mediathek-dropzone:focus-visible {
-    border-color: var(--bs-primary) !important;
+    border-color: rgb(59 130 246) !important;
     outline: none;
 }
 
 .admin-mediathek-dropzone.is-dragover {
-    border-color: var(--bs-primary) !important;
-    background-color: var(--bs-primary-bg-subtle) !important;
+    border-color: rgb(59 130 246) !important;
+    background-color: rgb(239 246 255) !important;
 }
 
 .checkbox-list ul {
@@ -77,18 +81,18 @@ body {
     margin-bottom: 0;
 }
 
-/* EasyMDE: volle Breite im Admin-Formular, Bootstrap-Fehlerzustand am CodeMirror */
+/* EasyMDE: volle Breite im Admin-Formular, Fehlerzustand am CodeMirror */
 .EasyMDEContainer {
     display: block;
     width: 100%;
 }
 
 .EasyMDEContainer .CodeMirror {
-    border-radius: var(--bs-border-radius);
+    border-radius: 0.5rem;
 }
 
-.EasyMDEContainer:has(textarea.form-control.is-invalid) .CodeMirror {
-    border-color: var(--bs-form-invalid-border-color);
+.EasyMDEContainer:has(textarea[aria-invalid="true"]) .CodeMirror {
+    border-color: rgb(239 68 68);
 }
 
 /* Media-Selector: Vorschau der aktuellen Auswahl neben dem Formularfeld */
@@ -97,8 +101,8 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem;
-    border: 1px solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius);
+    border: 1px solid rgb(209 213 219);
+    border-radius: 0.5rem;
     min-height: 3rem;
 }
 
@@ -106,7 +110,7 @@ body {
     width: 48px;
     height: 48px;
     object-fit: cover;
-    border-radius: var(--bs-border-radius-sm);
+    border-radius: 0.375rem;
 }
 
 /* Media-Selector Modal: klickbare Ordner-Zeile */
@@ -116,7 +120,7 @@ body {
 }
 
 .admin-media-selector-folder:hover {
-    background-color: var(--bs-secondary-bg);
+    background-color: rgb(243 244 246);
 }
 
 /* Media-Selector Modal: klickbare Medien-Zeile */
@@ -126,19 +130,19 @@ body {
 }
 
 .admin-media-selector-item:hover {
-    background-color: var(--bs-secondary-bg);
+    background-color: rgb(243 244 246);
 }
 
 .admin-media-selector-item.is-selected {
-    background-color: var(--bs-primary-bg-subtle);
-    border-color: var(--bs-primary);
+    background-color: rgb(239 246 255);
+    border-color: rgb(59 130 246);
 }
 
 .admin-media-selector-item img {
     width: 48px;
     height: 48px;
     object-fit: cover;
-    border-radius: var(--bs-border-radius-sm);
+    border-radius: 0.375rem;
 }
 
 .admin-media-selector-item .admin-media-selector-pdf-badge {
@@ -151,11 +155,11 @@ body {
 .admin-cropper-container {
     max-height: 500px;
     overflow: hidden;
-    background-color: var(--bs-secondary-bg);
-    border-radius: var(--bs-border-radius);
+    background-color: rgb(243 244 246);
+    border-radius: 0.5rem;
 }
 
 .admin-cropper-container .cropper-view-box {
-    outline: 2px solid var(--bs-primary);
-    outline-color: var(--bs-primary);
+    outline: 2px solid rgb(59 130 246);
+    outline-color: rgb(59 130 246);
 }

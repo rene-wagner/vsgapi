@@ -1,6 +1,6 @@
 /* stimulusFetch: 'lazy' */
 import { Controller } from '@hotwired/stimulus';
-import { Modal } from 'bootstrap';
+import { Modal } from 'flowbite';
 
 export default class extends Controller {
     static targets = ['breadcrumb', 'folders', 'items', 'empty', 'loading'];
@@ -9,46 +9,54 @@ export default class extends Controller {
         itemsUrl: { type: String, default: '/api/media_items' },
     };
 
-    #onOpenBound;
-    #onRemoveBound;
-    #onHiddenBound;
-
+    #onDocumentClickBound;
     connect() {
-        this.modalInstance = Modal.getOrCreateInstance(this.element);
+        this.modalInstance = new Modal(this.element, {
+            onHide: () => {
+                this.activeWrapper = null;
+            },
+        });
         this.activeWrapper = null;
         this.currentBreadcrumb = [];
 
-        this.#onOpenBound = this.#onOpen.bind(this);
-        this.#onRemoveBound = this.#onRemove.bind(this);
-        this.#onHiddenBound = () => { this.activeWrapper = null; };
-
-        document.addEventListener('media-selector:open', this.#onOpenBound);
-        document.addEventListener('media-selector:remove', this.#onRemoveBound);
-        this.element.addEventListener('hidden.bs.modal', this.#onHiddenBound);
+        this.#onDocumentClickBound = this.#onDocumentClick.bind(this);
+        document.addEventListener('click', this.#onDocumentClickBound);
     }
 
     disconnect() {
-        document.removeEventListener('media-selector:open', this.#onOpenBound);
-        document.removeEventListener('media-selector:remove', this.#onRemoveBound);
-        this.element.removeEventListener('hidden.bs.modal', this.#onHiddenBound);
-        this.modalInstance?.dispose();
+        document.removeEventListener('click', this.#onDocumentClickBound);
     }
 
-    #onOpen(event) {
-        this.activeWrapper = event.detail.wrapper;
-        this.#loadFolder(null, []);
-        this.modalInstance.show();
-    }
+    #onDocumentClick(event) {
+        const openButton = event.target.closest('[data-media-selector-open]');
+        if (openButton) {
+            event.preventDefault();
+            const wrapper = openButton.closest('[data-media-selector]');
+            if (!wrapper) {
+                return;
+            }
 
-    #onRemove(event) {
-        const wrapper = event.detail.wrapper;
-        const hiddenInput = wrapper.querySelector('input[type="hidden"]');
-        if (hiddenInput) hiddenInput.value = '';
+            this.activeWrapper = wrapper;
+            this.#loadFolder(null, []);
+            this.modalInstance.show();
 
-        this.#updatePreview(wrapper, null, '', '');
+            return;
+        }
 
-        const removeBtn = wrapper.querySelector('[data-media-selector-remove]');
-        if (removeBtn) removeBtn.disabled = true;
+        const removeButton = event.target.closest('[data-media-selector-remove]');
+        if (removeButton) {
+            event.preventDefault();
+            const wrapper = removeButton.closest('[data-media-selector]');
+            if (!wrapper) {
+                return;
+            }
+
+            const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+            if (hiddenInput) hiddenInput.value = '';
+
+            this.#updatePreview(wrapper, null, '', '');
+            removeButton.disabled = true;
+        }
     }
 
     async #fetchJson(url) {
@@ -101,14 +109,14 @@ export default class extends Controller {
         ol.innerHTML = '';
 
         const rootLi = document.createElement('li');
-        rootLi.className = 'breadcrumb-item';
         if (path.length === 0) {
-            rootLi.classList.add('active');
+            rootLi.className = 'font-medium text-gray-900';
             rootLi.setAttribute('aria-current', 'page');
             rootLi.textContent = 'Mediathek';
         } else {
             const a = document.createElement('a');
             a.href = '#';
+            a.className = 'font-medium text-blue-700 hover:underline';
             a.textContent = 'Mediathek';
             a.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -119,15 +127,21 @@ export default class extends Controller {
         ol.appendChild(rootLi);
 
         path.forEach((crumb, idx) => {
+            const separator = document.createElement('li');
+            separator.className = 'text-gray-400';
+            separator.setAttribute('aria-hidden', 'true');
+            separator.textContent = '/';
+            ol.appendChild(separator);
+
             const li = document.createElement('li');
-            li.className = 'breadcrumb-item';
             if (idx === path.length - 1) {
-                li.classList.add('active');
+                li.className = 'font-medium text-gray-900';
                 li.setAttribute('aria-current', 'page');
                 li.textContent = crumb.name;
             } else {
                 const a = document.createElement('a');
                 a.href = '#';
+                a.className = 'font-medium text-blue-700 hover:underline';
                 a.textContent = crumb.name;
                 const subPath = path.slice(0, idx + 1);
                 a.addEventListener('click', (e) => {
@@ -145,13 +159,13 @@ export default class extends Controller {
         container.innerHTML = '';
         members.forEach((folder) => {
             const div = document.createElement('div');
-            div.className = 'admin-media-selector-folder list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 px-3';
+            div.className = 'admin-media-selector-folder flex items-center gap-3 rounded-lg border border-gray-200 px-3 py-2 hover:bg-gray-50';
             div.setAttribute('role', 'button');
             div.setAttribute('data-folder-id', folder.id);
             div.innerHTML =
-                '<span class="d-inline-flex align-items-center justify-content-center rounded bg-body-secondary flex-shrink-0" style="width:48px;height:48px" aria-hidden="true">' +
-                '<i class="fa-solid fa-folder text-warning fa-lg"></i></span>' +
-                '<span class="fw-semibold">' + this.#escapeHtml(folder.name) + '</span>';
+                '<span class="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100" aria-hidden="true">' +
+                '<i class="fa-solid fa-folder fa-lg text-yellow-500"></i></span>' +
+                '<span class="font-semibold text-gray-900">' + this.#escapeHtml(folder.name) + '</span>';
             container.appendChild(div);
         });
     }
@@ -161,23 +175,23 @@ export default class extends Controller {
         container.innerHTML = '';
         members.forEach((item) => {
             const div = document.createElement('div');
-            div.className = 'admin-media-selector-item list-group-item d-flex align-items-center gap-3 py-2 px-3';
+            div.className = 'admin-media-selector-item flex items-center gap-3 rounded-lg border border-gray-200 px-3 py-2 hover:bg-gray-50';
             div.setAttribute('role', 'button');
             div.setAttribute('data-media-item-id', item.id);
             div.setAttribute('data-media-item-name', item.name || '');
 
             let thumbHtml;
             if (item.type === 'image' && item.thumbnail_url) {
-                thumbHtml = '<img src="' + this.#escapeAttr(item.thumbnail_url) + '" alt="" class="rounded">';
+                thumbHtml = '<img src="' + this.#escapeAttr(item.thumbnail_url) + '" alt="" class="rounded-md">';
             } else if (item.type === 'image' && item.original_url) {
-                thumbHtml = '<img src="' + this.#escapeAttr(item.original_url) + '" alt="" class="rounded">';
+                thumbHtml = '<img src="' + this.#escapeAttr(item.original_url) + '" alt="" class="rounded-md">';
             } else {
-                thumbHtml = '<span class="badge text-bg-secondary d-inline-flex align-items-center justify-content-center admin-media-selector-pdf-badge">' + this.#escapeHtml(item.extension || 'PDF') + '</span>';
+                thumbHtml = '<span class="inline-flex items-center justify-center rounded-md bg-gray-200 px-2 text-xs font-semibold uppercase tracking-wide text-gray-700 admin-media-selector-pdf-badge">' + this.#escapeHtml(item.extension || 'PDF') + '</span>';
             }
 
             div.innerHTML = thumbHtml +
-                '<div class="min-w-0"><div class="fw-semibold text-truncate">' + this.#escapeHtml(item.name || '') + '</div>' +
-                '<div class="small text-muted">' + this.#escapeHtml(item.type || '') + (item.extension ? ' · .' + this.#escapeHtml(item.extension) : '') + '</div></div>';
+                '<div class="min-w-0"><div class="truncate font-semibold text-gray-900">' + this.#escapeHtml(item.name || '') + '</div>' +
+                '<div class="text-sm text-gray-500">' + this.#escapeHtml(item.type || '') + (item.extension ? ' · .' + this.#escapeHtml(item.extension) : '') + '</div></div>';
 
             container.appendChild(div);
         });
@@ -187,7 +201,7 @@ export default class extends Controller {
         this.foldersTarget.querySelectorAll('[data-folder-id]').forEach((el) => {
             el.addEventListener('click', () => {
                 const id = parseInt(el.dataset.folderId, 10);
-                const name = el.querySelector('.fw-semibold')?.textContent || '';
+                const name = el.querySelector('.font-semibold')?.textContent || '';
                 const newPath = this.currentBreadcrumb.concat([{ id: id, name: name }]);
                 this.#loadFolder(id, newPath);
             });
@@ -226,7 +240,7 @@ export default class extends Controller {
         if (!preview) return;
 
         if (!id) {
-            preview.innerHTML = '<span class="text-muted">Kein Bild ausgewählt</span>';
+            preview.innerHTML = '<span class="text-sm text-gray-500">Kein Bild ausgewählt</span>';
             return;
         }
 
@@ -234,7 +248,7 @@ export default class extends Controller {
         if (thumbSrc) {
             html += '<img src="' + this.#escapeAttr(thumbSrc) + '" alt="">';
         }
-        html += '<span class="text-truncate">' + this.#escapeHtml(name) + '</span>';
+        html += '<span class="truncate text-sm text-gray-900">' + this.#escapeHtml(name) + '</span>';
         preview.innerHTML = html;
     }
 
