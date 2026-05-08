@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Service\MembershipApplication\MembershipApplicationPdfService;
 use App\Service\MembershipApplication\MembershipApplicationPayloadMapper;
 use App\Service\MembershipApplication\MembershipApplicationStoreService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,18 +20,19 @@ final class MembershipApplicationController extends AbstractController
         MembershipApplicationPayloadMapper $payloadMapper,
         MembershipApplicationPdfService $membershipApplicationPdfService,
         MembershipApplicationStoreService $membershipApplicationStoreService,
+        LoggerInterface $logger,
     ): JsonResponse {
         try {
             $payload = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException) {
             return $this->json([
-                'error' => 'Ungueltige Anfrage.',
+                'error' => 'Ungültige Anfrage.',
             ], Response::HTTP_BAD_REQUEST);
         }
 
         if (!is_array($payload)) {
             return $this->json([
-                'error' => 'Ungueltige Anfrage.',
+                'error' => 'Ungültige Anfrage.',
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -54,18 +56,28 @@ final class MembershipApplicationController extends AbstractController
                 $membershipApplicationPdfService->delete($filename);
             }
 
+            $logger->error('Aufnahmeantrag PDF konnte nicht erstellt werden.', [
+                'exception' => $exception,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+                'payload' => $payload,
+            ]);
+
             return $this->json([
                 'error' => 'Der Aufnahmeantrag konnte nicht erstellt werden.',
-                'exeption' => $exception->getMessage(),
-                'trace' => [
-                    'message' => $exception->getMessage(),
-                    'trace' => $exception->getTrace(),
-                ],
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
             if (isset($filename)) {
                 $membershipApplicationPdfService->delete($filename);
             }
+
+            $logger->error('Aufnahmeantrag konnte nicht gespeichert werden.', [
+                'exception' => $exception,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+                'payload' => $payload,
+                'filename' => $filename ?? null,
+            ]);
 
             return $this->json([
                 'error' => 'Der Aufnahmeantrag konnte nicht gespeichert werden.',
