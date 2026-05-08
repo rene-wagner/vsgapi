@@ -9,8 +9,7 @@ export default class extends Controller {
         itemsUrl: { type: String, default: '/api/media_items' },
     };
 
-    #onOpenBound;
-    #onRemoveBound;
+    #onDocumentClickBound;
     connect() {
         this.modalInstance = new Modal(this.element, {
             onHide: () => {
@@ -20,33 +19,44 @@ export default class extends Controller {
         this.activeWrapper = null;
         this.currentBreadcrumb = [];
 
-        this.#onOpenBound = this.#onOpen.bind(this);
-        this.#onRemoveBound = this.#onRemove.bind(this);
-
-        document.addEventListener('media-selector:open', this.#onOpenBound);
-        document.addEventListener('media-selector:remove', this.#onRemoveBound);
+        this.#onDocumentClickBound = this.#onDocumentClick.bind(this);
+        document.addEventListener('click', this.#onDocumentClickBound);
     }
 
     disconnect() {
-        document.removeEventListener('media-selector:open', this.#onOpenBound);
-        document.removeEventListener('media-selector:remove', this.#onRemoveBound);
+        document.removeEventListener('click', this.#onDocumentClickBound);
     }
 
-    #onOpen(event) {
-        this.activeWrapper = event.detail.wrapper;
-        this.#loadFolder(null, []);
-        this.modalInstance.show();
-    }
+    #onDocumentClick(event) {
+        const openButton = event.target.closest('[data-media-selector-open]');
+        if (openButton) {
+            event.preventDefault();
+            const wrapper = openButton.closest('[data-media-selector]');
+            if (!wrapper) {
+                return;
+            }
 
-    #onRemove(event) {
-        const wrapper = event.detail.wrapper;
-        const hiddenInput = wrapper.querySelector('input[type="hidden"]');
-        if (hiddenInput) hiddenInput.value = '';
+            this.activeWrapper = wrapper;
+            this.#loadFolder(null, []);
+            this.modalInstance.show();
 
-        this.#updatePreview(wrapper, null, '', '');
+            return;
+        }
 
-        const removeBtn = wrapper.querySelector('[data-media-selector-remove]');
-        if (removeBtn) removeBtn.disabled = true;
+        const removeButton = event.target.closest('[data-media-selector-remove]');
+        if (removeButton) {
+            event.preventDefault();
+            const wrapper = removeButton.closest('[data-media-selector]');
+            if (!wrapper) {
+                return;
+            }
+
+            const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+            if (hiddenInput) hiddenInput.value = '';
+
+            this.#updatePreview(wrapper, null, '', '');
+            removeButton.disabled = true;
+        }
     }
 
     async #fetchJson(url) {
