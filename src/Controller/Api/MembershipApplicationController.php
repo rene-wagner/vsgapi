@@ -49,13 +49,17 @@ final class MembershipApplicationController extends AbstractController
                 $filename,
                 $membershipApplicationPdfService->getRelativePath($filename),
             );
-        } catch (\RuntimeException) {
+        } catch (\RuntimeException $exception) {
             if (isset($filename)) {
                 $membershipApplicationPdfService->delete($filename);
             }
 
             return $this->json([
                 'error' => 'Der Aufnahmeantrag konnte nicht erstellt werden.',
+                'trace' => [
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTrace(),
+                ],
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         } catch (\Throwable) {
             if (isset($filename)) {
