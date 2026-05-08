@@ -36,8 +36,11 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY assets ./assets
-COPY webpack.config.js ./
+COPY templates ./templates
 COPY public ./public
+COPY webpack.config.js ./
+COPY tailwind.config.js ./
+COPY postcss.config.js ./
 
 RUN npm run build
 
