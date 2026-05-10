@@ -17,6 +17,7 @@
             <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Name</dt><dd class="text-sm text-gray-900 sm:col-span-2">{{ department.name }}</dd></div>
             <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Slug</dt><dd class="sm:col-span-2"><code class="rounded bg-gray-100 px-2 py-1 text-sm text-gray-800">{{ department.slug }}</code></dd></div>
             <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Beschreibung</dt><dd class="admin-pre-content text-sm text-gray-900 sm:col-span-2">{{ department.description }}</dd></div>
+            <div class="grid gap-2 px-6 py-4 sm:grid-cols-3 sm:gap-4"><dt class="text-sm font-medium uppercase tracking-wide text-gray-500">Abteilungsleiter</dt><dd class="text-sm text-gray-900 sm:col-span-2">{% if department.manager %}{{ department.manager.firstName }} {{ department.manager.lastName }}{% else %}<span class="text-gray-500">—</span>{% endif %}</dd></div>
         </dl>
     </div>
 

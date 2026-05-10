@@ -25,7 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(),
         new Get(),
     ],
-    normalizationContext: ['groups' => ['department:read', 'media_item:read']],
+    normalizationContext: ['groups' => ['department:read', 'contact_person:read', 'media_item:read']],
 )]
 #[ApiFilter(PropertyFilter::class)]
 class Department
@@ -71,6 +71,11 @@ class Department
     #[Assert\Choice(choices: self::AVAILABLE_COLORS, message: 'Bitte wählen Sie eine gültige Farbe aus.')]
     #[Groups(['department:read'])]
     private ?string $color = 'purple';
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['department:read'])]
+    private ?ContactPerson $manager = null;
 
     /** @var Collection<int, DepartmentStatistic> */
     #[ORM\OneToMany(targetEntity: DepartmentStatistic::class, mappedBy: 'department', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -155,6 +160,18 @@ class Department
     public function setColor(string $color): static
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getManager(): ?ContactPerson
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?ContactPerson $manager): static
+    {
+        $this->manager = $manager;
 
         return $this;
     }

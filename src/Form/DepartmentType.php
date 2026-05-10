@@ -2,8 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\ContactPerson;
 use App\Entity\Department;
 use App\Form\MediaItemSelectorType;
+use App\Repository\ContactPersonRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -38,6 +41,17 @@ class DepartmentType extends AbstractType
                 'attr' => [
                     'rows' => 10,
                 ],
+            ])
+            ->add('manager', EntityType::class, [
+                'class' => ContactPerson::class,
+                'choice_label' => fn (ContactPerson $contactPerson): string => $contactPerson->getLastName() . ', ' . $contactPerson->getFirstName(),
+                'query_builder' => fn (ContactPersonRepository $contactPersonRepository) => $contactPersonRepository
+                    ->createQueryBuilder('contactPerson')
+                    ->orderBy('contactPerson.lastName', 'ASC')
+                    ->addOrderBy('contactPerson.firstName', 'ASC'),
+                'required' => false,
+                'placeholder' => 'Bitte auswählen',
+                'label' => 'Abteilungsleiter',
             ])
             ->add('icon', MediaItemSelectorType::class, [
                 'required' => false,
