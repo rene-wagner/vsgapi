@@ -112,7 +112,25 @@ final class MembershipApplicationPdfService
         $pdf->SetTextColor(0, 128, 0);
         $pdf->SetFont('Helvetica', 'B', 9);
 
-        $this->drawDepartment($pdf, $application['department']);
+        $pdf->SetFont('Helvetica', 'B', 10);
+
+        if ($application['department'] === 'badminton') {
+            $this->drawCheckbox($pdf, 153.5, 60.5);
+        }
+
+        if ($application['department'] === 'gymnastik') {
+            $this->drawCheckbox($pdf, 80.5, 60.5);
+        }
+
+        if ($application['department'] === 'tischtennis') {
+            $this->drawCheckbox($pdf, 116.5, 60.5);
+        }
+
+        if ($application['department'] === 'volleyball') {
+            $this->drawCheckbox($pdf, 46.5, 60.5);
+        }
+
+        $pdf->SetFont('Helvetica', 'B', 9);
 
         $this->drawText($pdf, 15, 70, $application['lastName']);
         $this->drawText($pdf, 64, 70, $application['firstName']);
@@ -171,7 +189,22 @@ final class MembershipApplicationPdfService
         $this->drawText($pdf, 20, 44.5, $address);
 
         $pdf->SetFont('Helvetica', 'B', 10);
-        $this->drawDepartment($pdf, $application['department'], 43.5, 79.5, 36.5);
+
+        if ($application['department'] === 'badminton') {
+            $this->drawCheckbox($pdf, 148, 78.5);
+        }
+
+        if ($application['department'] === 'gymnastik') {
+            $this->drawCheckbox($pdf, 78.5, 78.5);
+        }
+
+        if ($application['department'] === 'tischtennis') {
+            $this->drawCheckbox($pdf, 114, 78.5);
+        }
+        
+        if ($application['department'] === 'volleyball') {
+            $this->drawCheckbox($pdf, 42.5, 78.5);
+        }
 
         $pdf->SetFont('Helvetica', 'B', 10);
         $this->drawText($pdf, 51, 102.8, $application['guardianOneName']);
@@ -188,22 +221,6 @@ final class MembershipApplicationPdfService
 
         $pdf->SetFont('Helvetica', 'B', 10);
         $this->drawText($pdf, 20, 268.5, sprintf('%s, %s', $application['place'], $application['applicationDate']));
-    }
-
-    private function drawDepartment(Fpdi $pdf, string $department, float $x = 46.5, float $y = 60.5, float $spacing = 34): void
-    {
-        $positions = [
-            'volleyball' => [$x, $y],
-            'gymnastik' => [$x + $spacing, $y],
-            'tischtennis' => [$x + (2 * $spacing), $y],
-            'badminton' => [$x + (3 * $spacing), $y],
-        ];
-
-        if (!isset($positions[$department])) {
-            return;
-        }
-
-        $this->drawCheckbox($pdf, $positions[$department][0], $positions[$department][1]);
     }
 
     private function drawCheckbox(Fpdi $pdf, float $x, float $y): void
