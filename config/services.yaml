@@ -46,6 +46,10 @@ services:
             $supervisionTemplatePath: '%membership_application.supervision_template_path%'
             $storageDir: '%membership_application.storage_dir%'
 
+    App\Service\MembershipApplication\MembershipApplicationNotificationService:
+        arguments:
+            $mailerFrom: '%app.mailer_from%'
+
     App\Service\Media\MediaUploadService:
         arguments:
             $storageDir: '%media.storage_dir%'

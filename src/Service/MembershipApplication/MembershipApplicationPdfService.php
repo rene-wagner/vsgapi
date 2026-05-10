@@ -35,6 +35,11 @@ final class MembershipApplicationPdfService
         return 'antraege/' . $filename;
     }
 
+    public function getAbsolutePath(string $filename): string
+    {
+        return $this->storageDir . DIRECTORY_SEPARATOR . $filename;
+    }
+
     public function getToken(string $filename): string
     {
         if (preg_match('/^(?:aufnahmeantrag|membership-application|aufsichtspflicht)-((?:\d{8}-[a-f0-9]{32}|test))\.pdf$/', $filename, $matches) === 1) {
