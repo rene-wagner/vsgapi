@@ -65,16 +65,29 @@ final class MembershipApplicationPayloadMapper
         $acceptsStatutes = $this->requireBool($payload, 'acceptsStatutes', 'Bitte geben Sie an, ob die Satzung anerkannt wird.');
         $acceptsEmailInvitation = $this->requireBool($payload, 'acceptsEmailInvitation', 'Bitte geben Sie an, ob die Einladung per E-Mail erfolgen darf.');
         $acceptsPrivacyPolicy = $this->requireBool($payload, 'acceptsPrivacyPolicy', 'Bitte geben Sie die DSGVO-Einwilligung an.');
-        $confirmsMinorAttachment = $this->requireBool($payload, 'confirmsMinorAttachment', 'Bitte geben Sie an, ob die Anlage zur Aufsichtspflicht beigefuegt ist.');
         $isChild = $this->requireBool($payload, 'isChild', 'Bitte geben Sie an, ob es sich um ein Kind handelt.');
-        $guardianOneName = $this->optionalString($payload, 'guardianOneName');
-        $guardianOneAddress = $this->optionalString($payload, 'guardianOneAddress');
-        $guardianOnePhone = $this->optionalString($payload, 'guardianOnePhone');
-        $guardianTwoName = $this->optionalString($payload, 'guardianTwoName');
-        $guardianTwoAddress = $this->optionalString($payload, 'guardianTwoAddress');
-        $guardianTwoPhone = $this->optionalString($payload, 'guardianTwoPhone');
-        $underTwelveMayWalkHomeAlone = $this->requireBool($payload, 'underTwelveMayWalkHomeAlone', 'Bitte geben Sie die Regelung fuer Kinder unter zwoelf Jahren an.');
-        $overTwelveMayWalkHomeAlone = $this->requireBool($payload, 'overTwelveMayWalkHomeAlone', 'Bitte geben Sie die Regelung fuer Kinder ab zwoelf Jahren an.');
+
+        $confirmsMinorAttachment = false;
+        $guardianOneName = '';
+        $guardianOneAddress = '';
+        $guardianOnePhone = '';
+        $guardianTwoName = '';
+        $guardianTwoAddress = '';
+        $guardianTwoPhone = '';
+        $underTwelveMayWalkHomeAlone = false;
+        $overTwelveMayWalkHomeAlone = false;
+
+        if ($isChild) {
+            $confirmsMinorAttachment = $this->requireBool($payload, 'confirmsMinorAttachment', 'Bitte geben Sie an, ob die Anlage zur Aufsichtspflicht beigefuegt ist.');
+            $guardianOneName = $this->requireString($payload, 'guardianOneName', 'Bitte geben Sie den Namen der ersten erziehungsberechtigten Person an.');
+            $guardianOneAddress = $this->requireString($payload, 'guardianOneAddress', 'Bitte geben Sie die Anschrift der ersten erziehungsberechtigten Person an.');
+            $guardianOnePhone = $this->requireString($payload, 'guardianOnePhone', 'Bitte geben Sie die Telefonnummer der ersten erziehungsberechtigten Person an.');
+            $guardianTwoName = $this->optionalString($payload, 'guardianTwoName');
+            $guardianTwoAddress = $this->optionalString($payload, 'guardianTwoAddress');
+            $guardianTwoPhone = $this->optionalString($payload, 'guardianTwoPhone');
+            $underTwelveMayWalkHomeAlone = $this->requireBool($payload, 'underTwelveMayWalkHomeAlone', 'Bitte geben Sie die Regelung fuer Kinder unter zwoelf Jahren an.');
+            $overTwelveMayWalkHomeAlone = $this->requireBool($payload, 'overTwelveMayWalkHomeAlone', 'Bitte geben Sie die Regelung fuer Kinder ab zwoelf Jahren an.');
+        }
 
         return [
             'department' => $department,
