@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260507063613 extends AbstractMigration
+final class Version20260510165852 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,7 +23,7 @@ final class Version20260507063613 extends AbstractMigration
         $this->addSql('CREATE TABLE category (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_64C19C15E237E06 (name), UNIQUE INDEX UNIQ_64C19C1989D9B62 (slug), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE contact_person (id INT AUTO_INCREMENT NOT NULL, slug VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, position VARCHAR(255) DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, phone VARCHAR(255) DEFAULT NULL, address LONGTEXT DEFAULT NULL, is_board TINYINT DEFAULT 0 NOT NULL, picture_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_A44EE6F7989D9B62 (slug), INDEX IDX_A44EE6F7EE45BDBF (picture_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE content_block (pk INT AUTO_INCREMENT NOT NULL, id BINARY(16) NOT NULL, url VARCHAR(255) NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY (pk)) DEFAULT CHARACTER SET utf8mb4');
-        $this->addSql('CREATE TABLE department (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, color VARCHAR(32) NOT NULL, icon_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_CD1DE18A989D9B62 (slug), INDEX IDX_CD1DE18A54B9D732 (icon_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE department (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, color VARCHAR(32) NOT NULL, icon_id INT DEFAULT NULL, manager_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_CD1DE18A989D9B62 (slug), INDEX IDX_CD1DE18A54B9D732 (icon_id), INDEX IDX_CD1DE18A783E3463 (manager_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE department_result (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, league VARCHAR(255) NOT NULL, url VARCHAR(2048) NOT NULL, department_id INT NOT NULL, INDEX IDX_7703EE3AE80F5DF (department_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE department_statistic (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, department_id INT NOT NULL, INDEX IDX_BF193150AE80F5DF (department_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE department_training_group (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, age_range VARCHAR(255) DEFAULT NULL, department_id INT NOT NULL, INDEX IDX_D86A806DAE80F5DF (department_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
@@ -39,6 +39,7 @@ final class Version20260507063613 extends AbstractMigration
         $this->addSql('CREATE TABLE `user` (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('ALTER TABLE contact_person ADD CONSTRAINT FK_A44EE6F7EE45BDBF FOREIGN KEY (picture_id) REFERENCES media_item (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE department ADD CONSTRAINT FK_CD1DE18A54B9D732 FOREIGN KEY (icon_id) REFERENCES media_item (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE department ADD CONSTRAINT FK_CD1DE18A783E3463 FOREIGN KEY (manager_id) REFERENCES contact_person (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE department_result ADD CONSTRAINT FK_7703EE3AE80F5DF FOREIGN KEY (department_id) REFERENCES department (id)');
         $this->addSql('ALTER TABLE department_statistic ADD CONSTRAINT FK_BF193150AE80F5DF FOREIGN KEY (department_id) REFERENCES department (id)');
         $this->addSql('ALTER TABLE department_training_group ADD CONSTRAINT FK_D86A806DAE80F5DF FOREIGN KEY (department_id) REFERENCES department (id)');
@@ -61,6 +62,7 @@ final class Version20260507063613 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE contact_person DROP FOREIGN KEY FK_A44EE6F7EE45BDBF');
         $this->addSql('ALTER TABLE department DROP FOREIGN KEY FK_CD1DE18A54B9D732');
+        $this->addSql('ALTER TABLE department DROP FOREIGN KEY FK_CD1DE18A783E3463');
         $this->addSql('ALTER TABLE department_result DROP FOREIGN KEY FK_7703EE3AE80F5DF');
         $this->addSql('ALTER TABLE department_statistic DROP FOREIGN KEY FK_BF193150AE80F5DF');
         $this->addSql('ALTER TABLE department_training_group DROP FOREIGN KEY FK_D86A806DAE80F5DF');
