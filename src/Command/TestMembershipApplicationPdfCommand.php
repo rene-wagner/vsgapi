@@ -46,6 +46,11 @@ final class TestMembershipApplicationPdfCommand extends Command
             $payload = $this->loadPayload($input->getOption('payload'));
             $application = $this->payloadMapper->map($payload);
             $filename = $this->pdfService->create($application, self::TEST_FILENAME);
+
+            if ($application['isChild']) {
+                $supervisionFilename = $this->pdfService->createSupervisionDuty($application, $this->pdfService->getToken($filename), 'aufsichtspflicht-test.pdf');
+            }
+
             $this->storeService->store(
                 $application,
                 $filename,
@@ -60,6 +65,10 @@ final class TestMembershipApplicationPdfCommand extends Command
                 $this->pdfService->delete($filename);
             }
 
+            if (isset($supervisionFilename)) {
+                $this->pdfService->delete($supervisionFilename);
+            }
+
             $io->error('Die Test-PDF konnte nicht gespeichert werden.');
 
             return Command::FAILURE;
@@ -68,6 +77,11 @@ final class TestMembershipApplicationPdfCommand extends Command
         $io->success('Test-PDF wurde erzeugt.');
         $io->writeln('Datei: ' . $filename);
         $io->writeln('Pfad: /' . ltrim($this->pdfService->getRelativePath($filename), '/'));
+
+        if (isset($supervisionFilename)) {
+            $io->writeln('Datei Aufsichtspflicht: ' . $supervisionFilename);
+            $io->writeln('Pfad Aufsichtspflicht: /' . ltrim($this->pdfService->getRelativePath($supervisionFilename), '/'));
+        }
 
         return Command::SUCCESS;
     }
@@ -100,6 +114,15 @@ final class TestMembershipApplicationPdfCommand extends Command
                 'acceptsEmailInvitation' => true,
                 'acceptsPrivacyPolicy' => true,
                 'confirmsMinorAttachment' => true,
+                'isChild' => true,
+                'guardianOneName' => 'Mustermann, Klaus',
+                'guardianOneAddress' => 'Große Deichstraße 12, 06667 Weißenfels',
+                'guardianOnePhone' => '+49123456789',
+                'guardianTwoName' => 'Mustermann, Karin',
+                'guardianTwoAddress' => 'Große Deichstraße 12, 06667 Weißenfels',
+                'guardianTwoPhone' => '+49123456789',
+                'underTwelveMayWalkHomeAlone' => true,
+                'overTwelveMayWalkHomeAlone' => false,
             ];
         }
 

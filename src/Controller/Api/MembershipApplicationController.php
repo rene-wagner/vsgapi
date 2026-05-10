@@ -46,6 +46,12 @@ final class MembershipApplicationController extends AbstractController
 
         try {
             $filename = $membershipApplicationPdfService->create($application);
+
+            if ($application['isChild']) {
+                $token = $membershipApplicationPdfService->getToken($filename);
+                $supervisionFilename = $membershipApplicationPdfService->createSupervisionDuty($application, $token);
+            }
+
             $membershipApplicationStoreService->store(
                 $application,
                 $filename,
@@ -54,6 +60,10 @@ final class MembershipApplicationController extends AbstractController
         } catch (\RuntimeException $exception) {
             if (isset($filename)) {
                 $membershipApplicationPdfService->delete($filename);
+            }
+
+            if (isset($supervisionFilename)) {
+                $membershipApplicationPdfService->delete($supervisionFilename);
             }
 
             $logger->error('Aufnahmeantrag PDF konnte nicht erstellt werden.', [
@@ -71,6 +81,10 @@ final class MembershipApplicationController extends AbstractController
                 $membershipApplicationPdfService->delete($filename);
             }
 
+            if (isset($supervisionFilename)) {
+                $membershipApplicationPdfService->delete($supervisionFilename);
+            }
+
             $logger->error('Aufnahmeantrag konnte nicht gespeichert werden.', [
                 'exception' => $exception,
                 'message' => $exception->getMessage(),
@@ -84,9 +98,15 @@ final class MembershipApplicationController extends AbstractController
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->json([
+        $response = [
             'success' => true,
             'url' => $request->getSchemeAndHttpHost() . '/' . ltrim($membershipApplicationPdfService->getRelativePath($filename), '/'),
-        ], Response::HTTP_CREATED);
+        ];
+
+        if (isset($supervisionFilename)) {
+            $response['supervisionDutyUrl'] = $request->getSchemeAndHttpHost() . '/' . ltrim($membershipApplicationPdfService->getRelativePath($supervisionFilename), '/');
+        }
+
+        return $this->json($response, Response::HTTP_CREATED);
     }
 }

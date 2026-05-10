@@ -24,7 +24,16 @@ namespace App\Service\MembershipApplication;
  *     acceptsStatutes: bool,
  *     acceptsEmailInvitation: bool,
  *     acceptsPrivacyPolicy: bool,
- *     confirmsMinorAttachment: bool
+ *     confirmsMinorAttachment: bool,
+ *     isChild: bool,
+ *     guardianOneName: string,
+ *     guardianOneAddress: string,
+ *     guardianOnePhone: string,
+ *     guardianTwoName: string,
+ *     guardianTwoAddress: string,
+ *     guardianTwoPhone: string,
+ *     underTwelveMayWalkHomeAlone: bool,
+ *     overTwelveMayWalkHomeAlone: bool
  * }
  */
 final class MembershipApplicationPayloadMapper
@@ -57,6 +66,15 @@ final class MembershipApplicationPayloadMapper
         $acceptsEmailInvitation = $this->requireBool($payload, 'acceptsEmailInvitation', 'Bitte geben Sie an, ob die Einladung per E-Mail erfolgen darf.');
         $acceptsPrivacyPolicy = $this->requireBool($payload, 'acceptsPrivacyPolicy', 'Bitte geben Sie die DSGVO-Einwilligung an.');
         $confirmsMinorAttachment = $this->requireBool($payload, 'confirmsMinorAttachment', 'Bitte geben Sie an, ob die Anlage zur Aufsichtspflicht beigefuegt ist.');
+        $isChild = $this->requireBool($payload, 'isChild', 'Bitte geben Sie an, ob es sich um ein Kind handelt.');
+        $guardianOneName = $this->optionalString($payload, 'guardianOneName');
+        $guardianOneAddress = $this->optionalString($payload, 'guardianOneAddress');
+        $guardianOnePhone = $this->optionalString($payload, 'guardianOnePhone');
+        $guardianTwoName = $this->optionalString($payload, 'guardianTwoName');
+        $guardianTwoAddress = $this->optionalString($payload, 'guardianTwoAddress');
+        $guardianTwoPhone = $this->optionalString($payload, 'guardianTwoPhone');
+        $underTwelveMayWalkHomeAlone = $this->requireBool($payload, 'underTwelveMayWalkHomeAlone', 'Bitte geben Sie die Regelung fuer Kinder unter zwoelf Jahren an.');
+        $overTwelveMayWalkHomeAlone = $this->requireBool($payload, 'overTwelveMayWalkHomeAlone', 'Bitte geben Sie die Regelung fuer Kinder ab zwoelf Jahren an.');
 
         return [
             'department' => $department,
@@ -80,6 +98,15 @@ final class MembershipApplicationPayloadMapper
             'acceptsEmailInvitation' => $acceptsEmailInvitation,
             'acceptsPrivacyPolicy' => $acceptsPrivacyPolicy,
             'confirmsMinorAttachment' => $confirmsMinorAttachment,
+            'isChild' => $isChild,
+            'guardianOneName' => $guardianOneName,
+            'guardianOneAddress' => $guardianOneAddress,
+            'guardianOnePhone' => $guardianOnePhone,
+            'guardianTwoName' => $guardianTwoName,
+            'guardianTwoAddress' => $guardianTwoAddress,
+            'guardianTwoPhone' => $guardianTwoPhone,
+            'underTwelveMayWalkHomeAlone' => $underTwelveMayWalkHomeAlone,
+            'overTwelveMayWalkHomeAlone' => $overTwelveMayWalkHomeAlone,
         ];
     }
 
