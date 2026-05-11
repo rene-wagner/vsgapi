@@ -21,10 +21,27 @@ export default class extends Controller {
 
         this.#onDocumentClickBound = this.#onDocumentClick.bind(this);
         document.addEventListener('click', this.#onDocumentClickBound);
+        this.#initializePreviews();
     }
 
     disconnect() {
         document.removeEventListener('click', this.#onDocumentClickBound);
+    }
+
+    #initializePreviews() {
+        document.querySelectorAll('[data-media-selector]').forEach((wrapper) => {
+            const preview = wrapper.querySelector('[data-media-selector-preview]');
+            if (!preview || preview.innerHTML.trim() !== '') {
+                return;
+            }
+
+            const hiddenInput = wrapper.querySelector('input[type="hidden"]');
+            if (!hiddenInput || hiddenInput.value) {
+                return;
+            }
+
+            this.#updatePreview(wrapper, null);
+        });
     }
 
     #onDocumentClick(event) {
