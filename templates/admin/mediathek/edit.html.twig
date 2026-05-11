@@ -11,6 +11,7 @@
     </div>
 
     {% set file_url = media_url.buildOriginalUrl(item) %}
+    {% set thumbnail_url = media_url.buildThumbnailUrl(item) %}
     {% set is_image = item.type.value == 'image' %}
     {% set is_croppable = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
     {% set can_regenerate_thumbnail = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
@@ -37,6 +38,23 @@
                         <p class="mb-1 break-words font-medium text-gray-900">{{ item.originalFilename }}</p>
                         <p class="mb-2 text-sm text-gray-500">{{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
                         <p class="mb-0 text-sm text-gray-500">Für PDF-Dateien wird keine Vorschau angezeigt.</p>
+                    {% endif %}
+
+                    {% if file_url or thumbnail_url %}
+                        <div class="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 space-y-3">
+                            {% if file_url %}
+                                <div>
+                                    <p class="mb-1 text-sm font-medium text-gray-900">URL</p>
+                                    <a href="{{ file_url }}" target="_blank" rel="noopener noreferrer" class="break-all text-sm text-blue-700 hover:underline">{{ file_url }}</a>
+                                </div>
+                            {% endif %}
+                            {% if thumbnail_url %}
+                                <div>
+                                    <p class="mb-1 text-sm font-medium text-gray-900">Thumbnail-URL</p>
+                                    <a href="{{ thumbnail_url }}" target="_blank" rel="noopener noreferrer" class="break-all text-sm text-blue-700 hover:underline">{{ thumbnail_url }}</a>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% endif %}
                 </div>
             </div>
