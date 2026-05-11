@@ -254,7 +254,7 @@ export default class extends Controller {
 
         if (!item || !item.id) {
             preview.innerHTML = mode === 'card'
-                ? '<div class="flex min-h-[150px] items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-sm text-gray-500">Kein Medium ausgewählt</div>'
+                ? '<div class="flex min-h-[220px] flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-white px-6 py-8 text-center"><span class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-gray-400"><i class="fa-solid fa-image text-2xl" aria-hidden="true"></i></span><p class="mt-4 text-sm font-medium text-gray-700">Kein Medium ausgewählt</p><p class="mt-1 text-sm text-gray-500">Wählen Sie eine Datei aus der Mediathek aus.</p></div>'
                 : '<span class="text-sm text-gray-500">Kein Bild ausgewählt</span>';
             return;
         }
@@ -283,25 +283,28 @@ export default class extends Controller {
         let mediaHtml = '';
 
         if (isImage && previewUrl) {
-            mediaHtml = '<img src="' + this.#escapeAttr(previewUrl) + '" alt="' + this.#escapeAttr(item.name) + '" class="h-auto max-h-[150px] w-full max-w-[150px] rounded-lg border border-gray-200 object-contain bg-white">';
+            mediaHtml = '<img src="' + this.#escapeAttr(previewUrl) + '" alt="' + this.#escapeAttr(item.name) + '" class="h-[180px] w-[180px] rounded-2xl border border-gray-200 object-contain bg-gradient-to-br from-gray-50 to-white p-3 shadow-sm">';
         } else if (item.type === 'pdf') {
-            mediaHtml = '<div class="flex h-[150px] w-[150px] items-center justify-center rounded-lg bg-gray-100"><i class="fa-solid fa-file-pdf text-5xl text-red-600" aria-hidden="true"></i></div>';
+            mediaHtml = '<div class="flex h-[180px] w-[180px] items-center justify-center rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-sm"><i class="fa-solid fa-file-pdf text-6xl text-red-600" aria-hidden="true"></i></div>';
         } else {
-            mediaHtml = '<div class="flex h-[150px] w-[150px] items-center justify-center rounded-lg bg-gray-100"><i class="fa-solid fa-file text-5xl text-gray-500" aria-hidden="true"></i></div>';
+            mediaHtml = '<div class="flex h-[180px] w-[180px] items-center justify-center rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-sm"><i class="fa-solid fa-file text-6xl text-gray-500" aria-hidden="true"></i></div>';
         }
 
         const typeLabel = isImage ? 'Bild' : 'PDF';
         const editUrl = '/admin/mediathek/items/' + encodeURIComponent(item.id) + '/edit';
 
-        return '<div class="grid gap-6 md:grid-cols-[150px_minmax(0,1fr)]">' +
-            '<div>' + mediaHtml + '</div>' +
-            '<div>' +
-                '<dl class="space-y-3 text-sm text-gray-700">' +
-                    '<div class="grid gap-1 sm:grid-cols-3 sm:gap-4"><dt class="font-medium text-gray-500">Name</dt><dd class="sm:col-span-2">' + this.#escapeHtml(item.name) + '</dd></div>' +
-                    '<div class="grid gap-1 sm:grid-cols-3 sm:gap-4"><dt class="font-medium text-gray-500">Typ</dt><dd class="sm:col-span-2">' + this.#escapeHtml(typeLabel) + '</dd></div>' +
-                    '<div class="grid gap-1 sm:grid-cols-3 sm:gap-4"><dt class="font-medium text-gray-500">Größe</dt><dd class="sm:col-span-2">' + this.#escapeHtml(item.sizeHuman || '—') + '</dd></div>' +
-                '</dl>' +
-                '<a href="' + this.#escapeAttr(editUrl) + '" class="mt-4 inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>' +
+        return '<div class="grid gap-6 lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)] lg:items-center">' +
+            '<div class="flex justify-center lg:justify-start">' + mediaHtml + '</div>' +
+            '<div class="min-w-0">' +
+                '<h4 class="truncate text-base font-semibold text-gray-900">' + this.#escapeHtml(item.name) + '</h4>' +
+                '<div class="mt-3 flex flex-wrap gap-2">' +
+                    '<span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">' + this.#escapeHtml(typeLabel) + '</span>' +
+                    '<span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">' + this.#escapeHtml(item.sizeHuman || '—') + '</span>' +
+                '</div>' +
+                '<p class="mt-4 text-sm text-gray-500">Sie können die aktuelle Datei austauschen oder in der Mediathek bearbeiten.</p>' +
+                '<div class="mt-5 flex flex-wrap gap-3">' +
+                    '<a href="' + this.#escapeAttr(editUrl) + '" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i><span class="ml-2">Bearbeiten</span></a>' +
+                '</div>' +
             '</div>' +
         '</div>';
     }
