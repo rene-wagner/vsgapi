@@ -88,33 +88,54 @@
 
         <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
             <div class="border-b border-gray-200 px-6 py-4">
-                <h2 class="text-sm font-semibold text-gray-900">{{ form.departmentStats.vars.label }}</h2>
-            </div>
-            <div class="px-6 py-4">
-                <div class="collection-holder department-stats-collection space-y-3" data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentStats|length }}">
-                {% for stat in form.departmentStats %}
-                    <div class="collection-item rounded-lg border border-gray-200 bg-gray-50 p-4">
-                        <div class="grid gap-4 md:grid-cols-2">
-                            <div>
-                                {{ form_label(stat.label, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(stat.label, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(stat.label) }}</div>
-                            </div>
-                            <div>
-                                {{ form_label(stat.value, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(stat.value, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(stat.value) }}</div>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <button type="button" class="js-remove-collection-item text-sm font-medium text-red-600 hover:underline" aria-label="Statistik entfernen">Entfernen</button>
-                        </div>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-sm font-semibold text-gray-900">{{ form.departmentStats.vars.label }}</h2>
+                        <p class="mt-1 text-sm text-gray-500">Pflegen Sie hier die wichtigsten Kennzahlen der Abteilung.</p>
                     </div>
-                {% endfor %}
-            </div>
-                <div class="mt-4">
                     <button type="button" class="js-add-stat inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Statistik hinzufügen</button>
                 </div>
+            </div>
+            <div class="px-6 py-4">
+                <div class="collection-holder department-stats-collection space-y-4" data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentStats|length }}">
+                {% for stat in form.departmentStats %}
+                    <details class="department-stat-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50"{% if loop.first %} open{% endif %}>
+                        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
+                            <div class="flex min-w-0 items-start gap-3">
+                                <div class="mt-0.5 h-10 w-1.5 rounded-full bg-violet-600"></div>
+                                <div class="min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="truncate text-sm font-semibold text-gray-900" data-stat-summary-label>{{ stat.label.vars.value ?: 'Neue Statistik' }}</h3>
+                                        <span class="inline-flex items-center rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-800" data-stat-summary-badge>{{ stat.value.vars.value ?: 'Kein Wert' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" class="js-remove-stat inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Statistik entfernen">
+                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition" data-stat-chevron aria-hidden="true">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </span>
+                            </div>
+                        </summary>
+                        <div class="border-t border-gray-200 bg-white px-5 py-5">
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div>
+                                    {{ form_label(stat.label, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(stat.label, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(stat.label) }}</div>
+                                </div>
+                                <div>
+                                    {{ form_label(stat.value, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(stat.value, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(stat.value) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                {% endfor %}
+            </div>
             </div>
         </section>
     </div>
@@ -390,6 +411,29 @@
         }
     }
 
+    function updateStatSummary(statItem) {
+        var labelInput = statItem.querySelector('input[name$="[label]"]');
+        var valueInput = statItem.querySelector('input[name$="[value]"]');
+        var summaryLabel = statItem.querySelector('[data-stat-summary-label]');
+        var summaryBadge = statItem.querySelector('[data-stat-summary-badge]');
+
+        if (summaryLabel) {
+            summaryLabel.textContent = labelInput && labelInput.value.trim() !== '' ? labelInput.value.trim() : 'Neue Statistik';
+        }
+
+        if (summaryBadge) {
+            summaryBadge.textContent = valueInput && valueInput.value.trim() !== '' ? valueInput.value.trim() : 'Kein Wert';
+        }
+    }
+
+    function updateStatChevron(statItem) {
+        var chevron = statItem.querySelector('[data-stat-chevron]');
+
+        if (chevron) {
+            chevron.style.transform = statItem.open ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    }
+
     function updateResultSummary(resultItem) {
         var titleInput = resultItem.querySelector('input[name$="[title]"]');
         var leagueInput = resultItem.querySelector('input[name$="[league]"]');
@@ -464,6 +508,21 @@
         });
     }
 
+    function bindStatSummaryInputs(statItem) {
+        var labelInput = statItem.querySelector('input[name$="[label]"]');
+        var valueInput = statItem.querySelector('input[name$="[value]"]');
+
+        [labelInput, valueInput].forEach(function (input) {
+            if (!input) {
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                updateStatSummary(statItem);
+            });
+        });
+    }
+
     function createSessionRow(sessionHtml) {
         var temp = document.createElement('div');
         temp.innerHTML = sessionHtml;
@@ -501,31 +560,59 @@
         });
     }
 
+    function createStatItem(statHtml) {
+        var temp = document.createElement('div');
+        temp.innerHTML = statHtml;
+
+        var labelInput = temp.querySelector('input[name$="[label]"]');
+        var valueInput = temp.querySelector('input[name$="[value]"]');
+
+        var item = document.createElement('details');
+        item.className = 'department-stat-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50';
+        item.open = true;
+        item.innerHTML =
+            '<summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">' +
+                '<div class="flex min-w-0 items-start gap-3">' +
+                    '<div class="mt-0.5 h-10 w-1.5 rounded-full bg-violet-600"></div>' +
+                    '<div class="min-w-0">' +
+                        '<div class="flex flex-wrap items-center gap-2">' +
+                            '<h3 class="truncate text-sm font-semibold text-gray-900" data-stat-summary-label>Neue Statistik</h3>' +
+                            '<span class="inline-flex items-center rounded-full bg-violet-100 px-2.5 py-1 text-xs font-medium text-violet-800" data-stat-summary-badge>Kein Wert</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="flex items-center gap-2">' +
+                    '<button type="button" class="js-remove-stat inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Statistik entfernen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>' +
+                    '<span class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition" data-stat-chevron aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>' +
+                '</div>' +
+            '</summary>' +
+            '<div class="border-t border-gray-200 bg-white px-5 py-5">' +
+                '<div class="grid gap-4 md:grid-cols-2">' +
+                    '<div><label>Bezeichnung</label>' + (labelInput ? labelInput.outerHTML : '') + '</div>' +
+                    '<div><label>Wert</label>' + (valueInput ? valueInput.outerHTML : '') + '</div>' +
+                '</div>' +
+            '</div>';
+
+        return item;
+    }
+
     document.querySelectorAll('.js-add-stat').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var holder = document.querySelector('.department-stats-collection');
             var proto = holder.dataset.prototype;
             var idx = parseInt(holder.dataset.index, 10);
+            var item = createStatItem(proto.replace(/__stat__/g, String(idx)));
 
-            var temp = document.createElement('div');
-            temp.innerHTML = proto.replace(/__stat__/g, String(idx));
-            var inputs = temp.querySelectorAll('input');
-            var labelInput = inputs.length >= 1 ? inputs[0].outerHTML : '';
-            var valueInput = inputs.length >= 2 ? inputs[1].outerHTML : '';
-
-            var div = document.createElement('div');
-            div.className = 'collection-item rounded-lg border border-gray-200 bg-gray-50 p-4';
-            div.innerHTML =
-                '<div class="grid gap-4 md:grid-cols-2">' +
-                    '<div><label>Bezeichnung</label>' + labelInput + '</div>' +
-                    '<div><label>Wert</label>' + valueInput + '</div>' +
-                '</div>' +
-                textRemoveButtonHtml('Entfernen', 'Statistik entfernen');
-
-            holder.appendChild(div);
+            holder.appendChild(item);
             holder.dataset.index = String(idx + 1);
-            applyFieldClasses(div);
-            bindRemove(div.querySelector('.js-remove-collection-item'));
+            applyFieldClasses(item);
+            bindRemove(item.querySelector('.js-remove-stat'));
+            bindStatSummaryInputs(item);
+            item.addEventListener('toggle', function () {
+                updateStatChevron(item);
+            });
+            updateStatSummary(item);
+            updateStatChevron(item);
         });
     });
 
@@ -679,7 +766,16 @@
         updateResultChevron(item);
     });
 
-    document.querySelectorAll('.department-stats-collection .js-remove-collection-item').forEach(bindRemove);
+    document.querySelectorAll('.department-stat-item').forEach(function (item) {
+        bindRemove(item.querySelector('.js-remove-stat'));
+        bindStatSummaryInputs(item);
+        item.addEventListener('toggle', function () {
+            updateStatChevron(item);
+        });
+        updateStatSummary(item);
+        updateStatChevron(item);
+    });
+
     applyFieldClasses(document.querySelector('.department-form'));
 })();
 </script>
