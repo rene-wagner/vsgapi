@@ -222,37 +222,61 @@
 
     <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         <div class="border-b border-gray-200 px-6 py-4">
-            <h2 class="text-sm font-semibold text-gray-900">{{ form.departmentResults.vars.label }}</h2>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900">{{ form.departmentResults.vars.label }}</h2>
+                    <p class="mt-1 text-sm text-gray-500">Pflegen Sie hier die externen Ergebnisdienst-Einträge der Abteilung.</p>
+                </div>
+                <button type="button" class="js-add-result inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Ergebnisdienst hinzufügen</button>
+            </div>
         </div>
         <div class="px-6 py-4">
-            <div class="collection-holder department-results-collection space-y-3" data-prototype="{{ form_widget(form.departmentResults.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentResults|length }}">
+            <div class="collection-holder department-results-collection space-y-4" data-prototype="{{ form_widget(form.departmentResults.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentResults|length }}">
                 {% for result in form.departmentResults %}
-                    <div class="collection-item rounded-lg border border-gray-200 bg-gray-50 p-4">
-                        <div class="grid gap-4 md:grid-cols-3">
-                            <div>
-                                {{ form_label(result.title, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(result.title, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(result.title) }}</div>
+                    <details class="department-result-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50"{% if loop.first %} open{% endif %}>
+                        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
+                            <div class="flex min-w-0 items-start gap-3">
+                                <div class="mt-0.5 h-10 w-1.5 rounded-full bg-emerald-600"></div>
+                                <div class="min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="truncate text-sm font-semibold text-gray-900" data-result-summary-title>{{ result.title.vars.value ?: 'Neuer Ergebnisdienst' }}</h3>
+                                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800" data-result-summary-badge>{{ result.league.vars.value ?: 'Keine Liga' }}</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500" data-result-summary-url>
+                                        {% if result.url.vars.value %}{{ result.url.vars.value }}{% else %}Keine URL hinterlegt{% endif %}
+                                    </p>
+                                </div>
                             </div>
-                            <div>
-                                {{ form_label(result.league, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(result.league, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(result.league) }}</div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" class="js-remove-result inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Ergebnisdienst entfernen">
+                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition" data-result-chevron aria-hidden="true">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </span>
                             </div>
-                            <div>
-                                {{ form_label(result.url, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(result.url, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(result.url) }}</div>
+                        </summary>
+                        <div class="border-t border-gray-200 bg-white px-5 py-5">
+                            <div class="grid gap-4 md:grid-cols-3">
+                                <div>
+                                    {{ form_label(result.title, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(result.title, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(result.title) }}</div>
+                                </div>
+                                <div>
+                                    {{ form_label(result.league, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(result.league, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(result.league) }}</div>
+                                </div>
+                                <div>
+                                    {{ form_label(result.url, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(result.url, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(result.url) }}</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-3">
-                            <button type="button" class="js-remove-collection-item text-sm font-medium text-red-600 hover:underline" aria-label="Ergebnisdienst entfernen">Entfernen</button>
-                        </div>
-                    </div>
+                    </details>
                 {% endfor %}
-            </div>
-            <div class="mt-4">
-                <button type="button" class="js-add-result inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Ergebnisdienst hinzufügen</button>
             </div>
         </div>
     </section>
@@ -294,6 +318,7 @@
             var item = btn.closest('.collection-item');
             var sessionsHolder = btn.closest('.department-training-sessions-collection');
             var groupItem = btn.closest('.training-group-item');
+            var resultItem = btn.closest('.department-result-item');
 
             if (!item) {
                 return;
@@ -307,6 +332,10 @@
 
             if (groupItem) {
                 updateGroupSummary(groupItem);
+            }
+
+            if (resultItem) {
+                updateResultSummary(resultItem);
             }
         });
     }
@@ -361,6 +390,35 @@
         }
     }
 
+    function updateResultSummary(resultItem) {
+        var titleInput = resultItem.querySelector('input[name$="[title]"]');
+        var leagueInput = resultItem.querySelector('input[name$="[league]"]');
+        var urlInput = resultItem.querySelector('input[name$="[url]"]');
+        var summaryTitle = resultItem.querySelector('[data-result-summary-title]');
+        var summaryBadge = resultItem.querySelector('[data-result-summary-badge]');
+        var summaryUrl = resultItem.querySelector('[data-result-summary-url]');
+
+        if (summaryTitle) {
+            summaryTitle.textContent = titleInput && titleInput.value.trim() !== '' ? titleInput.value.trim() : 'Neuer Ergebnisdienst';
+        }
+
+        if (summaryBadge) {
+            summaryBadge.textContent = leagueInput && leagueInput.value.trim() !== '' ? leagueInput.value.trim() : 'Keine Liga';
+        }
+
+        if (summaryUrl) {
+            summaryUrl.textContent = urlInput && urlInput.value.trim() !== '' ? urlInput.value.trim() : 'Keine URL hinterlegt';
+        }
+    }
+
+    function updateResultChevron(resultItem) {
+        var chevron = resultItem.querySelector('[data-result-chevron]');
+
+        if (chevron) {
+            chevron.style.transform = resultItem.open ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    }
+
     function updateSessionsState(holder) {
         var groupItem = holder.closest('.training-group-item');
         var emptyState = holder.parentElement.querySelector('.js-empty-sessions');
@@ -386,6 +444,22 @@
 
             input.addEventListener('input', function () {
                 updateGroupSummary(groupItem);
+            });
+        });
+    }
+
+    function bindResultSummaryInputs(resultItem) {
+        var titleInput = resultItem.querySelector('input[name$="[title]"]');
+        var leagueInput = resultItem.querySelector('input[name$="[league]"]');
+        var urlInput = resultItem.querySelector('input[name$="[url]"]');
+
+        [titleInput, leagueInput, urlInput].forEach(function (input) {
+            if (!input) {
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                updateResultSummary(resultItem);
             });
         });
     }
@@ -455,33 +529,62 @@
         });
     });
 
+    function createResultItem(resultHtml) {
+        var temp = document.createElement('div');
+        temp.innerHTML = resultHtml;
+
+        var titleInput = temp.querySelector('input[name$="[title]"]');
+        var leagueInput = temp.querySelector('input[name$="[league]"]');
+        var urlInput = temp.querySelector('input[name$="[url]"]');
+
+        var item = document.createElement('details');
+        item.className = 'department-result-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50';
+        item.open = true;
+        item.innerHTML =
+            '<summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">' +
+                '<div class="flex min-w-0 items-start gap-3">' +
+                    '<div class="mt-0.5 h-10 w-1.5 rounded-full bg-emerald-600"></div>' +
+                    '<div class="min-w-0">' +
+                        '<div class="flex flex-wrap items-center gap-2">' +
+                            '<h3 class="truncate text-sm font-semibold text-gray-900" data-result-summary-title>Neuer Ergebnisdienst</h3>' +
+                            '<span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800" data-result-summary-badge>Keine Liga</span>' +
+                        '</div>' +
+                        '<p class="mt-1 text-sm text-gray-500" data-result-summary-url>Keine URL hinterlegt</p>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="flex items-center gap-2">' +
+                    '<button type="button" class="js-remove-result inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Ergebnisdienst entfernen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>' +
+                    '<span class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition" data-result-chevron aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>' +
+                '</div>' +
+            '</summary>' +
+            '<div class="border-t border-gray-200 bg-white px-5 py-5">' +
+                '<div class="grid gap-4 md:grid-cols-3">' +
+                    '<div><label>Titel</label>' + (titleInput ? titleInput.outerHTML : '') + '</div>' +
+                    '<div><label>Liga</label>' + (leagueInput ? leagueInput.outerHTML : '') + '</div>' +
+                    '<div><label>URL</label>' + (urlInput ? urlInput.outerHTML : '') + '</div>' +
+                '</div>' +
+            '</div>';
+
+        return item;
+    }
+
     document.querySelectorAll('.js-add-result').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var holder = document.querySelector('.department-results-collection');
             var proto = holder.dataset.prototype;
             var idx = parseInt(holder.dataset.index, 10);
+            var item = createResultItem(proto.replace(/__result__/g, String(idx)));
 
-            var temp = document.createElement('div');
-            temp.innerHTML = proto.replace(/__result__/g, String(idx));
-            var inputs = temp.querySelectorAll('input');
-            var titleInput = inputs.length >= 1 ? inputs[0].outerHTML : '';
-            var leagueInput = inputs.length >= 2 ? inputs[1].outerHTML : '';
-            var urlInput = inputs.length >= 3 ? inputs[2].outerHTML : '';
-
-            var div = document.createElement('div');
-            div.className = 'collection-item rounded-lg border border-gray-200 bg-gray-50 p-4';
-            div.innerHTML =
-                '<div class="grid gap-4 md:grid-cols-3">' +
-                    '<div><label>Titel</label>' + titleInput + '</div>' +
-                    '<div><label>Liga</label>' + leagueInput + '</div>' +
-                    '<div><label>URL</label>' + urlInput + '</div>' +
-                '</div>' +
-                textRemoveButtonHtml('Entfernen', 'Ergebnisdienst entfernen');
-
-            holder.appendChild(div);
+            holder.appendChild(item);
             holder.dataset.index = String(idx + 1);
-            applyFieldClasses(div);
-            bindRemove(div.querySelector('.js-remove-collection-item'));
+            applyFieldClasses(item);
+            bindRemove(item.querySelector('.js-remove-result'));
+            bindResultSummaryInputs(item);
+            item.addEventListener('toggle', function () {
+                updateResultChevron(item);
+            });
+            updateResultSummary(item);
+            updateResultChevron(item);
         });
     });
 
@@ -566,8 +669,17 @@
         updateGroupChevron(item);
     });
 
+    document.querySelectorAll('.department-result-item').forEach(function (item) {
+        bindRemove(item.querySelector('.js-remove-result'));
+        bindResultSummaryInputs(item);
+        item.addEventListener('toggle', function () {
+            updateResultChevron(item);
+        });
+        updateResultSummary(item);
+        updateResultChevron(item);
+    });
+
     document.querySelectorAll('.department-stats-collection .js-remove-collection-item').forEach(bindRemove);
-    document.querySelectorAll('.department-results-collection .js-remove-collection-item').forEach(bindRemove);
     applyFieldClasses(document.querySelector('.department-form'));
 })();
 </script>
