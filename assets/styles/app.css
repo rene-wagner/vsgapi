@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    /* VSG Blue - Weißenfels city colors based on azure blue (#0057B7) */
+    --color-vsg-blue-50: #e6f0fa;
+    --color-vsg-blue-100: #cce0f7;
+    --color-vsg-blue-200: #99c2f0;
+    --color-vsg-blue-300: #66a3e8;
+    --color-vsg-blue-400: #3385e0;
+    --color-vsg-blue-500: #0066d6;
+    --color-vsg-blue-600: #0057b7;
+    --color-vsg-blue-700: #004a94;
+    --color-vsg-blue-800: #003d7a;
+    --color-vsg-blue-900: #002d5c;
+    --color-vsg-blue-950: #001a3a;
+
+    /* VSG Gold - Accent color */
+    --color-vsg-gold-50: #fefce8;
+    --color-vsg-gold-100: #fef9c3;
+    --color-vsg-gold-200: #fef08a;
+    --color-vsg-gold-300: #fde047;
+    --color-vsg-gold-400: #fcd34d;
+    --color-vsg-gold-500: #fbbf24;
+    --color-vsg-gold-600: #d4a91a;
+    --color-vsg-gold-700: #b89614;
+    --color-vsg-gold-800: #8a700f;
+    --color-vsg-gold-900: #5c4a0a;
+
+    /* Department colors */
+    --color-vsg-badminton-primary: #800080;
+    --color-vsg-badminton-secondary: #ffe6ff;
+    --color-vsg-gymnastik-primary: #00ff00;
+    --color-vsg-gymnastik-secondary: #ccffcc;
+    --color-vsg-tischtennis-primary: #ff0000;
+    --color-vsg-tischtennis-secondary: #ffe6e6;
+    --color-vsg-volleyball-primary: #0000ff;
+    --color-vsg-volleyball-secondary: #e6e6ff;
+
+    /* Typography */
+    --font-display: "Bebas Neue", sans-serif;
+    --font-body: "Source Sans 3", sans-serif;
+}
+
 body {
     min-height: 100vh;
 }
@@ -66,13 +107,13 @@ body {
 
 .admin-mediathek-dropzone:hover,
 .admin-mediathek-dropzone:focus-visible {
-    border-color: rgb(59 130 246) !important;
+    border-color: var(--color-vsg-blue-500) !important;
     outline: none;
 }
 
 .admin-mediathek-dropzone.is-dragover {
-    border-color: rgb(59 130 246) !important;
-    background-color: rgb(239 246 255) !important;
+    border-color: var(--color-vsg-blue-500) !important;
+    background-color: var(--color-vsg-blue-50) !important;
 }
 
 .checkbox-list ul {
@@ -134,8 +175,8 @@ body {
 }
 
 .admin-media-selector-item.is-selected {
-    background-color: rgb(239 246 255);
-    border-color: rgb(59 130 246);
+    background-color: var(--color-vsg-blue-50);
+    border-color: var(--color-vsg-blue-500);
 }
 
 .admin-media-selector-item img {
@@ -160,6 +201,6 @@ body {
 }
 
 .admin-cropper-container .cropper-view-box {
-    outline: 2px solid rgb(59 130 246);
-    outline-color: rgb(59 130 246);
+    outline: 2px solid var(--color-vsg-blue-500);
+    outline-color: var(--color-vsg-blue-500);
 }

@@ -1,8 +1,8 @@
 {% set r = app.request.attributes.get('_route') ?? '' %}
 {% set nav_context = nav_context|default('default') %}
-{% set base_classes = 'block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-gray-700 hover:text-white' %}
-{% set active_classes = 'bg-gray-700 text-white' %}
-{% set inactive_classes = 'text-gray-300' %}
+{% set base_classes = 'block rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-vsg-blue-800 hover:text-white' %}
+{% set active_classes = 'bg-vsg-blue-700 text-white' %}
+{% set inactive_classes = 'text-vsg-blue-100' %}
 <a href="{{ path('admin_dashboard') }}" class="{{ base_classes }} {{ r == 'admin_dashboard' ? active_classes : inactive_classes }}">Dashboard</a>
 <a href="{{ path('admin_user_index') }}" class="{{ base_classes }} {{ r starts with 'admin_user' ? active_classes : inactive_classes }}">Benutzer</a>
 <a href="{{ path('admin_category_index') }}" class="{{ base_classes }} {{ r starts with 'admin_category' ? active_classes : inactive_classes }}">Kategorien</a>

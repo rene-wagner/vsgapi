@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <header class="sticky top-0 z-30 border-b border-gray-200 bg-white lg:hidden">
+    <header class="sticky top-0 z-30 border-b border-vsg-blue-100 bg-white lg:hidden">
         <div class="flex items-center justify-between px-4 py-3">
-            <a href="{{ path('admin_dashboard') }}" class="text-lg font-semibold text-gray-900">VSG Admin</a>
-            <button type="button" class="inline-flex items-center rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" data-drawer-target="admin-sidebar-mobile" data-drawer-show="admin-sidebar-mobile" data-drawer-placement="left" aria-controls="admin-sidebar-mobile" aria-label="Menü öffnen">
+            <a href="{{ path('admin_dashboard') }}" class="text-lg font-semibold text-vsg-blue-900">VSG Admin</a>
+            <button type="button" class="inline-flex items-center rounded-lg p-2 text-vsg-blue-700 hover:bg-vsg-blue-50 hover:text-vsg-blue-900 focus:outline-none focus:ring-2 focus:ring-vsg-blue-300" data-drawer-target="admin-sidebar-mobile" data-drawer-show="admin-sidebar-mobile" data-drawer-placement="left" aria-controls="admin-sidebar-mobile" aria-label="Menü öffnen">
                 <svg class="h-6 w-6" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
@@ -12,11 +12,11 @@
         </div>
     </header>
 
-    <aside id="admin-sidebar-mobile" class="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-gray-700 bg-gray-800 transition-transform lg:hidden" tabindex="-1" aria-labelledby="admin-sidebar-mobile-label">
+    <aside id="admin-sidebar-mobile" class="fixed left-0 top-0 z-40 h-screen w-72 -translate-x-full border-r border-vsg-blue-800 bg-vsg-blue-900 transition-transform lg:hidden" tabindex="-1" aria-labelledby="admin-sidebar-mobile-label">
         <div class="flex h-full flex-col">
-            <div class="flex items-center justify-between border-b border-gray-700 px-4 py-3">
+            <div class="flex items-center justify-between border-b border-vsg-blue-800 px-4 py-3">
                 <h2 id="admin-sidebar-mobile-label" class="text-lg font-semibold text-white">VSG Admin</h2>
-                <button type="button" class="inline-flex items-center rounded-lg p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" data-drawer-hide="admin-sidebar-mobile" aria-controls="admin-sidebar-mobile" aria-label="Schließen">
+                <button type="button" class="inline-flex items-center rounded-lg p-2 text-vsg-blue-200 hover:bg-vsg-blue-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-vsg-blue-300" data-drawer-hide="admin-sidebar-mobile" aria-controls="admin-sidebar-mobile" aria-label="Schließen">
                     <svg class="h-5 w-5" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
@@ -25,7 +25,7 @@
             <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
                 {% include 'admin/_nav_links.html.twig' with { nav_context: 'mobile' } %}
             </nav>
-            <div class="border-t border-gray-700 px-4 py-3 text-sm text-gray-300">
+            <div class="border-t border-vsg-blue-800 px-4 py-3 text-sm text-vsg-blue-100">
                 {{ app.user.fullName }}
                 &middot;
                 <a href="{{ path('app_logout') }}" class="font-medium text-white hover:underline">Abmelden</a>
@@ -34,14 +34,14 @@
     </aside>
 
     <div class="min-h-screen lg:flex">
-        <aside class="hidden w-72 flex-shrink-0 border-r border-gray-700 bg-gray-800 text-white lg:flex lg:flex-col">
-            <div class="border-b border-gray-700 px-4 py-4">
+        <aside class="hidden w-72 flex-shrink-0 border-r border-vsg-blue-800 bg-vsg-blue-900 text-white lg:flex lg:flex-col">
+            <div class="border-b border-vsg-blue-800 px-4 py-4">
                 <a href="{{ path('admin_dashboard') }}" class="text-xl font-semibold text-white">VSG Admin</a>
             </div>
             <nav class="flex-1 space-y-1 px-3 py-4">
                 {% include 'admin/_nav_links.html.twig' with { nav_context: 'desktop' } %}
             </nav>
-            <div class="border-t border-gray-700 px-4 py-3 text-sm text-gray-300">
+            <div class="border-t border-vsg-blue-800 px-4 py-3 text-sm text-vsg-blue-100">
                 {{ app.user.fullName }}
                 &middot;
                 <a href="{{ path('app_logout') }}" class="font-medium text-white hover:underline">Abmelden</a>
@@ -54,7 +54,7 @@
                         success: 'border-green-200 bg-green-50 text-green-800',
                         error: 'border-red-200 bg-red-50 text-red-800',
                         warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
-                        info: 'border-blue-200 bg-blue-50 text-blue-800'
+                        info: 'border-vsg-blue-200 bg-vsg-blue-50 text-vsg-blue-800'
                     } %}
                     <div class="mb-4 rounded-lg border px-4 py-3 {{ alert_classes[type] ?? 'border-gray-200 bg-white text-gray-800' }}" role="alert">
                         {{ message }}

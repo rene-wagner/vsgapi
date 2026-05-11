@@ -3,16 +3,16 @@
 {% block title %}Login - VSG Admin{% endblock %}
 
 {% block body %}
-    <div class="flex min-h-screen items-center justify-center bg-gray-900 px-4 py-8">
+    <div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-vsg-blue-950 via-vsg-blue-900 to-vsg-blue-700 px-4 py-8">
         <div class="w-full max-w-md">
-            <div class="rounded-2xl bg-white p-6 shadow-xl sm:p-8">
-                <h1 class="mb-6 text-center text-2xl font-semibold text-gray-900">VSG Admin Login</h1>
+            <div class="rounded-2xl border border-vsg-blue-100 bg-white p-6 shadow-xl sm:p-8">
+                <h1 class="mb-6 text-center text-2xl font-semibold text-vsg-blue-900">VSG Admin Login</h1>
 
                 {% set alert_classes = {
                     success: 'border-green-200 bg-green-50 text-green-800',
                     error: 'border-red-200 bg-red-50 text-red-800',
                     warning: 'border-yellow-200 bg-yellow-50 text-yellow-800',
-                    info: 'border-blue-200 bg-blue-50 text-blue-800'
+                    info: 'border-vsg-blue-200 bg-vsg-blue-50 text-vsg-blue-800'
                 } %}
 
                 {% for type, messages in app.flashes %}
@@ -28,20 +28,20 @@
                 <form method="post" class="space-y-5">
                     <div>
                         <label for="inputEmail" class="mb-2 block text-sm font-medium text-gray-900">E-Mail</label>
-                        <input type="email" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
+                        <input type="email" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-vsg-blue-500 focus:ring-vsg-blue-500" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
                     </div>
                     <div>
                         <label for="inputPassword" class="mb-2 block text-sm font-medium text-gray-900">Passwort</label>
-                        <input type="password" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500" id="inputPassword" name="_password" required autocomplete="current-password">
+                        <input type="password" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-vsg-blue-500 focus:ring-vsg-blue-500" id="inputPassword" name="_password" required autocomplete="current-password">
                     </div>
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                    <button type="submit" class="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Anmelden</button>
+                    <button type="submit" class="w-full rounded-lg bg-vsg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-vsg-blue-800 focus:outline-none focus:ring-4 focus:ring-vsg-blue-300">Anmelden</button>
                 </form>
 
                 <div class="mt-5 text-center text-sm">
-                    <a href="{{ path('app_forgot_password_request') }}" class="font-medium text-blue-700 hover:underline">Passwort vergessen?</a>
+                    <a href="{{ path('app_forgot_password_request') }}" class="font-medium text-vsg-blue-700 hover:text-vsg-blue-900 hover:underline">Passwort vergessen?</a>
                 </div>
             </div>
         </div>
