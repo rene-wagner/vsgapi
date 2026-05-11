@@ -8,6 +8,8 @@ use App\Repository\EventRepository;
 
 class EventOccurrenceService
 {
+    private const CALENDAR_TIMEZONE = 'Europe/Berlin';
+
     public function __construct(
         private EventRepository $eventRepository,
     ) {
@@ -28,8 +30,8 @@ class EventOccurrenceService
                 $occurrences[] = [
                     'id' => $event->getId(),
                     'title' => $event->getTitle(),
-                    'start' => $occurrence['startsAt']->format(\DateTimeInterface::ATOM),
-                    'end' => $occurrence['endsAt']->format(\DateTimeInterface::ATOM),
+                    'start' => $occurrence['startsAt']->setTimezone(new \DateTimeZone(self::CALENDAR_TIMEZONE))->format(\DateTimeInterface::ATOM),
+                    'end' => $occurrence['endsAt']->setTimezone(new \DateTimeZone(self::CALENDAR_TIMEZONE))->format(\DateTimeInterface::ATOM),
                     'url' => '/admin/events/' . $event->getId() . '/edit',
                 ];
             }

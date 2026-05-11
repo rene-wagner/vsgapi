@@ -32,11 +32,15 @@ class EventType extends AbstractType
                 'label' => 'Beginn',
                 'widget' => 'single_text',
                 'html5' => true,
+                'model_timezone' => 'UTC',
+                'view_timezone' => 'Europe/Berlin',
             ])
             ->add('endsAt', DateTimeType::class, [
                 'label' => 'Ende',
                 'widget' => 'single_text',
                 'html5' => true,
+                'model_timezone' => 'UTC',
+                'view_timezone' => 'Europe/Berlin',
             ])
             ->add('location', TextType::class, [
                 'label' => 'Ort',
@@ -60,6 +64,8 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
                 'html5' => true,
                 'required' => false,
+                'model_timezone' => 'UTC',
+                'view_timezone' => 'Europe/Berlin',
             ])
             ->add('picture', MediaItemSelectorType::class, [
                 'required' => false,
