@@ -58,6 +58,8 @@ final class MembershipApplicationController extends AbstractController
                 $application,
                 $filename,
                 $membershipApplicationPdfService->getRelativePath($filename),
+                $supervisionFilename ?? null,
+                isset($supervisionFilename) ? $membershipApplicationPdfService->getRelativePath($supervisionFilename) : null,
             );
         } catch (\RuntimeException $exception) {
             if (isset($filename)) {

@@ -14,14 +14,21 @@ final class MembershipApplicationStoreService
     }
 
     /** @param MembershipApplicationData $application */
-    public function store(array $application, string $pdfFilename, string $pdfPath): void
-    {
+    public function store(
+        array $application,
+        string $membershipApplicationPdfFilename,
+        string $membershipApplicationPdfPath,
+        ?string $supervisionDutyPdfFilename = null,
+        ?string $supervisionDutyPdfPath = null,
+    ): void {
         $membershipApplication = new MembershipApplication();
         $membershipApplication
             ->setFirstName($application['firstName'])
             ->setLastName($application['lastName'])
-            ->setPdfFilename($pdfFilename)
-            ->setPdfPath($pdfPath)
+            ->setMembershipApplicationPdfFilename($membershipApplicationPdfFilename)
+            ->setMembershipApplicationPdfPath($membershipApplicationPdfPath)
+            ->setSupervisionDutyPdfFilename($supervisionDutyPdfFilename)
+            ->setSupervisionDutyPdfPath($supervisionDutyPdfPath)
         ;
 
         $this->entityManager->persist($membershipApplication);

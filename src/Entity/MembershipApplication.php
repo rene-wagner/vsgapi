@@ -21,10 +21,16 @@ class MembershipApplication
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $pdfFilename = null;
+    private ?string $membershipApplicationPdfFilename = null;
 
     #[ORM\Column(length: 512)]
-    private ?string $pdfPath = null;
+    private ?string $membershipApplicationPdfPath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $supervisionDutyPdfFilename = null;
+
+    #[ORM\Column(length: 512, nullable: true)]
+    private ?string $supervisionDutyPdfPath = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -58,37 +64,61 @@ class MembershipApplication
         return $this;
     }
 
-    public function getPdfFilename(): ?string
+    public function getMembershipApplicationPdfFilename(): ?string
     {
-        return $this->pdfFilename;
+        return $this->membershipApplicationPdfFilename;
     }
 
-    public function setPdfFilename(string $pdfFilename): static
+    public function setMembershipApplicationPdfFilename(string $membershipApplicationPdfFilename): static
     {
-        $this->pdfFilename = $pdfFilename;
+        $this->membershipApplicationPdfFilename = $membershipApplicationPdfFilename;
 
         return $this;
     }
 
-    public function getPdfPath(): ?string
+    public function getMembershipApplicationPdfPath(): ?string
     {
-        return $this->pdfPath;
+        return $this->membershipApplicationPdfPath;
     }
 
-    public function setPdfPath(string $pdfPath): static
+    public function setMembershipApplicationPdfPath(string $membershipApplicationPdfPath): static
     {
-        $this->pdfPath = $pdfPath;
+        $this->membershipApplicationPdfPath = $membershipApplicationPdfPath;
 
         return $this;
     }
 
-    public function getPdfToken(): ?string
+    public function getSupervisionDutyPdfFilename(): ?string
     {
-        if ($this->pdfFilename === null) {
+        return $this->supervisionDutyPdfFilename;
+    }
+
+    public function setSupervisionDutyPdfFilename(?string $supervisionDutyPdfFilename): static
+    {
+        $this->supervisionDutyPdfFilename = $supervisionDutyPdfFilename;
+
+        return $this;
+    }
+
+    public function getSupervisionDutyPdfPath(): ?string
+    {
+        return $this->supervisionDutyPdfPath;
+    }
+
+    public function setSupervisionDutyPdfPath(?string $supervisionDutyPdfPath): static
+    {
+        $this->supervisionDutyPdfPath = $supervisionDutyPdfPath;
+
+        return $this;
+    }
+
+    public function getMembershipApplicationPdfToken(): ?string
+    {
+        if ($this->membershipApplicationPdfFilename === null) {
             return null;
         }
 
-        if (preg_match('/^(?:aufnahmeantrag|membership-application)-((?:\d{8}-[a-f0-9]{32}|test))\.pdf$/', $this->pdfFilename, $matches) !== 1) {
+        if (preg_match('/^(?:aufnahmeantrag|membership-application)-((?:\d{8}-[a-f0-9]{32}|test))\.pdf$/', $this->membershipApplicationPdfFilename, $matches) !== 1) {
             return null;
         }
 
