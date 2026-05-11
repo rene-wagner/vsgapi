@@ -94,7 +94,7 @@
             <div class="px-6 py-4">
                 <div class="collection-holder department-stats-collection space-y-4" data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentStats|length }}">
                 {% for stat in form.departmentStats %}
-                    <details class="department-stat-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50"{% if loop.first %} open{% endif %}>
+                    <details class="department-stat-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
                         <summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
                             <div class="flex min-w-0 items-start gap-3">
                                 <div class="mt-0.5 h-10 w-1.5 rounded-full bg-violet-600"></div>
@@ -148,7 +148,7 @@
         <div class="px-6 py-4">
             <div class="collection-holder department-training-groups-collection space-y-4" data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}" data-index="{{ form.trainingGroups|length }}">
                 {% for group in form.trainingGroups %}
-                    <details class="training-group-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50"{% if loop.first %} open{% endif %}>
+                    <details class="training-group-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
                         <summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
                             <div class="flex min-w-0 items-start gap-3">
                                 <div class="mt-0.5 h-10 w-1.5 rounded-full bg-blue-600"></div>
@@ -249,7 +249,7 @@
         <div class="px-6 py-4">
             <div class="collection-holder department-results-collection space-y-4" data-prototype="{{ form_widget(form.departmentResults.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentResults|length }}">
                 {% for result in form.departmentResults %}
-                    <details class="department-result-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50"{% if loop.first %} open{% endif %}>
+                    <details class="department-result-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
                         <summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
                             <div class="flex min-w-0 items-start gap-3">
                                 <div class="mt-0.5 h-10 w-1.5 rounded-full bg-emerald-600"></div>
