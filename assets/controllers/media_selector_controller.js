@@ -54,7 +54,7 @@ export default class extends Controller {
             const hiddenInput = wrapper.querySelector('input[type="hidden"]');
             if (hiddenInput) hiddenInput.value = '';
 
-            this.#updatePreview(wrapper, null, '', '');
+            this.#updatePreview(wrapper, null);
             removeButton.disabled = true;
         }
     }
@@ -179,6 +179,11 @@ export default class extends Controller {
             div.setAttribute('role', 'button');
             div.setAttribute('data-media-item-id', item.id);
             div.setAttribute('data-media-item-name', item.name || '');
+            div.setAttribute('data-media-item-type', item.type || '');
+            div.setAttribute('data-media-item-extension', item.extension || '');
+            div.setAttribute('data-media-item-thumbnail-url', item.thumbnail_url || '');
+            div.setAttribute('data-media-item-original-url', item.original_url || '');
+            div.setAttribute('data-media-item-size-human', item.size_human || '');
 
             let thumbHtml;
             if (item.type === 'image' && item.thumbnail_url) {
@@ -220,14 +225,20 @@ export default class extends Controller {
         if (!this.activeWrapper) return;
 
         const id = el.dataset.mediaItemId;
-        const name = el.dataset.mediaItemName || '';
-        const img = el.querySelector('img');
-        const thumbSrc = img ? img.src : '';
+        const item = {
+            id: id,
+            name: el.dataset.mediaItemName || '',
+            type: el.dataset.mediaItemType || '',
+            extension: el.dataset.mediaItemExtension || '',
+            thumbnailUrl: el.dataset.mediaItemThumbnailUrl || '',
+            originalUrl: el.dataset.mediaItemOriginalUrl || '',
+            sizeHuman: el.dataset.mediaItemSizeHuman || '',
+        };
 
         const hiddenInput = this.activeWrapper.querySelector('input[type="hidden"]');
         if (hiddenInput) hiddenInput.value = id;
 
-        this.#updatePreview(this.activeWrapper, id, name, thumbSrc);
+        this.#updatePreview(this.activeWrapper, item);
 
         const removeBtn = this.activeWrapper.querySelector('[data-media-selector-remove]');
         if (removeBtn) removeBtn.disabled = false;
@@ -235,21 +246,64 @@ export default class extends Controller {
         this.modalInstance.hide();
     }
 
-    #updatePreview(wrapper, id, name, thumbSrc) {
+    #updatePreview(wrapper, item) {
         const preview = wrapper.querySelector('[data-media-selector-preview]');
         if (!preview) return;
 
-        if (!id) {
-            preview.innerHTML = '<span class="text-sm text-gray-500">Kein Bild ausgewählt</span>';
+        const mode = preview.dataset.mediaSelectorPreviewMode || 'inline';
+
+        if (!item || !item.id) {
+            preview.innerHTML = mode === 'card'
+                ? '<div class="flex min-h-[150px] items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-sm text-gray-500">Kein Medium ausgewählt</div>'
+                : '<span class="text-sm text-gray-500">Kein Bild ausgewählt</span>';
             return;
         }
 
+        preview.innerHTML = mode === 'card'
+            ? this.#renderCardPreview(item)
+            : this.#renderInlinePreview(item);
+    }
+
+    #renderInlinePreview(item) {
         let html = '';
-        if (thumbSrc) {
-            html += '<img src="' + this.#escapeAttr(thumbSrc) + '" alt="">';
+        const imageUrl = item.thumbnailUrl || item.originalUrl;
+
+        if (imageUrl) {
+            html += '<img src="' + this.#escapeAttr(imageUrl) + '" alt="">';
         }
-        html += '<span class="truncate text-sm text-gray-900">' + this.#escapeHtml(name) + '</span>';
-        preview.innerHTML = html;
+
+        html += '<span class="truncate text-sm text-gray-900">' + this.#escapeHtml(item.name) + '</span>';
+
+        return html;
+    }
+
+    #renderCardPreview(item) {
+        const isImage = item.type === 'image';
+        const previewUrl = item.thumbnailUrl || item.originalUrl;
+        let mediaHtml = '';
+
+        if (isImage && previewUrl) {
+            mediaHtml = '<img src="' + this.#escapeAttr(previewUrl) + '" alt="' + this.#escapeAttr(item.name) + '" class="h-auto max-h-[150px] w-full max-w-[150px] rounded-lg border border-gray-200 object-contain bg-white">';
+        } else if (item.type === 'pdf') {
+            mediaHtml = '<div class="flex h-[150px] w-[150px] items-center justify-center rounded-lg bg-gray-100"><i class="fa-solid fa-file-pdf text-5xl text-red-600" aria-hidden="true"></i></div>';
+        } else {
+            mediaHtml = '<div class="flex h-[150px] w-[150px] items-center justify-center rounded-lg bg-gray-100"><i class="fa-solid fa-file text-5xl text-gray-500" aria-hidden="true"></i></div>';
+        }
+
+        const typeLabel = isImage ? 'Bild' : 'PDF';
+        const editUrl = '/admin/mediathek/items/' + encodeURIComponent(item.id) + '/edit';
+
+        return '<div class="grid gap-6 md:grid-cols-[150px_minmax(0,1fr)]">' +
+            '<div>' + mediaHtml + '</div>' +
+            '<div>' +
+                '<dl class="space-y-3 text-sm text-gray-700">' +
+                    '<div class="grid gap-1 sm:grid-cols-3 sm:gap-4"><dt class="font-medium text-gray-500">Name</dt><dd class="sm:col-span-2">' + this.#escapeHtml(item.name) + '</dd></div>' +
+                    '<div class="grid gap-1 sm:grid-cols-3 sm:gap-4"><dt class="font-medium text-gray-500">Typ</dt><dd class="sm:col-span-2">' + this.#escapeHtml(typeLabel) + '</dd></div>' +
+                    '<div class="grid gap-1 sm:grid-cols-3 sm:gap-4"><dt class="font-medium text-gray-500">Größe</dt><dd class="sm:col-span-2">' + this.#escapeHtml(item.sizeHuman || '—') + '</dd></div>' +
+                '</dl>' +
+                '<a href="' + this.#escapeAttr(editUrl) + '" class="mt-4 inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" aria-label="Bearbeiten" title="Bearbeiten"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i></a>' +
+            '</div>' +
+        '</div>';
     }
 
     #showEmpty(visible) {

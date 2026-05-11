@@ -5,7 +5,7 @@
 {% if media_item %}
 <div class="mb-4 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
     <div class="border-b border-gray-200 px-6 py-4 text-lg font-semibold text-gray-900">{{ title|default('Mediendatei') }}</div>
-    <div class="px-6 py-4">
+    <div class="px-6 py-4" data-media-selector-preview data-media-selector-preview-mode="card">
         <div class="grid gap-6 md:grid-cols-[150px_minmax(0,1fr)]">
             <div>
                 {% if media_item.type.value == 'image' and media_item.thumbnailPath and media_item.mimeType not in ['image/svg+xml', 'image/gif'] %}
