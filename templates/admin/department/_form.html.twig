@@ -3,76 +3,95 @@
 {{ form_start(form, { attr: { class: 'department-form space-y-6', novalidate: 'novalidate' } }) }}
     {{ form_errors(form) }}
 
-    <div>
-        {{ form_label(form.name, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-        {{ form_widget(form.name, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.name) }}</div>
+    <div class="grid gap-6 lg:grid-cols-2">
+        <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-sm font-semibold text-gray-900">Stammdaten</h2>
+            </div>
+            <div class="space-y-4 px-6 py-4">
+                <div>
+                    {{ form_label(form.name, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                    {{ form_widget(form.name, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                    <div class="mt-2 text-sm text-red-600">{{ form_errors(form.name) }}</div>
+                </div>
+
+                <div>
+                    {{ form_label(form.color, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                    {{ form_widget(form.color, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                    <div class="mt-2 text-sm text-red-600">{{ form_errors(form.color) }}</div>
+                </div>
+
+                <div>
+                    {{ form_label(form.manager, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                    {{ form_widget(form.manager, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                    <div class="mt-2 text-sm text-red-600">{{ form_errors(form.manager) }}</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-sm font-semibold text-gray-900">Beschreibung</h2>
+            </div>
+            <div class="px-6 py-4">
+                {{ form_label(form.description, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                {{ form_widget(form.description, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', 'data-controller': 'easymde', rows: 10 } }) }}
+                <div class="mt-2 text-sm text-red-600">{{ form_errors(form.description) }}</div>
+            </div>
+        </section>
     </div>
 
-    <div>
-        {{ form_label(form.color, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-        {{ form_widget(form.color, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.color) }}</div>
-    </div>
-
-    <div>
-        {{ form_label(form.description, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-        {{ form_widget(form.description, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', 'data-controller': 'easymde', rows: 10 } }) }}
-        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.description) }}</div>
-    </div>
-
-    <div>
-        {{ form_label(form.manager, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-        {{ form_widget(form.manager, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.manager) }}</div>
-    </div>
-
-    <details class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <summary class="cursor-pointer px-6 py-4 text-sm font-semibold text-gray-900">{{ form.icon.vars.label }}</summary>
-        <div class="border-t border-gray-200 px-6 py-4">
-            {% if department.icon %}
-                <div data-media-selector>
-                    {{ include('admin/_media_item_card.html.twig', {
-                        media_item: department.icon,
-                        media_url: media_url,
-                        title: 'Aktuelles Icon'|trans,
-                        selector_content: '
-                            <div class="space-y-3">
-                                <p class="text-sm font-medium text-gray-900">' ~ 'Icon auswählen'|trans ~ '</p>
-                                <div class="flex flex-wrap gap-2">
-                                    <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-media-selector-open>
-                                        <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">' ~ 'Auswählen'|trans ~ '</span>
-                                    </button>
-                                    <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove >
-                                        <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">' ~ 'Entfernen'|trans ~ '</span>
-                                    </button>
+    <div class="space-y-6">
+        <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-sm font-semibold text-gray-900">{{ form.icon.vars.label }}</h2>
+            </div>
+            <div class="px-6 py-4">
+                {% if department.icon %}
+                    <div data-media-selector>
+                        {{ include('admin/_media_item_card.html.twig', {
+                            media_item: department.icon,
+                            media_url: media_url,
+                            title: 'Aktuelles Icon'|trans,
+                            selector_content: '
+                                <div class="space-y-3">
+                                    <p class="text-sm font-medium text-gray-900">' ~ 'Icon auswählen'|trans ~ '</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-media-selector-open>
+                                            <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">' ~ 'Auswählen'|trans ~ '</span>
+                                        </button>
+                                        <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove >
+                                            <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">' ~ 'Entfernen'|trans ~ '</span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        '
-                    }) }}
-                    {{ form_widget(form.icon) }}
-                </div>
-            {% else %}
-                <div data-media-selector>
-                    <div data-media-selector-preview class="admin-media-selector-preview"></div>
-                    {{ form_widget(form.icon) }}
-                    <div class="mt-3 flex flex-wrap gap-2">
-                        <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-media-selector-open>
-                            <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">{{ 'Auswählen'|trans }}</span>
-                        </button>
-                        <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove  disabled>
-                            <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">{{ 'Entfernen'|trans }}</span>
-                        </button>
+                            '
+                        }) }}
+                        {{ form_widget(form.icon) }}
                     </div>
-                </div>
-            {% endif %}
-        </div>
-    </details>
+                {% else %}
+                    <div data-media-selector>
+                        <div data-media-selector-preview class="admin-media-selector-preview"></div>
+                        {{ form_widget(form.icon) }}
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            <button type="button" class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-media-selector-open>
+                                <i class="fa-solid fa-image" aria-hidden="true"></i><span class="ml-2">{{ 'Auswählen'|trans }}</span>
+                            </button>
+                            <button type="button" class="inline-flex items-center rounded-lg border border-red-700 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-300" data-media-selector-remove  disabled>
+                                <i class="fa-solid fa-trash" aria-hidden="true"></i><span class="ml-2">{{ 'Entfernen'|trans }}</span>
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
 
-    <details class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <summary class="cursor-pointer px-6 py-4 text-sm font-semibold text-gray-900">{{ form.departmentStats.vars.label }}</summary>
-        <div class="border-t border-gray-200 px-6 py-4">
-            <div class="collection-holder department-stats-collection space-y-3" data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentStats|length }}">
+        <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4">
+                <h2 class="text-sm font-semibold text-gray-900">{{ form.departmentStats.vars.label }}</h2>
+            </div>
+            <div class="px-6 py-4">
+                <div class="collection-holder department-stats-collection space-y-3" data-prototype="{{ form_widget(form.departmentStats.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentStats|length }}">
                 {% for stat in form.departmentStats %}
                     <div class="collection-item rounded-lg border border-gray-200 bg-gray-50 p-4">
                         <div class="grid gap-4 md:grid-cols-2">
@@ -93,77 +112,119 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="mt-4">
-                <button type="button" class="js-add-stat inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Statistik hinzufügen</button>
+                <div class="mt-4">
+                    <button type="button" class="js-add-stat inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Statistik hinzufügen</button>
+                </div>
             </div>
-        </div>
-    </details>
+        </section>
+    </div>
 
-    <details class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <summary class="cursor-pointer px-6 py-4 text-sm font-semibold text-gray-900">{{ form.trainingGroups.vars.label }}</summary>
-        <div class="border-t border-gray-200 px-6 py-4">
-            <div class="collection-holder department-training-groups-collection space-y-4" data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}" data-index="{{ form.trainingGroups|length }}">
-                {% for group in form.trainingGroups %}
-                    <div class="collection-item relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-                        <button type="button" class="js-remove-group absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Trainingsgruppe entfernen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
-                        <div class="pr-12">
-                            <div class="mb-4">
-                                {{ form_label(group.name, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(group.name, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                {% if group.name.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ group.name.vars.help }}</p>{% endif %}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(group.name) }}</div>
-                            </div>
-                            <div class="mb-4">
-                                {{ form_label(group.ageRange, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                {{ form_widget(group.ageRange, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                {% if group.ageRange.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ group.ageRange.vars.help }}</p>{% endif %}
-                                <div class="mt-2 text-sm text-red-600">{{ form_errors(group.ageRange) }}</div>
-                            </div>
-
-                            <h4 class="mb-3 text-sm font-semibold text-gray-900">{{ group.departmentTrainingSessions.vars.label }}</h4>
-                            <div class="text-sm text-red-600">{{ form_errors(group.departmentTrainingSessions) }}</div>
-                            <div class="collection-holder department-training-sessions-collection space-y-3" data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}" data-index="{{ group.departmentTrainingSessions|length }}">
-                                {% for session in group.departmentTrainingSessions %}
-                                    <div class="collection-item relative rounded-lg border border-gray-200 bg-gray-50 p-4">
-                                        <button type="button" class="js-remove-session absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Trainingseinheit entfernen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>
-                                        <div class="pr-12">
-                                            <div class="mb-4">
-                                                {{ form_label(session.day, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                                {{ form_widget(session.day, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                                {% if session.day.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ session.day.vars.help }}</p>{% endif %}
-                                                <div class="mt-2 text-sm text-red-600">{{ form_errors(session.day) }}</div>
-                                            </div>
-                                            <div class="mb-4">
-                                                {{ form_label(session.time, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                                {{ form_widget(session.time, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                                {% if session.time.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ session.time.vars.help }}</p>{% endif %}
-                                                <div class="mt-2 text-sm text-red-600">{{ form_errors(session.time) }}</div>
-                                            </div>
-                                            <div>
-                                                {{ form_label(session.location, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-                                                {{ form_widget(session.location, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-                                                <div class="mt-2 text-sm text-red-600">{{ form_errors(session.location) }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <div class="mt-4">
-                                <button type="button" class="js-add-session inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Trainingseinheit hinzufügen</button>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="mt-4">
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900">{{ form.trainingGroups.vars.label }}</h2>
+                    <p class="mt-1 text-sm text-gray-500">Jede Trainingsgruppe enthält ihre Stammdaten und eine Liste der Trainingseinheiten.</p>
+                </div>
                 <button type="button" class="js-add-group inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Trainingsgruppe hinzufügen</button>
             </div>
         </div>
-    </details>
+        <div class="px-6 py-4">
+            <div class="collection-holder department-training-groups-collection space-y-4" data-prototype="{{ form_widget(form.trainingGroups.vars.prototype)|e('html_attr') }}" data-index="{{ form.trainingGroups|length }}">
+                {% for group in form.trainingGroups %}
+                    <details class="training-group-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50"{% if loop.first %} open{% endif %}>
+                        <summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">
+                            <div class="flex min-w-0 items-start gap-3">
+                                <div class="mt-0.5 h-10 w-1.5 rounded-full bg-blue-600"></div>
+                                <div class="min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="truncate text-sm font-semibold text-gray-900" data-group-summary-name>{{ group.name.vars.value ?: 'Neue Trainingsgruppe' }}</h3>
+                                        <span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800" data-group-summary-badge>{{ group.departmentTrainingSessions|length }} Trainingseinheit{% if group.departmentTrainingSessions|length != 1 %}en{% endif %}</span>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500" data-group-summary-meta>
+                                        {{ group.ageRange.vars.value ?: 'Keine Altersgruppe' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" class="js-remove-group inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Trainingsgruppe entfernen">
+                                    <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                </button>
+                                <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition" data-group-chevron aria-hidden="true">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </span>
+                            </div>
+                        </summary>
+                        <div class="border-t border-gray-200 bg-white px-5 py-5">
+                            <div class="grid gap-4 md:grid-cols-2">
+                                <div>
+                                    {{ form_label(group.name, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(group.name, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    {% if group.name.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ group.name.vars.help }}</p>{% endif %}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(group.name) }}</div>
+                                </div>
+                                <div>
+                                    {{ form_label(group.ageRange, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                    {{ form_widget(group.ageRange, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                    {% if group.ageRange.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ group.ageRange.vars.help }}</p>{% endif %}
+                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(group.ageRange) }}</div>
+                                </div>
+                            </div>
 
-    <details class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <summary class="cursor-pointer px-6 py-4 text-sm font-semibold text-gray-900">{{ form.departmentResults.vars.label }}</summary>
-        <div class="border-t border-gray-200 px-6 py-4">
+                            <div class="mt-8 pt-6 training-group-sessions">
+                                <div class="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                    <div>
+                                        <h4 class="text-sm font-semibold text-gray-900">{{ group.departmentTrainingSessions.vars.label }}</h4>
+                                        <div class="mt-1 text-sm text-red-600">{{ form_errors(group.departmentTrainingSessions) }}</div>
+                                    </div>
+                                    <button type="button" class="js-add-session inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Trainingseinheit hinzufügen</button>
+                                </div>
+
+                                <p class="js-empty-sessions text-sm text-gray-500{% if group.departmentTrainingSessions|length > 0 %} hidden{% endif %}">Noch keine Trainingseinheiten vorhanden.</p>
+
+                                <div class="collection-holder department-training-sessions-collection divide-y divide-gray-200" data-prototype="{{ form_widget(group.departmentTrainingSessions.vars.prototype)|e('html_attr') }}" data-index="{{ group.departmentTrainingSessions|length }}">
+                                    {% for session in group.departmentTrainingSessions %}
+                                        <div class="collection-item py-4 first:pt-0 last:pb-0">
+                                            <div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-start">
+                                                <div>
+                                                    {{ form_label(session.day, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                                    {{ form_widget(session.day, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                                    {% if session.day.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ session.day.vars.help }}</p>{% endif %}
+                                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(session.day) }}</div>
+                                                </div>
+                                                <div>
+                                                    {{ form_label(session.time, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                                    {{ form_widget(session.time, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                                    {% if session.time.vars.help %}<p class="mt-2 text-sm text-gray-500">{{ session.time.vars.help }}</p>{% endif %}
+                                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(session.time) }}</div>
+                                                </div>
+                                                <div>
+                                                    {{ form_label(session.location, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                                                    {{ form_widget(session.location, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                                                    <div class="mt-2 text-sm text-red-600">{{ form_errors(session.location) }}</div>
+                                                </div>
+                                                <div class="md:pt-8">
+                                                    <button type="button" class="js-remove-session inline-flex h-10 w-10 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Trainingseinheit entfernen">
+                                                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <h2 class="text-sm font-semibold text-gray-900">{{ form.departmentResults.vars.label }}</h2>
+        </div>
+        <div class="px-6 py-4">
             <div class="collection-holder department-results-collection space-y-3" data-prototype="{{ form_widget(form.departmentResults.vars.prototype)|e('html_attr') }}" data-index="{{ form.departmentResults|length }}">
                 {% for result in form.departmentResults %}
                     <div class="collection-item rounded-lg border border-gray-200 bg-gray-50 p-4">
@@ -194,7 +255,7 @@
                 <button type="button" class="js-add-result inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Ergebnisdienst hinzufügen</button>
             </div>
         </div>
-    </details>
+    </section>
 
     <div class="flex items-center gap-3">
         <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Speichern</button>
@@ -226,8 +287,27 @@
     }
 
     function bindRemove(btn) {
-        btn.addEventListener('click', function () {
-            btn.closest('.collection-item').remove();
+        btn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var item = btn.closest('.collection-item');
+            var sessionsHolder = btn.closest('.department-training-sessions-collection');
+            var groupItem = btn.closest('.training-group-item');
+
+            if (!item) {
+                return;
+            }
+
+            item.remove();
+
+            if (sessionsHolder) {
+                updateSessionsState(sessionsHolder);
+            }
+
+            if (groupItem) {
+                updateGroupSummary(groupItem);
+            }
         });
     }
 
@@ -235,23 +315,115 @@
         return '<button type="button" class="' + jsClass + ' absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="' + ariaLabel + '"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>';
     }
 
+    function sessionRemoveButtonHtml() {
+        return '<button type="button" class="js-remove-session inline-flex h-10 w-10 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Trainingseinheit entfernen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>';
+    }
+
     function textRemoveButtonHtml(label, ariaLabel) {
         return '<div class="mt-3"><button type="button" class="js-remove-collection-item text-sm font-medium text-red-600 hover:underline" aria-label="' + ariaLabel + '">' + label + '</button></div>';
     }
 
+    function getCollectionItemCount(holder) {
+        return Array.prototype.filter.call(holder.children, function (child) {
+            return child.classList.contains('collection-item');
+        }).length;
+    }
+
+    function updateGroupSummary(groupItem) {
+        var nameInput = groupItem.querySelector('input[name$="[name]"]');
+        var ageRangeInput = groupItem.querySelector('input[name$="[ageRange]"]');
+        var summaryName = groupItem.querySelector('[data-group-summary-name]');
+        var summaryMeta = groupItem.querySelector('[data-group-summary-meta]');
+        var summaryBadge = groupItem.querySelector('[data-group-summary-badge]');
+        var sessionsHolder = groupItem.querySelector('.department-training-sessions-collection');
+        var sessionCount = sessionsHolder ? getCollectionItemCount(sessionsHolder) : 0;
+        var sessionLabel = sessionCount === 1 ? 'Trainingseinheit' : 'Trainingseinheiten';
+
+        if (summaryName) {
+            summaryName.textContent = nameInput && nameInput.value.trim() !== '' ? nameInput.value.trim() : 'Neue Trainingsgruppe';
+        }
+
+        if (summaryMeta) {
+            var ageRangeText = ageRangeInput && ageRangeInput.value.trim() !== '' ? ageRangeInput.value.trim() : 'Keine Altersgruppe';
+            summaryMeta.textContent = ageRangeText;
+        }
+
+        if (summaryBadge) {
+            summaryBadge.textContent = sessionCount + ' ' + sessionLabel;
+        }
+    }
+
+    function updateGroupChevron(groupItem) {
+        var chevron = groupItem.querySelector('[data-group-chevron]');
+
+        if (chevron) {
+            chevron.style.transform = groupItem.open ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+    }
+
+    function updateSessionsState(holder) {
+        var groupItem = holder.closest('.training-group-item');
+        var emptyState = holder.parentElement.querySelector('.js-empty-sessions');
+        var hasItems = getCollectionItemCount(holder) > 0;
+
+        if (emptyState) {
+            emptyState.classList.toggle('hidden', hasItems);
+        }
+
+        if (groupItem) {
+            updateGroupSummary(groupItem);
+        }
+    }
+
+    function bindGroupSummaryInputs(groupItem) {
+        var nameInput = groupItem.querySelector('input[name$="[name]"]');
+        var ageRangeInput = groupItem.querySelector('input[name$="[ageRange]"]');
+
+        [nameInput, ageRangeInput].forEach(function (input) {
+            if (!input) {
+                return;
+            }
+
+            input.addEventListener('input', function () {
+                updateGroupSummary(groupItem);
+            });
+        });
+    }
+
+    function createSessionRow(sessionHtml) {
+        var temp = document.createElement('div');
+        temp.innerHTML = sessionHtml;
+
+        var dayInput = temp.querySelector('input[name$="[day]"]');
+        var timeInput = temp.querySelector('input[name$="[time]"]');
+        var locationInput = temp.querySelector('select[name$="[location]"]');
+
+        var row = document.createElement('div');
+        row.className = 'collection-item py-4 first:pt-0 last:pb-0';
+        row.innerHTML =
+            '<div class="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-start">' +
+                '<div><label>Tag</label>' + (dayInput ? dayInput.outerHTML : '') + '<p class="mt-2 text-sm text-gray-500">z. B. Montag oder Mo</p></div>' +
+                '<div><label>Zeit</label>' + (timeInput ? timeInput.outerHTML : '') + '<p class="mt-2 text-sm text-gray-500">z. B. 17:00 – 22:00 Uhr</p></div>' +
+                '<div><label>Sportstätte</label>' + (locationInput ? locationInput.outerHTML : '') + '</div>' +
+                '<div class="md:pt-8">' + sessionRemoveButtonHtml() + '</div>' +
+            '</div>';
+
+        return row;
+    }
+
     function bindAddSession(btn) {
         btn.addEventListener('click', function () {
-            var groupCard = btn.closest('.collection-item');
-            var holder = groupCard.querySelector('.department-training-sessions-collection');
+            var groupItem = btn.closest('.training-group-item');
+            var holder = groupItem.querySelector('.department-training-sessions-collection');
             var proto = holder.dataset.prototype;
             var sidx = parseInt(holder.dataset.index, 10);
-            var div = document.createElement('div');
-            div.className = 'collection-item relative rounded-lg border border-gray-200 bg-gray-50 p-4';
-            div.innerHTML = removeCardButtonHtml('js-remove-session', 'Trainingseinheit entfernen') + '<div class="pr-12">' + proto.replace(/__session__/g, String(sidx)) + '</div>';
-            holder.appendChild(div);
+            var row = createSessionRow(proto.replace(/__session__/g, String(sidx)));
+
+            holder.appendChild(row);
             holder.dataset.index = String(sidx + 1);
-            applyFieldClasses(div);
-            bindRemove(div.querySelector('.js-remove-session'));
+            applyFieldClasses(row);
+            bindRemove(row.querySelector('.js-remove-session'));
+            updateSessionsState(holder);
         });
     }
 
@@ -283,8 +455,6 @@
         });
     });
 
-    document.querySelectorAll('.department-stats-collection .js-remove-collection-item').forEach(bindRemove);
-
     document.querySelectorAll('.js-add-result').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var holder = document.querySelector('.department-results-collection');
@@ -315,33 +485,89 @@
         });
     });
 
-    document.querySelectorAll('.department-results-collection .js-remove-collection-item').forEach(bindRemove);
+    function createTrainingGroupItem(groupHtml) {
+        var temp = document.createElement('div');
+        temp.innerHTML = groupHtml;
+
+        var nameInput = temp.querySelector('input[name$="[name]"]');
+        var ageRangeInput = temp.querySelector('input[name$="[ageRange]"]');
+        var sessionsHolder = temp.querySelector('.department-training-sessions-collection');
+
+        var item = document.createElement('details');
+        item.className = 'training-group-item collection-item overflow-hidden rounded-xl border border-gray-200 bg-gray-50';
+        item.open = true;
+        item.innerHTML =
+            '<summary class="flex cursor-pointer list-none items-start justify-between gap-4 bg-gradient-to-r from-slate-50 to-white px-5 py-4">' +
+                '<div class="flex min-w-0 items-start gap-3">' +
+                    '<div class="mt-0.5 h-10 w-1.5 rounded-full bg-blue-600"></div>' +
+                    '<div class="min-w-0">' +
+                        '<div class="flex flex-wrap items-center gap-2">' +
+                            '<h3 class="truncate text-sm font-semibold text-gray-900" data-group-summary-name>Neue Trainingsgruppe</h3>' +
+                            '<span class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800" data-group-summary-badge>0 Trainingseinheiten</span>' +
+                        '</div>' +
+                        '<p class="mt-1 text-sm text-gray-500" data-group-summary-meta>Keine Altersgruppe</p>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="flex items-center gap-2">' +
+                    '<button type="button" class="js-remove-group inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Trainingsgruppe entfernen"><i class="fa-solid fa-trash" aria-hidden="true"></i></button>' +
+                    '<span class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 transition" data-group-chevron aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>' +
+                '</div>' +
+            '</summary>' +
+            '<div class="border-t border-gray-200 bg-white px-5 py-5">' +
+                '<div class="grid gap-4 md:grid-cols-2">' +
+                    '<div><label>Name der Gruppe</label>' + (nameInput ? nameInput.outerHTML : '') + '<p class="mt-2 text-sm text-gray-500">z. B. Jugend oder Erwachsene</p></div>' +
+                    '<div><label>Altersgruppe</label>' + (ageRangeInput ? ageRangeInput.outerHTML : '') + '<p class="mt-2 text-sm text-gray-500">Optional, z. B. 6 – 17 oder Erwachsene</p></div>' +
+                '</div>' +
+                '<div class="mt-8 pt-6 training-group-sessions">' +
+                    '<div class="mb-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">' +
+                        '<div><h4 class="text-sm font-semibold text-gray-900">Trainingseinheiten</h4><div class="mt-1 text-sm text-red-600"></div></div>' +
+                        '<button type="button" class="js-add-session inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Trainingseinheit hinzufügen</button>' +
+                    '</div>' +
+                    '<p class="js-empty-sessions text-sm text-gray-500">Noch keine Trainingseinheiten vorhanden.</p>' +
+                    '<div class="collection-holder department-training-sessions-collection divide-y divide-gray-200" data-prototype="' + (sessionsHolder ? sessionsHolder.dataset.prototype : '') + '" data-index="0"></div>' +
+                '</div>' +
+            '</div>';
+
+        return item;
+    }
 
     document.querySelectorAll('.js-add-group').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var holder = document.querySelector('.department-training-groups-collection');
             var proto = holder.dataset.prototype;
             var idx = parseInt(holder.dataset.index, 10);
-            var html = proto.replace(/__session__/g, '0').replace(/__group__/g, String(idx));
-            var div = document.createElement('div');
-            div.className = 'collection-item relative rounded-xl border border-gray-200 bg-white p-4 shadow-sm';
-            div.innerHTML = removeCardButtonHtml('js-remove-group', 'Trainingsgruppe entfernen') + '<div class="pr-12">' + html + '<div class="mt-4"><button type="button" class="js-add-session inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Trainingseinheit hinzufügen</button></div></div>';
-            holder.appendChild(div);
+            var item = createTrainingGroupItem(proto.replace(/__session__/g, '0').replace(/__group__/g, String(idx)));
+
+            holder.appendChild(item);
             holder.dataset.index = String(idx + 1);
-            var sessionsHolder = div.querySelector('.department-training-sessions-collection');
-            if (sessionsHolder) {
-                sessionsHolder.dataset.index = String(div.querySelectorAll('.department-training-sessions-collection > .collection-item').length);
-            }
-            applyFieldClasses(div);
-            bindAddSession(div.querySelector('.js-add-session'));
-            bindRemove(div.querySelector('.js-remove-group'));
-            div.querySelectorAll('.js-remove-session').forEach(bindRemove);
+            applyFieldClasses(item);
+            bindAddSession(item.querySelector('.js-add-session'));
+            bindRemove(item.querySelector('.js-remove-group'));
+            bindGroupSummaryInputs(item);
+            item.addEventListener('toggle', function () {
+                updateGroupChevron(item);
+            });
+            updateSessionsState(item.querySelector('.department-training-sessions-collection'));
+            updateGroupSummary(item);
+            updateGroupChevron(item);
         });
     });
 
-    document.querySelectorAll('.js-add-session').forEach(bindAddSession);
-    document.querySelectorAll('.js-remove-group').forEach(bindRemove);
-    document.querySelectorAll('.js-remove-session').forEach(bindRemove);
+    document.querySelectorAll('.training-group-item').forEach(function (item) {
+        bindAddSession(item.querySelector('.js-add-session'));
+        bindRemove(item.querySelector('.js-remove-group'));
+        bindGroupSummaryInputs(item);
+        item.querySelectorAll('.js-remove-session').forEach(bindRemove);
+        item.addEventListener('toggle', function () {
+            updateGroupChevron(item);
+        });
+        updateSessionsState(item.querySelector('.department-training-sessions-collection'));
+        updateGroupSummary(item);
+        updateGroupChevron(item);
+    });
+
+    document.querySelectorAll('.department-stats-collection .js-remove-collection-item').forEach(bindRemove);
+    document.querySelectorAll('.department-results-collection .js-remove-collection-item').forEach(bindRemove);
     applyFieldClasses(document.querySelector('.department-form'));
 })();
 </script>
