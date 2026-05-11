@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Entity\MediaItem;
 use App\Repository\ContactPersonRepository;
+use App\Util\Slugifier;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -18,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactPersonRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['slug'], message: 'Dieser Slug wird bereits verwendet.')]
 #[ApiResource(
     operations: [
@@ -106,6 +108,18 @@ class ContactPerson
         return $this;
     }
 
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function refreshSlug(): void
+    {
+        $this->updateSlug();
+    }
+
+    private function updateSlug(): void
+    {
+        $this->slug = Slugifier::slugify(trim(($this->firstName ?? '') . ' ' . ($this->lastName ?? '')));
+    }
+
     public function getFirstName(): ?string
     {
         return $this->firstName;
@@ -114,6 +128,7 @@ class ContactPerson
     public function setFirstName(string $firstName): static
     {
         $this->firstName = $firstName;
+        $this->updateSlug();
 
         return $this;
     }
@@ -126,6 +141,7 @@ class ContactPerson
     public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
+        $this->updateSlug();
 
         return $this;
     }

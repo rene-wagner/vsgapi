@@ -17,10 +17,6 @@ class ContactPersonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('slug', TextType::class, [
-                'label' => 'Slug',
-                'help' => 'Nur Kleinbuchstaben, Zahlen und Bindestriche (z. B. max-mustermann).',
-            ])
             ->add('firstName', TextType::class, [
                 'label' => 'Vorname',
             ])

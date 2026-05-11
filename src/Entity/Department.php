@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Entity\MediaItem;
 use App\Repository\DepartmentRepository;
+use App\Util\Slugifier;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -19,6 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DepartmentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['slug'], message: 'Dieser Slug wird bereits verwendet.')]
 #[ApiResource(
     operations: [
@@ -112,6 +114,7 @@ class Department
     public function setName(string $name): static
     {
         $this->name = $name;
+        $this->slug = Slugifier::slugify($name);
 
         return $this;
     }
@@ -126,6 +129,13 @@ class Department
         $this->slug = $slug;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function refreshSlug(): void
+    {
+        $this->slug = Slugifier::slugify($this->name ?? '');
     }
 
     public function getDescription(): ?string

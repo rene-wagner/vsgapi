@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\CategoryRepository;
+use App\Util\Slugifier;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,6 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['name'], message: 'Dieser Kategoriename wird bereits verwendet.')]
 #[UniqueEntity(fields: ['slug'], message: 'Dieser Slug wird bereits verwendet.')]
 #[ApiResource(
@@ -77,6 +79,7 @@ class Category
     public function setName(string $name): static
     {
         $this->name = $name;
+        $this->slug = Slugifier::slugify($name);
 
         return $this;
     }
@@ -91,6 +94,13 @@ class Category
         $this->slug = $slug;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function refreshSlug(): void
+    {
+        $this->slug = Slugifier::slugify($this->name ?? '');
     }
 
     /** @return Collection<int, Post> */

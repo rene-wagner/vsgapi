@@ -23,10 +23,6 @@ class PostType extends AbstractType
             ->add('title', TextType::class, [
                 'label' => 'Titel',
             ])
-            ->add('slug', TextType::class, [
-                'label' => 'Slug',
-                'help' => 'Nur Kleinbuchstaben, Zahlen und Bindestriche (z. B. mein-beitrag).',
-            ])
             ->add('content', TextareaType::class, [
                 'label' => 'Inhalt (Markdown)',
                 'attr' => [

@@ -9,15 +9,6 @@
         <div class="mt-2 text-sm text-red-600">{{ form_errors(form.name) }}</div>
     </div>
 
-    <div>
-        {{ form_label(form.slug, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-        {{ form_widget(form.slug, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
-        {% if form.slug.vars.help %}
-            <p class="mt-2 text-sm text-gray-500">{{ form.slug.vars.help }}</p>
-        {% endif %}
-        <div class="mt-2 text-sm text-red-600">{{ form_errors(form.slug) }}</div>
-    </div>
-
     <div class="flex items-center gap-3">
         <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Speichern</button>
         <a href="{{ path('admin_category_index') }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200">Abbrechen</a>

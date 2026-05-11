@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Entity\MediaItem;
 use App\Repository\PostRepository;
+use App\Util\Slugifier;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -116,6 +117,7 @@ class Post
     public function setTitle(string $title): static
     {
         $this->title = $title;
+        $this->slug = Slugifier::slugify($title);
 
         return $this;
     }
@@ -272,11 +274,13 @@ class Post
         $now = new \DateTimeImmutable();
         $this->createdAt = $now;
         $this->updatedAt = $now;
+        $this->slug = Slugifier::slugify($this->title ?? '');
     }
 
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+        $this->slug = Slugifier::slugify($this->title ?? '');
     }
 }

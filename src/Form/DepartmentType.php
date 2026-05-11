@@ -23,10 +23,6 @@ class DepartmentType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Name',
             ])
-            ->add('slug', TextType::class, [
-                'label' => 'Slug',
-                'help' => 'Nur Kleinbuchstaben, Zahlen und Bindestriche (z. B. handball).',
-            ])
             ->add('color', ChoiceType::class, [
                 'label' => 'Farbe',
                 'choices' => [
