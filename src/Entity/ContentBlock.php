@@ -62,7 +62,6 @@ class ContentBlock
     private ?string $url = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
     #[Groups(['content_block:read', 'content_block:write'])]
     private ?string $content = null;
 
