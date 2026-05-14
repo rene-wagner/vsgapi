@@ -9,9 +9,24 @@
         <div class="mt-2 text-sm text-red-600">{{ form_errors(form.title) }}</div>
     </div>
 
-    <div>
-        {{ form_label(form.content, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
-        {{ form_widget(form.content, { attr: { class: 'markdown-input block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', 'data-controller': 'easymde' } }) }}
+    <div
+        data-controller="easymde"
+        data-easymde-improve-url-value="{{ path('admin_post_rewrite') }}"
+        data-easymde-csrf-token-value="{{ csrf_token('post_rewrite') }}"
+    >
+        <div class="mb-2 flex items-center justify-between gap-3">
+            {{ form_label(form.content, null, { label_attr: { class: 'mb-0 block text-sm font-medium text-gray-900' } }) }}
+            <button
+                type="button"
+                class="inline-flex items-center rounded-lg border border-blue-700 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed disabled:opacity-60"
+                data-easymde-target="button"
+                data-action="click->easymde#improve"
+            >
+                <i class="fa-solid fa-robot" aria-hidden="true"></i><span class="ml-2">Text ausformulieren</span>
+            </button>
+        </div>
+        {{ form_widget(form.content, { attr: { class: 'markdown-input block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500', 'data-easymde-target': 'input' } }) }}
+        <div class="mt-2 hidden text-sm text-red-600" data-easymde-target="error"></div>
         <div class="mt-2 text-sm text-red-600">{{ form_errors(form.content) }}</div>
     </div>
 

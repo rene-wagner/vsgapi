@@ -6,9 +6,11 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Service\Ai\OpenRouterPostRewriteService;
 use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -95,6 +97,49 @@ class PostController extends AbstractController
             'post' => $post,
             'form' => $form,
             'media_url' => $mediaUrlService,
+        ]);
+    }
+
+    #[Route('/rewrite', name: 'admin_post_rewrite', methods: ['POST'])]
+    public function rewrite(Request $request, OpenRouterPostRewriteService $openRouterPostRewriteService): JsonResponse
+    {
+        try {
+            $payload = $request->toArray();
+        } catch (\JsonException) {
+            return $this->json([
+                'message' => 'Die Anfrage ist ungültig.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $token = $payload['_token'] ?? null;
+        $content = $payload['content'] ?? null;
+
+        if (!is_string($token) || !$this->isCsrfTokenValid('post_rewrite', $token)) {
+            return $this->json([
+                'message' => 'Der Sicherheitstoken ist ungültig.',
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        if (!is_string($content)) {
+            return $this->json([
+                'message' => 'Es wurde kein Text übermittelt.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $rewrittenContent = $openRouterPostRewriteService->rewrite($content);
+        } catch (\InvalidArgumentException $exception) {
+            return $this->json([
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (\RuntimeException $exception) {
+            return $this->json([
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_BAD_GATEWAY);
+        }
+
+        return $this->json([
+            'content' => $rewrittenContent,
         ]);
     }
 
