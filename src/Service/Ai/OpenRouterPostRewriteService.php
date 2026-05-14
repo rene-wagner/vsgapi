@@ -12,12 +12,23 @@ class OpenRouterPostRewriteService
     public function __construct(
         private AgentInterface $postRewriteAgent,
         private string $systemPrompt,
+        private string $model,
     ) {
     }
 
     public function getSystemPrompt(): string
     {
         return $this->systemPrompt;
+    }
+
+    public function getModel(): string
+    {
+        return $this->model;
+    }
+
+    public function getModelUrl(): string
+    {
+        return 'https://openrouter.ai/' . ltrim($this->model, '/');
     }
 
     public function rewrite(string $content): string

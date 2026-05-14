@@ -141,6 +141,8 @@ class PostController extends AbstractController
         return $this->json([
             'content' => $rewrittenContent,
             'systemPrompt' => $openRouterPostRewriteService->getSystemPrompt(),
+            'model' => $openRouterPostRewriteService->getModel(),
+            'modelUrl' => $openRouterPostRewriteService->getModelUrl(),
         ]);
     }
 

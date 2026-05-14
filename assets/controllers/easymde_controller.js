@@ -15,6 +15,8 @@ export default class extends Controller {
         'modalBody',
         'modalError',
         'modalLoading',
+        'modelLink',
+        'modelName',
         'previewInput',
         'prompt',
         'applyButton',
@@ -92,6 +94,8 @@ export default class extends Controller {
             this.#ensurePreviewEditor();
             this.previewEditor.value(data.content || '');
             this.promptTarget.textContent = data.systemPrompt || '';
+            this.modelNameTarget.textContent = data.model || '';
+            this.modelLinkTarget.href = data.modelUrl || '#';
             this.#hideModalLoading();
             this.#showModalBody();
             this.applyButtonTarget.disabled = false;
