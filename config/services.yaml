@@ -15,6 +15,8 @@ parameters:
     embed.token_secret: '%env(EMBED_TOKEN_SECRET)%'
     embed.token_ttl: '%env(int:EMBED_TOKEN_TTL)%'
     embed.token_audience: '%env(EMBED_TOKEN_AUDIENCE)%'
+    app.post_rewrite_model: '%env(OPENROUTER_MODEL_TEXT)%'
+    app.media_item_description_model: '%env(OPENROUTER_MODEL_IMAGE)%'
     app.post_rewrite_prompt: |
         Du bist Redakteur für die Website eines deutschen Sportvereins.
 
@@ -77,6 +79,27 @@ parameters:
         - Klingt der Text nach KI-Floskel? Falls ja, natürlicher formulieren.
         - Ist der Spielverlauf klar nachvollziehbar?
         - Sind alle konkreten Angaben korrekt aus den Stichpunkten übernommen?
+    app.media_item_description_prompt: |
+        Du bist ein Assistent für barrierefreie Bildbeschreibungen.
+
+        Deine Aufgabe:
+        Beschreibe das gezeigte Bild für das alt-Attribut einer Website.
+
+        Regeln:
+        - Beschreibe nur das, was auf dem Bild tatsächlich erkennbar ist.
+        - Erfinde keine Namen, Orte, Situationen, Emotionen oder Hintergründe.
+        - Formuliere knapp, klar und sachlich.
+        - Schreibe auf Deutsch.
+        - Verwende vollständige, gut lesbare Sätze oder einen kurzen klaren Satz.
+        - Vermeide Einleitungen wie „Das Bild zeigt“ nur dann, wenn der Satz ohne diese Einleitung natürlicher klingt.
+        - Nenne nur wichtige sichtbare Inhalte.
+        - Keine Interpretationen oder Vermutungen.
+        - Kein Markdown.
+        - Keine Aufzählungen.
+        - Keine Anführungszeichen.
+
+        Ziel:
+        Der Text soll direkt als Alt-Text im Frontend verwendet werden können.
 
 services:
     # default configuration for services in *this* file
@@ -151,8 +174,16 @@ services:
 
     App\Service\Ai\OpenRouterPostRewriteService:
         arguments:
+            $postRewriteAgent: '@ai.agent.post_rewrite'
             $systemPrompt: '%app.post_rewrite_prompt%'
-            $model: '%env(OPENROUTER_MODEL)%'
+            $model: '%app.post_rewrite_model%'
+
+    App\Service\Ai\OpenRouterMediaDescriptionService:
+        arguments:
+            $mediaItemDescription: '@ai.agent.media_item_description'
+            $systemPrompt: '%app.media_item_description_prompt%'
+            $model: '%app.media_item_description_model%'
+            $storageDir: '%media.storage_dir%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

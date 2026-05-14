@@ -8,6 +8,7 @@ use App\Form\MediaItemEditType;
 use App\Form\MediaItemUploadType;
 use App\Repository\MediaFolderRepository;
 use App\Repository\MediaItemRepository;
+use App\Service\Ai\OpenRouterMediaDescriptionService;
 use App\Service\Media\MediaCopyService;
 use App\Service\Media\MediaCropService;
 use App\Service\Media\MediaDeleteService;
@@ -16,6 +17,7 @@ use App\Service\Media\MediaUrlService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -132,6 +134,48 @@ class MediaLibraryController extends AbstractController
             'item' => $item,
             'form' => $form,
             'media_url' => $mediaUrlService,
+        ]);
+    }
+
+    #[Route('/items/{id}/describe', name: 'admin_mediathek_item_describe', methods: ['POST'])]
+    public function describeItem(
+        Request $request,
+        MediaItem $item,
+        OpenRouterMediaDescriptionService $openRouterMediaDescriptionService,
+    ): JsonResponse {
+        try {
+            $payload = $request->toArray();
+        } catch (\JsonException) {
+            return $this->json([
+                'message' => 'Die Anfrage ist ungültig.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $token = $payload['_token'] ?? null;
+
+        if (!is_string($token) || !$this->isCsrfTokenValid('describe_media_item' . $item->getId(), $token)) {
+            return $this->json([
+                'message' => 'Der Sicherheitstoken ist ungültig.',
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $description = $openRouterMediaDescriptionService->describe($item);
+        } catch (\InvalidArgumentException $exception) {
+            return $this->json([
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (\RuntimeException $exception) {
+            return $this->json([
+                'message' => $exception->getMessage(),
+            ], Response::HTTP_BAD_GATEWAY);
+        }
+
+        return $this->json([
+            'content' => $description,
+            'systemPrompt' => $openRouterMediaDescriptionService->getSystemPrompt(),
+            'model' => $openRouterMediaDescriptionService->getModel(),
+            'modelUrl' => $openRouterMediaDescriptionService->getModelUrl(),
         ]);
     }
 

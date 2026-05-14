@@ -3,7 +3,14 @@ ai:
         post_rewrite:
             platform: 'ai.platform.openrouter'
             model:
-                name: '%env(OPENROUTER_MODEL)%'
+                name: '%env(OPENROUTER_MODEL_TEXT)%'
                 options:
                     temperature: 0.3
             prompt: '%app.post_rewrite_prompt%'
+        media_item_description:
+            platform: 'ai.platform.openrouter'
+            model:
+                name: '%env(OPENROUTER_MODEL_IMAGE)%'
+                options:
+                    temperature: 0.2
+            prompt: '%app.media_item_description_prompt%'

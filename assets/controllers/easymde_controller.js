@@ -24,6 +24,7 @@ export default class extends Controller {
     static values = {
         csrfToken: String,
         improveUrl: String,
+        requireContent: { type: Boolean, default: true },
     };
 
     connect() {
@@ -59,7 +60,7 @@ export default class extends Controller {
 
         this.#hideError();
 
-        if (content === '') {
+        if (this.requireContentValue && content === '') {
             this.#showError('Bitte geben Sie zuerst einen Text ein.');
             return;
         }
