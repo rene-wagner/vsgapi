@@ -11,7 +11,13 @@ class OpenRouterPostRewriteService
 {
     public function __construct(
         private AgentInterface $postRewriteAgent,
+        private string $systemPrompt,
     ) {
+    }
+
+    public function getSystemPrompt(): string
+    {
+        return $this->systemPrompt;
     }
 
     public function rewrite(string $content): string
