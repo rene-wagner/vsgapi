@@ -1,0 +1,150 @@
+{% form_theme form 'form_div_layout.html.twig' %}
+
+{% macro collection_item(entry, title) %}
+    <div class="collection-item rounded-xl border border-gray-200 bg-gray-50 p-5">
+        <div class="mb-4 flex items-center justify-between gap-3">
+            <h3 class="text-sm font-semibold text-gray-900">{{ title }}</h3>
+            <button type="button" class="js-remove-collection-item inline-flex h-10 w-10 items-center justify-center rounded-lg bg-red-700 text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300" aria-label="Eintrag entfernen">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="space-y-4 [&_label]:mb-2 [&_label]:block [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-900 [&_.form-error-message]:mt-2 [&_.form-error-message]:text-sm [&_.form-error-message]:text-red-600 [&_textarea]:min-h-24">
+            {{ form_widget(entry) }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% import _self as macros %}
+
+{% set milestone_prototype %}{{ macros.collection_item(form.milestones.vars.prototype, 'Neuer Meilenstein') }}{% endset %}
+{% set hall_of_fame_prototype %}{{ macros.collection_item(form.hallOfFameEntries.vars.prototype, 'Neue Errungenschaft') }}{% endset %}
+{% set special_event_prototype %}{{ macros.collection_item(form.specialEvents.vars.prototype, 'Neue Veranstaltung') }}{% endset %}
+{% set membership_stat_prototype %}{{ macros.collection_item(form.membershipStats.vars.prototype, 'Neue Statistik') }}{% endset %}
+
+{{ form_start(form, { attr: { class: 'space-y-6', novalidate: 'novalidate' } }) }}
+    {{ form_errors(form) }}
+
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <h2 class="text-sm font-semibold text-gray-900">Stammdaten</h2>
+        </div>
+        <div class="px-6 py-4">
+            <div>
+                {{ form_label(form.foundingDate, null, { label_attr: { class: 'mb-2 block text-sm font-medium text-gray-900' } }) }}
+                {{ form_widget(form.foundingDate, { attr: { class: 'block w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500' } }) }}
+                <div class="mt-2 text-sm text-red-600">{{ form_errors(form.foundingDate) }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900">{{ form.milestones.vars.label }}</h2>
+                </div>
+                <button type="button" class="js-add-collection-item inline-flex items-center justify-center rounded-lg border border-blue-700 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-target-collection="milestones"><i class="fa-solid fa-timeline" aria-hidden="true"></i><span class="ml-2">Meilenstein hinzufügen</span></button>
+            </div>
+        </div>
+        <div class="px-6 py-4">
+            <div class="space-y-4" data-collection-holder="milestones" data-prototype="{{ milestone_prototype|e('html_attr') }}" data-index="{{ form.milestones|length }}">
+                {% for milestone in form.milestones %}
+                    {{ macros.collection_item(milestone, 'Meilenstein') }}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900">{{ form.hallOfFameEntries.vars.label }}</h2>
+                </div>
+                <button type="button" class="js-add-collection-item inline-flex items-center justify-center rounded-lg border border-blue-700 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-target-collection="hall-of-fame"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span class="ml-2">Errungenschaft hinzufügen</span></button>
+            </div>
+        </div>
+        <div class="px-6 py-4">
+            <div class="space-y-4" data-collection-holder="hall-of-fame" data-prototype="{{ hall_of_fame_prototype|e('html_attr') }}" data-index="{{ form.hallOfFameEntries|length }}">
+                {% for hall_of_fame_entry in form.hallOfFameEntries %}
+                    {{ macros.collection_item(hall_of_fame_entry, 'Errungenschaft') }}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900">{{ form.specialEvents.vars.label }}</h2>
+                </div>
+                <button type="button" class="js-add-collection-item inline-flex items-center justify-center rounded-lg border border-blue-700 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-target-collection="special-events"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span class="ml-2">Veranstaltung hinzufügen</span></button>
+            </div>
+        </div>
+        <div class="px-6 py-4">
+            <div class="space-y-4" data-collection-holder="special-events" data-prototype="{{ special_event_prototype|e('html_attr') }}" data-index="{{ form.specialEvents|length }}">
+                {% for special_event in form.specialEvents %}
+                    {{ macros.collection_item(special_event, 'Veranstaltung') }}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div class="border-b border-gray-200 px-6 py-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-gray-900">{{ form.membershipStats.vars.label }}</h2>
+                </div>
+                <button type="button" class="js-add-collection-item inline-flex items-center justify-center rounded-lg border border-blue-700 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-300" data-target-collection="membership-stats"><i class="fa-solid fa-users" aria-hidden="true"></i><span class="ml-2">Statistik hinzufügen</span></button>
+            </div>
+        </div>
+        <div class="px-6 py-4">
+            <div class="space-y-4" data-collection-holder="membership-stats" data-prototype="{{ membership_stat_prototype|e('html_attr') }}" data-index="{{ form.membershipStats|length }}">
+                {% for membership_stat in form.membershipStats %}
+                    {{ macros.collection_item(membership_stat, 'Mitgliederstatistik') }}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <div class="flex items-center gap-3">
+        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300">Speichern</button>
+    </div>
+{{ form_end(form) }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.js-add-collection-item').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var target = button.dataset.targetCollection;
+                var holder = document.querySelector('[data-collection-holder="' + target + '"]');
+
+                if (!holder) {
+                    return;
+                }
+
+                var prototype = holder.dataset.prototype;
+                var index = parseInt(holder.dataset.index || '0', 10);
+                var item = prototype.replace(/__name__/g, index);
+
+                holder.dataset.index = String(index + 1);
+                holder.insertAdjacentHTML('beforeend', item);
+            });
+        });
+
+        document.addEventListener('click', function (event) {
+            var removeButton = event.target.closest('.js-remove-collection-item');
+
+            if (!removeButton) {
+                return;
+            }
+
+            var item = removeButton.closest('.collection-item');
+            if (item) {
+                item.remove();
+            }
+        });
+    });
+</script>

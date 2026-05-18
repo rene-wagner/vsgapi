@@ -16,7 +16,7 @@ final class Version20260511153440 extends AbstractMigration
 
     public function getDescription(): string
     {
-        return "Seed initial data (users, categories, media, events, contacts, locations, departments)";
+        return "Seed initial data (users, categories, media, events, contacts, locations, departments, club history)";
     }
 
     public function up(Schema $schema): void
@@ -279,6 +279,51 @@ final class Version20260511153440 extends AbstractMigration
             );
         }
 
+        // --- club_history ---
+        $clubHistories = $this->loadJson("club_history.json");
+        foreach ($clubHistories as $row) {
+            $this->addSql(
+                "INSERT INTO club_history (id, founding_date) VALUES (?, ?)",
+                [$row["id"], $row["founding_date"]],
+            );
+        }
+
+        // --- club_history_milestones ---
+        $clubHistoryMilestones = $this->loadJson("club_history_milestones.json");
+        foreach ($clubHistoryMilestones as $row) {
+            $this->addSql(
+                "INSERT INTO club_history_milestone (id, year, title, description, club_history_id) VALUES (?, ?, ?, ?, ?)",
+                [$row["id"], $row["year"], $row["title"], $row["description"], $row["club_history_id"]],
+            );
+        }
+
+        // --- club_history_membership_stats ---
+        $clubHistoryMembershipStats = $this->loadJson("club_history_membership_stats.json");
+        foreach ($clubHistoryMembershipStats as $row) {
+            $this->addSql(
+                "INSERT INTO club_history_membership_stat (id, year, member_count, club_history_id) VALUES (?, ?, ?, ?)",
+                [$row["id"], $row["year"], $row["member_count"], $row["club_history_id"]],
+            );
+        }
+
+        // --- club_history_special_events ---
+        $clubHistorySpecialEvents = $this->loadJson("club_history_special_events.json");
+        foreach ($clubHistorySpecialEvents as $row) {
+            $this->addSql(
+                "INSERT INTO club_history_special_event (id, title, date, description, club_history_id) VALUES (?, ?, ?, ?, ?)",
+                [$row["id"], $row["title"], $row["date"], $row["description"], $row["club_history_id"]],
+            );
+        }
+
+        // --- club_history_hall_of_fame_entries ---
+        $clubHistoryHallOfFameEntries = $this->loadJson("club_history_hall_of_fame_entries.json");
+        foreach ($clubHistoryHallOfFameEntries as $row) {
+            $this->addSql(
+                "INSERT INTO club_history_hall_of_fame_entry (id, year, title, description, club_history_id) VALUES (?, ?, ?, ?, ?)",
+                [$row["id"], $row["year"], $row["title"], $row["description"], $row["club_history_id"]],
+            );
+        }
+
         // --- Reset auto-increment values to max(id) + 1 per table ---
         // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
         // so we compute the next value from the imported data.
@@ -298,6 +343,11 @@ final class Version20260511153440 extends AbstractMigration
                 max(array_column($trainingSessions, "id")) + 1,
             "post" => max(array_column($posts, "id")) + 1,
             "content_block" => max(array_column($contentBlocks, "pk")) + 1,
+            "club_history" => max(array_column($clubHistories, "id")) + 1,
+            "club_history_milestone" => max(array_column($clubHistoryMilestones, "id")) + 1,
+            "club_history_membership_stat" => max(array_column($clubHistoryMembershipStats, "id")) + 1,
+            "club_history_special_event" => max(array_column($clubHistorySpecialEvents, "id")) + 1,
+            "club_history_hall_of_fame_entry" => max(array_column($clubHistoryHallOfFameEntries, "id")) + 1,
         ];
         foreach ($autoIncrement as $table => $nextId) {
             $this->addSql(
@@ -310,6 +360,11 @@ final class Version20260511153440 extends AbstractMigration
     {
         // Delete imported data in reverse FK dependency order.
         // Does NOT drop tables — that is the schema migration's responsibility.
+        $this->addSql("DELETE FROM club_history_hall_of_fame_entry");
+        $this->addSql("DELETE FROM club_history_special_event");
+        $this->addSql("DELETE FROM club_history_membership_stat");
+        $this->addSql("DELETE FROM club_history_milestone");
+        $this->addSql("DELETE FROM club_history");
         $this->addSql("DELETE FROM department_training_session");
         $this->addSql("DELETE FROM department_training_group");
         $this->addSql("DELETE FROM department_statistic");
