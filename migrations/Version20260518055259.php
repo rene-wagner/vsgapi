@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260511153440 extends AbstractMigration
+final class Version20260518055259 extends AbstractMigration
 {
     private const IMPORT_TIMESTAMP = "2026-04-14 12:00:00";
 
@@ -289,38 +289,69 @@ final class Version20260511153440 extends AbstractMigration
         }
 
         // --- club_history_milestones ---
-        $clubHistoryMilestones = $this->loadJson("club_history_milestones.json");
+        $clubHistoryMilestones = $this->loadJson(
+            "club_history_milestones.json",
+        );
         foreach ($clubHistoryMilestones as $row) {
             $this->addSql(
                 "INSERT INTO club_history_milestone (id, year, title, description, club_history_id) VALUES (?, ?, ?, ?, ?)",
-                [$row["id"], $row["year"], $row["title"], $row["description"], $row["club_history_id"]],
+                [
+                    $row["id"],
+                    $row["year"],
+                    $row["title"],
+                    $row["description"],
+                    $row["club_history_id"],
+                ],
             );
         }
 
         // --- club_history_membership_stats ---
-        $clubHistoryMembershipStats = $this->loadJson("club_history_membership_stats.json");
+        $clubHistoryMembershipStats = $this->loadJson(
+            "club_history_membership_stats.json",
+        );
         foreach ($clubHistoryMembershipStats as $row) {
             $this->addSql(
                 "INSERT INTO club_history_membership_stat (id, year, member_count, club_history_id) VALUES (?, ?, ?, ?)",
-                [$row["id"], $row["year"], $row["member_count"], $row["club_history_id"]],
+                [
+                    $row["id"],
+                    $row["year"],
+                    $row["member_count"],
+                    $row["club_history_id"],
+                ],
             );
         }
 
         // --- club_history_special_events ---
-        $clubHistorySpecialEvents = $this->loadJson("club_history_special_events.json");
+        $clubHistorySpecialEvents = $this->loadJson(
+            "club_history_special_events.json",
+        );
         foreach ($clubHistorySpecialEvents as $row) {
             $this->addSql(
                 "INSERT INTO club_history_special_event (id, title, date, description, club_history_id) VALUES (?, ?, ?, ?, ?)",
-                [$row["id"], $row["title"], $row["date"], $row["description"], $row["club_history_id"]],
+                [
+                    $row["id"],
+                    $row["title"],
+                    $row["date"],
+                    $row["description"],
+                    $row["club_history_id"],
+                ],
             );
         }
 
         // --- club_history_hall_of_fame_entries ---
-        $clubHistoryHallOfFameEntries = $this->loadJson("club_history_hall_of_fame_entries.json");
+        $clubHistoryHallOfFameEntries = $this->loadJson(
+            "club_history_hall_of_fame_entries.json",
+        );
         foreach ($clubHistoryHallOfFameEntries as $row) {
             $this->addSql(
                 "INSERT INTO club_history_hall_of_fame_entry (id, year, title, description, club_history_id) VALUES (?, ?, ?, ?, ?)",
-                [$row["id"], $row["year"], $row["title"], $row["description"], $row["club_history_id"]],
+                [
+                    $row["id"],
+                    $row["year"],
+                    $row["title"],
+                    $row["description"],
+                    $row["club_history_id"],
+                ],
             );
         }
 
@@ -344,10 +375,14 @@ final class Version20260511153440 extends AbstractMigration
             "post" => max(array_column($posts, "id")) + 1,
             "content_block" => max(array_column($contentBlocks, "pk")) + 1,
             "club_history" => max(array_column($clubHistories, "id")) + 1,
-            "club_history_milestone" => max(array_column($clubHistoryMilestones, "id")) + 1,
-            "club_history_membership_stat" => max(array_column($clubHistoryMembershipStats, "id")) + 1,
-            "club_history_special_event" => max(array_column($clubHistorySpecialEvents, "id")) + 1,
-            "club_history_hall_of_fame_entry" => max(array_column($clubHistoryHallOfFameEntries, "id")) + 1,
+            "club_history_milestone" =>
+                max(array_column($clubHistoryMilestones, "id")) + 1,
+            "club_history_membership_stat" =>
+                max(array_column($clubHistoryMembershipStats, "id")) + 1,
+            "club_history_special_event" =>
+                max(array_column($clubHistorySpecialEvents, "id")) + 1,
+            "club_history_hall_of_fame_entry" =>
+                max(array_column($clubHistoryHallOfFameEntries, "id")) + 1,
         ];
         foreach ($autoIncrement as $table => $nextId) {
             $this->addSql(
