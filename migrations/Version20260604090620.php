@@ -355,6 +355,20 @@ final class Version20260604090620 extends AbstractMigration
             );
         }
 
+        // --- club_statistics ---
+        $clubStatistics = $this->loadJson("club_statistics.json");
+        foreach ($clubStatistics as $row) {
+            $this->addSql(
+                "INSERT INTO club_statistics (id, label, value, club_history_id) VALUES (?, ?, ?, ?)",
+                [
+                    $row["id"],
+                    $row["label"],
+                    $row["value"],
+                    $row["club_history_id"],
+                ],
+            );
+        }
+
         // --- Reset auto-increment values to max(id) + 1 per table ---
         // MySQL does not allow subqueries in ALTER TABLE AUTO_INCREMENT,
         // so we compute the next value from the imported data.
@@ -383,6 +397,7 @@ final class Version20260604090620 extends AbstractMigration
                 max(array_column($clubHistorySpecialEvents, "id")) + 1,
             "club_history_hall_of_fame_entry" =>
                 max(array_column($clubHistoryHallOfFameEntries, "id")) + 1,
+            "club_statistics" => max(array_column($clubStatistics, "id")) + 1,
         ];
         foreach ($autoIncrement as $table => $nextId) {
             $this->addSql(
@@ -399,6 +414,7 @@ final class Version20260604090620 extends AbstractMigration
         $this->addSql("DELETE FROM club_history_special_event");
         $this->addSql("DELETE FROM club_history_membership_stat");
         $this->addSql("DELETE FROM club_history_milestone");
+        $this->addSql("DELETE FROM club_statistics");
         $this->addSql("DELETE FROM club_history");
         $this->addSql("DELETE FROM department_training_session");
         $this->addSql("DELETE FROM department_training_group");
