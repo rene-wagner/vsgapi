@@ -4,7 +4,7 @@ FROM dunglas/frankenphp:php8.4 AS vendor
 
 WORKDIR /app
 
-RUN install-php-extensions gd \
+RUN install-php-extensions gd zip \
     && curl -fsSL https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY composer.json composer.lock symfony.lock ./
