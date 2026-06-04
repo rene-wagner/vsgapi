@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260518055258 extends AbstractMigration
+final class Version20260604090619 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,6 +26,7 @@ final class Version20260518055258 extends AbstractMigration
         $this->addSql('CREATE TABLE club_history_membership_stat (id INT AUTO_INCREMENT NOT NULL, year INT NOT NULL, member_count INT NOT NULL, club_history_id INT NOT NULL, INDEX IDX_7B6E270D57C3CABF (club_history_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE club_history_milestone (id INT AUTO_INCREMENT NOT NULL, year INT NOT NULL, title VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, club_history_id INT NOT NULL, INDEX IDX_E89766757C3CABF (club_history_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE club_history_special_event (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, date DATE NOT NULL, description LONGTEXT DEFAULT NULL, club_history_id INT NOT NULL, INDEX IDX_2C16053657C3CABF (club_history_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->addSql('CREATE TABLE club_statistics (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(255) NOT NULL, value VARCHAR(255) NOT NULL, club_history_id INT NOT NULL, INDEX IDX_AB15C5CF57C3CABF (club_history_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE contact_person (id INT AUTO_INCREMENT NOT NULL, slug VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, last_name VARCHAR(255) NOT NULL, position VARCHAR(255) DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, phone VARCHAR(255) DEFAULT NULL, address LONGTEXT DEFAULT NULL, is_board TINYINT DEFAULT 0 NOT NULL, picture_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_A44EE6F7989D9B62 (slug), INDEX IDX_A44EE6F7EE45BDBF (picture_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE content_block (pk INT AUTO_INCREMENT NOT NULL, id BINARY(16) NOT NULL, url VARCHAR(255) NOT NULL, content LONGTEXT NOT NULL, PRIMARY KEY (pk)) DEFAULT CHARACTER SET utf8mb4');
         $this->addSql('CREATE TABLE department (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, color VARCHAR(32) NOT NULL, icon_id INT DEFAULT NULL, manager_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_CD1DE18A989D9B62 (slug), INDEX IDX_CD1DE18A54B9D732 (icon_id), INDEX IDX_CD1DE18A783E3463 (manager_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
@@ -46,6 +47,7 @@ final class Version20260518055258 extends AbstractMigration
         $this->addSql('ALTER TABLE club_history_membership_stat ADD CONSTRAINT FK_7B6E270D57C3CABF FOREIGN KEY (club_history_id) REFERENCES club_history (id)');
         $this->addSql('ALTER TABLE club_history_milestone ADD CONSTRAINT FK_E89766757C3CABF FOREIGN KEY (club_history_id) REFERENCES club_history (id)');
         $this->addSql('ALTER TABLE club_history_special_event ADD CONSTRAINT FK_2C16053657C3CABF FOREIGN KEY (club_history_id) REFERENCES club_history (id)');
+        $this->addSql('ALTER TABLE club_statistics ADD CONSTRAINT FK_AB15C5CF57C3CABF FOREIGN KEY (club_history_id) REFERENCES club_history (id)');
         $this->addSql('ALTER TABLE contact_person ADD CONSTRAINT FK_A44EE6F7EE45BDBF FOREIGN KEY (picture_id) REFERENCES media_item (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE department ADD CONSTRAINT FK_CD1DE18A54B9D732 FOREIGN KEY (icon_id) REFERENCES media_item (id) ON DELETE SET NULL');
         $this->addSql('ALTER TABLE department ADD CONSTRAINT FK_CD1DE18A783E3463 FOREIGN KEY (manager_id) REFERENCES contact_person (id) ON DELETE SET NULL');
@@ -73,6 +75,7 @@ final class Version20260518055258 extends AbstractMigration
         $this->addSql('ALTER TABLE club_history_membership_stat DROP FOREIGN KEY FK_7B6E270D57C3CABF');
         $this->addSql('ALTER TABLE club_history_milestone DROP FOREIGN KEY FK_E89766757C3CABF');
         $this->addSql('ALTER TABLE club_history_special_event DROP FOREIGN KEY FK_2C16053657C3CABF');
+        $this->addSql('ALTER TABLE club_statistics DROP FOREIGN KEY FK_AB15C5CF57C3CABF');
         $this->addSql('ALTER TABLE contact_person DROP FOREIGN KEY FK_A44EE6F7EE45BDBF');
         $this->addSql('ALTER TABLE department DROP FOREIGN KEY FK_CD1DE18A54B9D732');
         $this->addSql('ALTER TABLE department DROP FOREIGN KEY FK_CD1DE18A783E3463');
@@ -97,6 +100,7 @@ final class Version20260518055258 extends AbstractMigration
         $this->addSql('DROP TABLE club_history_membership_stat');
         $this->addSql('DROP TABLE club_history_milestone');
         $this->addSql('DROP TABLE club_history_special_event');
+        $this->addSql('DROP TABLE club_statistics');
         $this->addSql('DROP TABLE contact_person');
         $this->addSql('DROP TABLE content_block');
         $this->addSql('DROP TABLE department');
