@@ -34,6 +34,11 @@ class ClubHistory
     #[Groups(['club_history:read'])]
     private ?\DateTimeImmutable $foundingDate = null;
 
+    /** @var Collection<int, ClubStatistics> */
+    #[ORM\OneToMany(targetEntity: ClubStatistics::class, mappedBy: 'clubHistory', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Groups(['club_history:read'])]
+    private Collection $clubStatistics;
+
     /** @var Collection<int, ClubHistoryMilestone> */
     #[ORM\OneToMany(targetEntity: ClubHistoryMilestone::class, mappedBy: 'clubHistory', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['year' => 'ASC', 'id' => 'ASC'])]
@@ -60,6 +65,7 @@ class ClubHistory
 
     public function __construct()
     {
+        $this->clubStatistics = new ArrayCollection();
         $this->milestones = new ArrayCollection();
         $this->membershipStats = new ArrayCollection();
         $this->specialEvents = new ArrayCollection();
@@ -79,6 +85,42 @@ class ClubHistory
     public function setFoundingDate(\DateTimeImmutable $foundingDate): static
     {
         $this->foundingDate = $foundingDate;
+
+        return $this;
+    }
+
+    /** @return Collection<int, ClubStatistics> */
+    public function getClubStatistics(): Collection
+    {
+        return $this->clubStatistics;
+    }
+
+    /** @param iterable<ClubStatistics> $clubStatistics */
+    public function setClubStatistics(iterable $clubStatistics): static
+    {
+        foreach ($this->clubStatistics->toArray() as $existing) {
+            $this->removeClubStatistic($existing);
+        }
+        foreach ($clubStatistics as $clubStatistic) {
+            $this->addClubStatistic($clubStatistic);
+        }
+
+        return $this;
+    }
+
+    public function addClubStatistic(ClubStatistics $clubStatistic): static
+    {
+        if (!$this->clubStatistics->contains($clubStatistic)) {
+            $this->clubStatistics->add($clubStatistic);
+            $clubStatistic->setClubHistory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClubStatistic(ClubStatistics $clubStatistic): static
+    {
+        $this->clubStatistics->removeElement($clubStatistic);
 
         return $this;
     }

@@ -19,6 +19,17 @@ class ClubHistoryType extends AbstractType
                 'widget' => 'single_text',
                 'input' => 'datetime_immutable',
             ])
+            ->add('clubStatistics', CollectionType::class, [
+                'entry_type' => ClubStatisticsType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'by_reference' => false,
+                'label' => 'Vereinsstatistiken',
+                'entry_options' => [
+                    'label' => false,
+                ],
+            ])
             ->add('milestones', CollectionType::class, [
                 'entry_type' => ClubHistoryMilestoneType::class,
                 'allow_add' => true,
