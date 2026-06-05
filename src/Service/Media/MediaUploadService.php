@@ -30,6 +30,7 @@ class MediaUploadService
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
         private readonly SvgSanitizerService $svgSanitizer,
+        private readonly MediaStorageService $mediaStorageService,
         private readonly string $storageDir,
         private readonly int $maxUploadBytes,
         private readonly int $thumbnailMaxEdge,
@@ -59,21 +60,11 @@ class MediaUploadService
             : pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
 
         $id = Uuid::v4()->toRfc4122();
-        $relativePath = 'items/' . $id . '.' . $extension;
+        $filename = $this->mediaStorageService->buildMediaFilename(pathinfo($baseName, PATHINFO_FILENAME), $id, $extension);
+        $relativePath = $this->mediaStorageService->buildItemRelativePath($folder, $filename);
         $absolutePath = $this->storageDir . '/' . $relativePath;
 
-        $dir = dirname($absolutePath);
-        if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
-            $this->logger->error('Media storage directory could not be created.', ['dir' => $dir]);
-            throw new BadRequestHttpException('Speichern fehlgeschlagen.');
-        }
-
-        try {
-            $file->move(dirname($absolutePath), basename($absolutePath));
-        } catch (\Throwable $e) {
-            $this->logger->error('Media file move failed.', ['exception' => $e]);
-            throw new BadRequestHttpException('Speichern fehlgeschlagen.');
-        }
+        $this->mediaStorageService->moveUploadedFile($file, $relativePath);
 
         if ($mimeType === 'image/svg+xml') {
             $svgContent = file_get_contents($absolutePath);
@@ -98,7 +89,7 @@ class MediaUploadService
         $item->setDescription($description);
 
         if ($type === MediaItemType::Image && !\in_array($mimeType, ['image/svg+xml', 'image/gif'], true)) {
-            $thumbRelative = $this->buildThumbnailRelativePath($relativePath);
+            $thumbRelative = $this->mediaStorageService->buildThumbnailRelativePath($folder, basename($relativePath));
             if ($this->generateThumbnail($relativePath, $thumbRelative)) {
                 $item->setThumbnailPath($thumbRelative);
             }
@@ -145,13 +136,6 @@ class MediaUploadService
 
             return false;
         }
-    }
-
-    private function buildThumbnailRelativePath(string $relativePath): string
-    {
-        $relativePath = $this->normalizeStorageRelativePath($relativePath);
-
-        return 'thumbnails/' . pathinfo($relativePath, PATHINFO_FILENAME) . '.jpg';
     }
 
     private function normalizeStorageRelativePath(string $path): string

@@ -119,8 +119,14 @@ class MediaLibraryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            $this->addFlash('success', 'Medien-Eintrag wurde aktualisiert.');
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Medien-Eintrag wurde aktualisiert.');
+            } catch (HttpExceptionInterface $e) {
+                $this->addFlash('danger', $e->getMessage());
+
+                return $this->redirectToRoute('admin_mediathek_item_edit', ['id' => $item->getId()]);
+            }
 
             $params = [];
             if ($item->getFolder() !== null) {

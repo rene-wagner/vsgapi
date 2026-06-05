@@ -145,6 +145,14 @@ services:
         arguments:
             $storageDir: '%media.storage_dir%'
 
+    App\Service\Media\MediaStorageService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
+
+    App\EventSubscriber\MediaStorageSyncSubscriber:
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, priority: 128 }
+
     App\EventSubscriber\MediaItemFileSyncSubscriber:
         tags:
             - { name: doctrine.event_listener, event: onFlush }

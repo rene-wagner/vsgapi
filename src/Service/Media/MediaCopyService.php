@@ -14,6 +14,7 @@ class MediaCopyService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
+        private readonly MediaStorageService $mediaStorageService,
         private readonly string $storageDir,
     ) {
     }
@@ -23,34 +24,24 @@ class MediaCopyService
         $folder = $targetFolder ?? $source->getFolder();
         $newId = Uuid::v4()->toRfc4122();
         $ext = $source->getExtension() ?? '';
-        $newRelative = 'items/' . $newId . '.' . $ext;
-        $srcAbsolute = $this->storageDir . '/' . $source->getPath();
+        $filename = $this->mediaStorageService->buildMediaFilename($source->getName() ?? 'kopie', $newId, $ext);
+        $newRelative = $this->mediaStorageService->buildItemRelativePath($folder, $filename);
         $dstAbsolute = $this->storageDir . '/' . $newRelative;
 
-        if (!is_file($srcAbsolute)) {
+        $sourcePath = $source->getPath();
+        if ($sourcePath === null || $sourcePath === '') {
             throw new BadRequestHttpException('Quelldatei fehlt.');
         }
 
-        $dir = dirname($dstAbsolute);
-        if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
-            $this->logger->error('Media copy: target directory failed.', ['dir' => $dir]);
-            throw new BadRequestHttpException('Kopieren fehlgeschlagen.');
-        }
-
-        if (!@copy($srcAbsolute, $dstAbsolute)) {
-            $this->logger->error('Media copy: file copy failed.', ['from' => $source->getPath()]);
-            throw new BadRequestHttpException('Kopieren fehlgeschlagen.');
-        }
+        $this->mediaStorageService->copyFile($sourcePath, $newRelative);
 
         $newThumbRelative = null;
-        $sourceThumbRelative = 'thumbnails/' . pathinfo($source->getPath() ?? '', PATHINFO_FILENAME) . '.jpg';
-        if ($sourceThumbRelative !== 'thumbnails/.jpg' && is_file($this->storageDir . '/' . $sourceThumbRelative)) {
-            $newThumbRelative = 'thumbnails/' . pathinfo($newRelative, PATHINFO_FILENAME) . '.jpg';
-            $thumbDst = $this->storageDir . '/' . $newThumbRelative;
-            $thumbDir = dirname($thumbDst);
-            if (!is_dir($thumbDir) && !mkdir($thumbDir, 0775, true) && !is_dir($thumbDir)) {
-                $this->logger->error('Media copy: thumbnail dir failed.', ['dir' => $thumbDir]);
-            } elseif (!@copy($this->storageDir . '/' . $sourceThumbRelative, $thumbDst)) {
+        $sourceThumbRelative = $source->getThumbnailPath();
+        if ($sourceThumbRelative !== null && $sourceThumbRelative !== '' && is_file($this->storageDir . '/' . $sourceThumbRelative)) {
+            $newThumbRelative = $this->mediaStorageService->buildThumbnailRelativePath($folder, basename($newRelative));
+            try {
+                $this->mediaStorageService->copyFile($sourceThumbRelative, $newThumbRelative);
+            } catch (BadRequestHttpException) {
                 $this->logger->error('Media copy: thumbnail copy failed.');
                 $newThumbRelative = null;
             }

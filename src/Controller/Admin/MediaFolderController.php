@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin/media-folders')]
@@ -31,8 +32,14 @@ class MediaFolderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($folder);
-            $entityManager->flush();
-            $this->addFlash('success', 'Ordner wurde erfolgreich erstellt.');
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Ordner wurde erfolgreich erstellt.');
+            } catch (HttpExceptionInterface $e) {
+                $this->addFlash('danger', $e->getMessage());
+
+                return $this->redirectToRoute('admin_media_folder_new');
+            }
 
             return $this->redirectToRoute('admin_mediathek_index');
         }
@@ -58,8 +65,14 @@ class MediaFolderController extends AbstractController
 
                 return $this->redirectToRoute('admin_media_folder_edit', ['id' => $folder->getId()]);
             }
-            $entityManager->flush();
-            $this->addFlash('success', 'Ordner wurde erfolgreich aktualisiert.');
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', 'Ordner wurde erfolgreich aktualisiert.');
+            } catch (HttpExceptionInterface $e) {
+                $this->addFlash('danger', $e->getMessage());
+
+                return $this->redirectToRoute('admin_media_folder_edit', ['id' => $folder->getId()]);
+            }
 
             return $this->redirectToRoute('admin_mediathek_index');
         }

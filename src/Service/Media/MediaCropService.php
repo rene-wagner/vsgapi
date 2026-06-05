@@ -82,7 +82,14 @@ class MediaCropService
 
     private function buildOriginalThumbnailRelativePath(string $sourcePath): string
     {
-        return 'thumbnails/' . pathinfo($sourcePath, PATHINFO_FILENAME) . '.jpg';
+        $directory = trim(dirname($sourcePath), '.');
+        $filename = pathinfo($sourcePath, PATHINFO_FILENAME) . '.jpg';
+
+        if ($directory === '' || $directory === '/') {
+            return '_thumbnails/' . $filename;
+        }
+
+        return '_thumbnails/' . trim($directory, '/') . '/' . $filename;
     }
 
     private function buildLegacyCroppedThumbnailRelativePath(string $sourcePath): string
