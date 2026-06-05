@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\MediaFolder;
+use App\Service\Media\MediaFolderChoiceBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -11,6 +12,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MediaFolderType extends AbstractType
 {
+    public function __construct(private readonly MediaFolderChoiceBuilder $mediaFolderChoiceBuilder)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $excludeId = $options['exclude_folder_id'];
@@ -23,16 +28,9 @@ class MediaFolderType extends AbstractType
                 'class' => MediaFolder::class,
                 'label' => 'Übergeordneter Ordner',
                 'required' => false,
-                'placeholder' => '— Root —',
-                'choice_label' => 'name',
-                'query_builder' => function ($repository) use ($excludeId) {
-                    $qb = $repository->createQueryBuilder('f')->orderBy('f.name', 'ASC');
-                    if ($excludeId !== null) {
-                        $qb->andWhere('f.id != :excludeId')->setParameter('excludeId', $excludeId);
-                    }
-
-                    return $qb;
-                },
+                'placeholder' => '— Hauptebene —',
+                'choices' => $this->mediaFolderChoiceBuilder->buildIndentedChoices($excludeId),
+                'choice_label' => fn (MediaFolder $folder) => $this->mediaFolderChoiceBuilder->buildIndentedLabel($folder),
             ]);
     }
 
