@@ -19,5 +19,7 @@ pkgs.mkShell {
     symfony-cli
 
     nodejs_latest
+
+    jq
   ];
 }

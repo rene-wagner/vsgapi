@@ -139,6 +139,10 @@ services:
         arguments:
             $storageDir: '%media.storage_dir%'
             $maxUploadBytes: '%media.max_upload_bytes%'
+
+    App\Service\Media\MediaThumbnailService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
             $thumbnailMaxEdge: '%media.thumbnail_max_edge%'
 
     App\Service\Media\MediaDeleteService:

@@ -87,6 +87,25 @@ class MediaStorageService
         $this->moveFile($sourceRelativePath, $targetRelativePath, $required);
     }
 
+    public function copyLocalFileToStorage(string $sourceAbsolutePath, string $targetRelativePath): void
+    {
+        if (!is_file($sourceAbsolutePath)) {
+            throw new BadRequestHttpException('Quelldatei fehlt.');
+        }
+
+        $targetAbsolutePath = $this->absolutePath($targetRelativePath);
+        $this->ensureDirectoryExists(dirname($targetAbsolutePath));
+
+        if (is_file($targetAbsolutePath)) {
+            throw new BadRequestHttpException('Im Zielordner existiert bereits eine Datei mit diesem Namen.');
+        }
+
+        if (!@copy($sourceAbsolutePath, $targetAbsolutePath)) {
+            $this->logger->error('Media import copy failed.', ['from' => $sourceAbsolutePath, 'to' => $targetRelativePath]);
+            throw new BadRequestHttpException('Importieren fehlgeschlagen.');
+        }
+    }
+
     public function ensureFolderExists(MediaFolder $folder): void
     {
         $this->ensureDirectoryExists($this->absolutePath($this->buildFolderPath($folder)));
