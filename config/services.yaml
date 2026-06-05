@@ -139,11 +139,23 @@ services:
         arguments:
             $storageDir: '%media.storage_dir%'
             $maxUploadBytes: '%media.max_upload_bytes%'
+
+    App\Service\Media\MediaThumbnailService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
             $thumbnailMaxEdge: '%media.thumbnail_max_edge%'
 
     App\Service\Media\MediaDeleteService:
         arguments:
             $storageDir: '%media.storage_dir%'
+
+    App\Service\Media\MediaStorageService:
+        arguments:
+            $storageDir: '%media.storage_dir%'
+
+    App\EventSubscriber\MediaStorageSyncSubscriber:
+        tags:
+            - { name: doctrine.event_listener, event: onFlush, priority: 128 }
 
     App\EventSubscriber\MediaItemFileSyncSubscriber:
         tags:

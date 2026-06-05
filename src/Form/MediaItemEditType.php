@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Category;
 use App\Entity\MediaFolder;
 use App\Entity\MediaItem;
+use App\Service\Media\MediaFolderChoiceBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -16,6 +17,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MediaItemEditType extends AbstractType
 {
+    public function __construct(private readonly MediaFolderChoiceBuilder $mediaFolderChoiceBuilder)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -38,9 +43,9 @@ class MediaItemEditType extends AbstractType
                 'class' => MediaFolder::class,
                 'label' => 'Ordner',
                 'required' => false,
-                'placeholder' => '— Root —',
-                'choice_label' => 'name',
-                'query_builder' => fn ($r) => $r->createQueryBuilder('f')->orderBy('f.name', 'ASC'),
+                'placeholder' => '— Hauptebene —',
+                'choices' => $this->mediaFolderChoiceBuilder->buildIndentedChoices(),
+                'choice_label' => fn (MediaFolder $folder) => $this->mediaFolderChoiceBuilder->buildIndentedLabel($folder),
             ])
             ->add('cropX', IntegerType::class, [
                 'label' => 'X',

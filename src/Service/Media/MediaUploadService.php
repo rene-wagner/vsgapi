@@ -7,8 +7,6 @@ use App\Entity\MediaFolder;
 use App\Entity\MediaItem;
 use App\Enum\MediaItemType;
 use Doctrine\ORM\EntityManagerInterface;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -30,9 +28,10 @@ class MediaUploadService
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
         private readonly SvgSanitizerService $svgSanitizer,
+        private readonly MediaStorageService $mediaStorageService,
+        private readonly MediaThumbnailService $mediaThumbnailService,
         private readonly string $storageDir,
         private readonly int $maxUploadBytes,
-        private readonly int $thumbnailMaxEdge,
     ) {
     }
 
@@ -59,21 +58,11 @@ class MediaUploadService
             : pathinfo($originalName, PATHINFO_FILENAME) . '.' . $extension;
 
         $id = Uuid::v4()->toRfc4122();
-        $relativePath = 'items/' . $id . '.' . $extension;
+        $filename = $this->mediaStorageService->buildMediaFilename(pathinfo($baseName, PATHINFO_FILENAME), $id, $extension);
+        $relativePath = $this->mediaStorageService->buildItemRelativePath($folder, $filename);
         $absolutePath = $this->storageDir . '/' . $relativePath;
 
-        $dir = dirname($absolutePath);
-        if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
-            $this->logger->error('Media storage directory could not be created.', ['dir' => $dir]);
-            throw new BadRequestHttpException('Speichern fehlgeschlagen.');
-        }
-
-        try {
-            $file->move(dirname($absolutePath), basename($absolutePath));
-        } catch (\Throwable $e) {
-            $this->logger->error('Media file move failed.', ['exception' => $e]);
-            throw new BadRequestHttpException('Speichern fehlgeschlagen.');
-        }
+        $this->mediaStorageService->moveUploadedFile($file, $relativePath);
 
         if ($mimeType === 'image/svg+xml') {
             $svgContent = file_get_contents($absolutePath);
@@ -98,8 +87,8 @@ class MediaUploadService
         $item->setDescription($description);
 
         if ($type === MediaItemType::Image && !\in_array($mimeType, ['image/svg+xml', 'image/gif'], true)) {
-            $thumbRelative = $this->buildThumbnailRelativePath($relativePath);
-            if ($this->generateThumbnail($relativePath, $thumbRelative)) {
+            $thumbRelative = $this->mediaStorageService->buildThumbnailRelativePath($folder, basename($relativePath));
+            if ($this->mediaThumbnailService->generate($relativePath, $thumbRelative)) {
                 $item->setThumbnailPath($thumbRelative);
             }
         }
@@ -109,60 +98,4 @@ class MediaUploadService
 
         return $item;
     }
-
-    private function generateThumbnail(string $relativePath, string $thumbRelative): bool
-    {
-        $relativePath = $this->normalizeStorageRelativePath($relativePath);
-        $thumbRelative = $this->normalizeStorageRelativePath($thumbRelative);
-
-        $absolutePath = $this->storageDir . '/' . $relativePath;
-        if (!is_file($absolutePath)) {
-            $this->logger->error('Media source file for thumbnail generation is missing.', ['path' => $relativePath]);
-
-            return false;
-        }
-
-        $thumbAbsolute = $this->storageDir . '/' . $thumbRelative;
-        $thumbDir = dirname($thumbAbsolute);
-        if (!is_dir($thumbDir) && !mkdir($thumbDir, 0775, true) && !is_dir($thumbDir)) {
-            $this->logger->error('Thumbnail directory could not be created.', ['dir' => $thumbDir]);
-
-            return false;
-        }
-
-        try {
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read($absolutePath);
-            $image->scaleDown(width: $this->thumbnailMaxEdge, height: $this->thumbnailMaxEdge);
-            $image->toJpeg(quality: 82)->save($thumbAbsolute);
-
-            return true;
-        } catch (\Throwable $e) {
-            $this->logger->error('Media thumbnail generation failed.', [
-                'exception' => $e,
-                'path' => $relativePath,
-            ]);
-
-            return false;
-        }
-    }
-
-    private function buildThumbnailRelativePath(string $relativePath): string
-    {
-        $relativePath = $this->normalizeStorageRelativePath($relativePath);
-
-        return 'thumbnails/' . pathinfo($relativePath, PATHINFO_FILENAME) . '.jpg';
-    }
-
-    private function normalizeStorageRelativePath(string $path): string
-    {
-        $path = ltrim($path, '/');
-
-        if (str_starts_with($path, 'uploads/')) {
-            $path = substr($path, strlen('uploads/'));
-        }
-
-        return $path;
-    }
-
 }

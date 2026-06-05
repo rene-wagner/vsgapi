@@ -55,6 +55,9 @@ class MediaFolder
     #[Groups(['media_folder:read', 'media_item:read'])]
     private ?string $name = null;
 
+    #[ORM\Column(length: 512, nullable: true)]
+    private ?string $storagePath = null;
+
     #[ORM\Column]
     #[Groups(['media_folder:read'])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -106,6 +109,18 @@ class MediaFolder
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getStoragePath(): ?string
+    {
+        return $this->storagePath;
+    }
+
+    public function setStoragePath(?string $storagePath): static
+    {
+        $this->storagePath = $storagePath;
 
         return $this;
     }

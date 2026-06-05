@@ -10,10 +10,8 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260604090620 extends AbstractMigration
+final class Version20260605094812 extends AbstractMigration
 {
-    private const IMPORT_TIMESTAMP = "2026-04-14 12:00:00";
-
     public function getDescription(): string
     {
         return "Seed initial data (users, categories, media, events, contacts, locations, departments, club history)";
@@ -46,75 +44,11 @@ final class Version20260604090620 extends AbstractMigration
             );
         }
 
-        // --- media_folders (root folders first, then children) ---
-        $folders = $this->loadJson("media_folders.json");
-        $roots = array_filter(
-            $folders,
-            fn(array $f): bool => $f["parent_id"] === null,
-        );
-        $children = array_filter(
-            $folders,
-            fn(array $f): bool => $f["parent_id"] !== null,
-        );
-
-        foreach ($roots as $row) {
-            $this->addSql(
-                "INSERT INTO media_folder (id, name, created_at, updated_at, parent_id) VALUES (?, ?, ?, ?, NULL)",
-                [
-                    $row["id"],
-                    $row["name"],
-                    self::IMPORT_TIMESTAMP,
-                    self::IMPORT_TIMESTAMP,
-                ],
-            );
-        }
-        foreach ($children as $row) {
-            $this->addSql(
-                "INSERT INTO media_folder (id, name, created_at, updated_at, parent_id) VALUES (?, ?, ?, ?, ?)",
-                [
-                    $row["id"],
-                    $row["name"],
-                    self::IMPORT_TIMESTAMP,
-                    self::IMPORT_TIMESTAMP,
-                    $row["parent_id"],
-                ],
-            );
-        }
-
-        // --- media_items ---
-        $items = $this->loadJson("media_items.json");
-        foreach ($items as $row) {
-            $this->addSql(
-                "INSERT INTO media_item (id, name, original_filename, mime_type, extension, type, size_bytes, path, thumbnail_path, description, crop_x, crop_y, crop_width, crop_height, is_hidden_in_api, created_at, updated_at, folder_id, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [
-                    $row["id"],
-                    $row["name"],
-                    $row["original_filename"],
-                    $row["mime_type"],
-                    $row["extension"],
-                    $row["type"],
-                    $row["size_bytes"],
-                    $row["path"],
-                    $row["thumbnail_path"],
-                    $row["description"],
-                    $row["crop_x"],
-                    $row["crop_y"],
-                    $row["crop_width"],
-                    $row["crop_height"],
-                    $row["is_hidden_in_api"] ?? false,
-                    $row["created_at"],
-                    $row["updated_at"],
-                    $row["folder_id"],
-                    $row["category_id"],
-                ],
-            );
-        }
-
         // --- events ---
         $events = $this->loadJson("events.json");
         foreach ($events as $row) {
             $this->addSql(
-                "INSERT INTO event (id, title, description, starts_at, ends_at, location, recurrence, recurrence_until, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO event (id, title, description, starts_at, ends_at, location, recurrence, recurrence_until, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)",
                 [
                     $row["id"],
                     $row["title"],
@@ -124,7 +58,6 @@ final class Version20260604090620 extends AbstractMigration
                     $row["location"],
                     $row["recurrence"],
                     $row["recurrence_until"],
-                    $row["picture_id"],
                 ],
             );
         }
@@ -133,7 +66,7 @@ final class Version20260604090620 extends AbstractMigration
         $contacts = $this->loadJson("contact_persons.json");
         foreach ($contacts as $row) {
             $this->addSql(
-                "INSERT INTO contact_person (id, slug, first_name, last_name, position, email, phone, address, is_board, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO contact_person (id, slug, first_name, last_name, position, email, phone, address, is_board, picture_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)",
                 [
                     $row["id"],
                     $row["slug"],
@@ -144,7 +77,6 @@ final class Version20260604090620 extends AbstractMigration
                     $row["phone"],
                     $row["address"],
                     $row["is_board"] ?? false,
-                    $row["picture_id"],
                 ],
             );
         }
@@ -153,14 +85,13 @@ final class Version20260604090620 extends AbstractMigration
         $locations = $this->loadJson("locations.json");
         foreach ($locations as $row) {
             $this->addSql(
-                "INSERT INTO location (id, name, street, city, maps_url, picture_id) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO location (id, name, street, city, maps_url, picture_id) VALUES (?, ?, ?, ?, ?, NULL)",
                 [
                     $row["id"],
                     $row["name"],
                     $row["street"],
                     $row["city"],
                     $row["maps_url"],
-                    $row["picture_id"],
                 ],
             );
         }
@@ -169,14 +100,13 @@ final class Version20260604090620 extends AbstractMigration
         $departments = $this->loadJson("departments.json");
         foreach ($departments as $row) {
             $this->addSql(
-                "INSERT INTO department (id, name, slug, color, description, icon_id, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO department (id, name, slug, color, description, icon_id, manager_id) VALUES (?, ?, ?, ?, ?, NULL, ?)",
                 [
                     $row["id"],
                     $row["name"],
                     $row["slug"],
                     $row["color"],
                     $row["description"],
-                    $row["icon_id"],
                     $row["manager_id"],
                 ],
             );
@@ -375,8 +305,6 @@ final class Version20260604090620 extends AbstractMigration
         $autoIncrement = [
             "`user`" => max(array_column($users, "id")) + 1,
             "category" => max(array_column($categories, "id")) + 1,
-            "media_folder" => max(array_column($folders, "id")) + 1,
-            "media_item" => max(array_column($items, "id")) + 1,
             "event" => max(array_column($events, "id")) + 1,
             "contact_person" => max(array_column($contacts, "id")) + 1,
             "location" => max(array_column($locations, "id")) + 1,
@@ -426,8 +354,6 @@ final class Version20260604090620 extends AbstractMigration
         $this->addSql("DELETE FROM post");
         $this->addSql("DELETE FROM content_block");
         $this->addSql("DELETE FROM event");
-        $this->addSql("DELETE FROM media_item");
-        $this->addSql("DELETE FROM media_folder");
         $this->addSql("DELETE FROM category");
         $this->addSql("DELETE FROM `user`");
     }
