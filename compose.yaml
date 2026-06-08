@@ -1,6 +1,6 @@
 services:
   database:
-    image: mysql:9
+    image: mariadb:10.11
     container_name: vsgapi-mysql
     ports:
       - "3306:3306"

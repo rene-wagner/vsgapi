@@ -22,6 +22,7 @@ docs/superpowers/
 ###> data/files ###
 migration_data/
 001-initial-dump.sql
+002-initial-dump.sql
 ###< data/files ###
 
 ###> symfony/webpack-encore-bundle ###

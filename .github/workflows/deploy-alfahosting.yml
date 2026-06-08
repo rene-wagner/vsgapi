@@ -1,0 +1,125 @@
+name: Deploy to Alfahosting
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      run_migrations:
+        description: "Doctrine-Migrationen nach dem Upload ausführen"
+        required: true
+        default: true
+        type: boolean
+
+concurrency:
+  group: alfahosting-deploy
+  cancel-in-progress: false
+
+env:
+  APP_ENV: prod
+  APP_DEBUG: "0"
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    env:
+      ALFAHOSTING_PORT: ${{ secrets.ALFAHOSTING_PORT || '22' }}
+      ALFAHOSTING_PHP_BINARY: ${{ secrets.ALFAHOSTING_PHP_BINARY || 'php' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --no-progress --no-interaction --optimize-autoloader
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Verify deployment artifacts
+        run: |
+          test -d vendor
+          test -f public/.htaccess
+          test -f public/build/manifest.json
+          test -f public/build/entrypoints.json
+
+      - name: Install deployment tools
+        run: sudo apt-get update && sudo apt-get install -y rsync sshpass
+
+      - name: Add SSH host key
+        env:
+          ALFAHOSTING_HOST: ${{ secrets.ALFAHOSTING_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$ALFAHOSTING_PORT" "$ALFAHOSTING_HOST" >> ~/.ssh/known_hosts
+
+      - name: Create target directory
+        env:
+          ALFAHOSTING_HOST: ${{ secrets.ALFAHOSTING_HOST }}
+          ALFAHOSTING_USER: ${{ secrets.ALFAHOSTING_USER }}
+          SSHPASS: ${{ secrets.ALFAHOSTING_PASSWORD }}
+          ALFAHOSTING_TARGET_DIR: ${{ secrets.ALFAHOSTING_TARGET_DIR }}
+        run: |
+          sshpass -e ssh -p "$ALFAHOSTING_PORT" "$ALFAHOSTING_USER@$ALFAHOSTING_HOST" "mkdir -p '$ALFAHOSTING_TARGET_DIR'"
+
+      - name: Upload application via rsync
+        env:
+          ALFAHOSTING_HOST: ${{ secrets.ALFAHOSTING_HOST }}
+          ALFAHOSTING_USER: ${{ secrets.ALFAHOSTING_USER }}
+          SSHPASS: ${{ secrets.ALFAHOSTING_PASSWORD }}
+          ALFAHOSTING_TARGET_DIR: ${{ secrets.ALFAHOSTING_TARGET_DIR }}
+        run: |
+          sshpass -e rsync -az --delete --human-readable \
+              --exclude='.git/' \
+              --exclude='.github/' \
+              --exclude='.docker/' \
+              --exclude='.dockerignore' \
+              --exclude='Dockerfile' \
+              --exclude='compose.yaml' \
+              --exclude='node_modules/' \
+              --exclude='var/cache/' \
+              --exclude='var/log/' \
+              --exclude='var/media/' \
+              --exclude='.env.local' \
+              --exclude='.env.*.local' \
+              --exclude='*.sql' \
+              -e "ssh -p $ALFAHOSTING_PORT" \
+              ./ "$ALFAHOSTING_USER@$ALFAHOSTING_HOST:$ALFAHOSTING_TARGET_DIR/"
+
+      - name: Warm up Symfony cache
+        env:
+          ALFAHOSTING_HOST: ${{ secrets.ALFAHOSTING_HOST }}
+          ALFAHOSTING_USER: ${{ secrets.ALFAHOSTING_USER }}
+          SSHPASS: ${{ secrets.ALFAHOSTING_PASSWORD }}
+          ALFAHOSTING_TARGET_DIR: ${{ secrets.ALFAHOSTING_TARGET_DIR }}
+        run: |
+          sshpass -e ssh -p "$ALFAHOSTING_PORT" "$ALFAHOSTING_USER@$ALFAHOSTING_HOST" \
+              "cd '$ALFAHOSTING_TARGET_DIR' && '$ALFAHOSTING_PHP_BINARY' bin/console cache:clear --env=prod && '$ALFAHOSTING_PHP_BINARY' bin/console cache:warmup --env=prod"
+
+      - name: Run Doctrine migrations
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_migrations }}
+        env:
+          ALFAHOSTING_HOST: ${{ secrets.ALFAHOSTING_HOST }}
+          ALFAHOSTING_USER: ${{ secrets.ALFAHOSTING_USER }}
+          SSHPASS: ${{ secrets.ALFAHOSTING_PASSWORD }}
+          ALFAHOSTING_TARGET_DIR: ${{ secrets.ALFAHOSTING_TARGET_DIR }}
+        run: |
+          sshpass -e ssh -p "$ALFAHOSTING_PORT" "$ALFAHOSTING_USER@$ALFAHOSTING_HOST" \
+              "cd '$ALFAHOSTING_TARGET_DIR' && '$ALFAHOSTING_PHP_BINARY' bin/console doctrine:migrations:migrate --no-interaction --env=prod"
