@@ -16,6 +16,9 @@ DirectoryIndex index.php
     RewriteCond %{ENV:REDIRECT_STATUS} =""
     RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
 
+    # Hochgeladene Bilder und PDFs direkt durch Apache ausliefern.
+    RewriteRule ^uploads/.+\.(?:jpe?g|png|gif|webp|svg|pdf)$ - [L,NC]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ %{ENV:BASE}/index.php [L]
 </IfModule>
