@@ -145,6 +145,11 @@ class MediaItem
     #[Groups(['media_item:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    #[SerializedName('image_created_at')]
+    #[Groups(['media_item:read'])]
+    private ?\DateTimeImmutable $imageCreatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -325,6 +330,18 @@ class MediaItem
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getImageCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->imageCreatedAt;
+    }
+
+    public function setImageCreatedAt(?\DateTimeImmutable $imageCreatedAt): static
+    {
+        $this->imageCreatedAt = $imageCreatedAt;
 
         return $this;
     }

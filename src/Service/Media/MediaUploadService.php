@@ -30,6 +30,7 @@ class MediaUploadService
         private readonly SvgSanitizerService $svgSanitizer,
         private readonly MediaStorageService $mediaStorageService,
         private readonly MediaThumbnailService $mediaThumbnailService,
+        private readonly ImageMetadataDateExtractor $imageMetadataDateExtractor,
         private readonly string $storageDir,
         private readonly int $maxUploadBytes,
     ) {
@@ -52,6 +53,7 @@ class MediaUploadService
         }
 
         [$extension, $type] = self::ALLOWED_MIMES[$mimeType];
+        $uploadedAt = new \DateTimeImmutable();
         $originalName = $file->getClientOriginalName();
         $baseName = $displayName !== null && $displayName !== ''
             ? $displayName
@@ -85,6 +87,10 @@ class MediaUploadService
         $item->setSizeBytes((int) filesize($absolutePath));
         $item->setPath($relativePath);
         $item->setDescription($description);
+
+        if ($type === MediaItemType::Image) {
+            $item->setImageCreatedAt($this->imageMetadataDateExtractor->extract($absolutePath, $mimeType) ?? $uploadedAt);
+        }
 
         if ($type === MediaItemType::Image && !\in_array($mimeType, ['image/svg+xml', 'image/gif'], true)) {
             $thumbRelative = $this->mediaStorageService->buildThumbnailRelativePath($folder, basename($relativePath));

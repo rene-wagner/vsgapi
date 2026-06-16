@@ -6,6 +6,7 @@
   "require": {
     "php": ">=8.2",
     "ext-ctype": "*",
+    "ext-exif": "*",
     "ext-iconv": "*",
     "api-platform/doctrine-orm": "^4.3.7",
     "api-platform/metadata": "^4.3.7",

@@ -41,6 +41,7 @@ class MediaFolderImportService
         private readonly MediaStorageService $mediaStorageService,
         private readonly MediaThumbnailService $mediaThumbnailService,
         private readonly SvgSanitizerService $svgSanitizer,
+        private readonly ImageMetadataDateExtractor $imageMetadataDateExtractor,
     ) {
     }
 
@@ -80,6 +81,7 @@ class MediaFolderImportService
                 : null;
 
             [$mimeType, $extension] = $fileInfo;
+            $importedAt = new \DateTimeImmutable();
             $originalFilename = $file->getFilename();
             $displayName = pathinfo($originalFilename, PATHINFO_FILENAME) . '.' . $extension;
             $id = Uuid::v4()->toRfc4122();
@@ -107,8 +109,10 @@ class MediaFolderImportService
             $item->setMimeType($mimeType);
             $item->setExtension($extension);
             $item->setType(MediaItemType::Image);
-            $item->setSizeBytes((int) filesize($this->mediaStorageService->absolutePath($targetPath)));
+            $targetAbsolutePath = $this->mediaStorageService->absolutePath($targetPath);
+            $item->setSizeBytes((int) filesize($targetAbsolutePath));
             $item->setPath($targetPath);
+            $item->setImageCreatedAt($this->imageMetadataDateExtractor->extract($targetAbsolutePath, $mimeType) ?? $importedAt);
             $item->setIsHiddenInApi(false);
 
             if ($this->shouldGenerateThumbnail($mimeType)) {

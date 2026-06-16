@@ -63,6 +63,7 @@ class MediaCopyService
         $copy->setPath($newRelative);
         $copy->setThumbnailPath($newThumbRelative);
         $copy->setDescription($source->getDescription());
+        $copy->setImageCreatedAt($source->getImageCreatedAt());
         $copy->setCropX($source->getCropX());
         $copy->setCropY($source->getCropY());
         $copy->setCropWidth($source->getCropWidth());

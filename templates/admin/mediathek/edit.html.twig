@@ -58,6 +58,13 @@
                             {% endif %}
                         </div>
                     {% endif %}
+
+                    {% if is_image and item.imageCreatedAt %}
+                        <div class="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                            <p class="mb-1 text-sm font-medium text-gray-900">Bild-Erstellungsdatum</p>
+                            <p class="mb-0 text-sm text-gray-500">{{ item.imageCreatedAt|date('d.m.Y H:i') }}</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
