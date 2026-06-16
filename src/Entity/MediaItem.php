@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Enum\MediaItemType;
 use App\Repository\MediaItemRepository;
 use App\Controller\Api\MediaItemCopyController;
@@ -25,10 +26,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaItemRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\Index(name: 'IDX_MEDIA_ITEM_IMAGE_CREATED_AT', columns: ['image_created_at'])]
 #[ApiResource(
     operations: [
         new GetCollection(uriTemplate: '/media_items', paginationItemsPerPage: 20, paginationClientItemsPerPage: false),
-        new GetCollection(uriTemplate: '/gallery', name: 'gallery', paginationItemsPerPage: 20, paginationClientItemsPerPage: false),
+        new GetCollection(
+            uriTemplate: '/gallery',
+            name: 'gallery',
+            paginationItemsPerPage: 20,
+            paginationClientItemsPerPage: false,
+            parameters: [
+                'year' => new QueryParameter(
+                    key: 'year',
+                    schema: [
+                        'type' => 'string',
+                        'pattern' => '^\\d{4}$',
+                    ],
+                    description: 'Filtert Galeriebilder nach dem Jahr von image_created_at.',
+                ),
+            ],
+        ),
         new Get(uriTemplate: '/media_items/{id}'),
         new Post(
             uriTemplate: '/media_items/upload',
