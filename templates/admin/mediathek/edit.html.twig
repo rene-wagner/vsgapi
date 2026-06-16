@@ -13,6 +13,7 @@
     {% set file_url = media_url.buildOriginalUrl(item) %}
     {% set thumbnail_url = media_url.buildThumbnailUrl(item) %}
     {% set is_image = item.type.value == 'image' %}
+    {% set preview_url = is_image and thumbnail_url and item.mimeType not in ['image/svg+xml', 'image/gif'] ? thumbnail_url : file_url %}
     {% set is_describable_image = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] %}
     {% set is_croppable = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
     {% set can_regenerate_thumbnail = is_image and item.mimeType in ['image/jpeg', 'image/png', 'image/webp'] %}
@@ -29,7 +30,7 @@
                 <div class="px-6 py-4">
                     {% if is_image %}
                         <div class="mb-3 text-center">
-                            <img src="{{ file_url }}" alt="{{ item.name|e('html_attr') }}" class="admin-media-edit-preview rounded-lg border border-gray-200">
+                            <img src="{{ preview_url }}" alt="{{ item.name|e('html_attr') }}" class="admin-media-edit-preview rounded-lg border border-gray-200">
                         </div>
                         <p class="mb-0 break-words text-sm text-gray-500">{{ item.name }} · {{ media_url.formatSizeHuman(item.sizeBytes) }}</p>
                     {% else %}
