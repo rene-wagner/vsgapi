@@ -44,6 +44,14 @@ use Symfony\Component\Validator\Constraints as Assert;
                     ],
                     description: 'Filtert Galeriebilder nach dem Jahr von image_created_at.',
                 ),
+                'q' => new QueryParameter(
+                    key: 'q',
+                    schema: [
+                        'type' => 'string',
+                        'maxLength' => 255,
+                    ],
+                    description: 'Sucht Galeriebilder nach einem Begriff im vollständigen Ordnerpfad.',
+                ),
             ],
         ),
         new Get(uriTemplate: '/media_items/{id}'),

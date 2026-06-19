@@ -10,9 +10,14 @@ use App\Entity\MediaItem;
 use App\Enum\MediaItemType;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class GalleryExtension implements QueryCollectionExtensionInterface
 {
+    public function __construct(private readonly SluggerInterface $slugger)
+    {
+    }
+
     public function applyToCollection(
         QueryBuilder $queryBuilder,
         QueryNameGeneratorInterface $queryNameGenerator,
@@ -33,7 +38,30 @@ final class GalleryExtension implements QueryCollectionExtensionInterface
             ->andWhere(sprintf('%s.type = :gallery_type', $rootAlias))
             ->setParameter('gallery_type', MediaItemType::Image)
             ->andWhere(sprintf('%s.isHiddenInApi = :gallery_hidden', $rootAlias))
-            ->setParameter('gallery_hidden', false);
+            ->setParameter('gallery_hidden', false)
+            ->addOrderBy(sprintf('%s.imageCreatedAt', $rootAlias), 'DESC');
+
+        $search = $context['filters']['q'] ?? null;
+        if ($search !== null && $search !== '') {
+            if (!\is_scalar($search)) {
+                throw new BadRequestHttpException('Der Parameter "q" muss ein Suchbegriff sein.');
+            }
+
+            $search = trim((string) $search);
+            if (mb_strlen($search) > 255) {
+                throw new BadRequestHttpException('Der Parameter "q" darf maximal 255 Zeichen lang sein.');
+            }
+
+            if ($search !== '') {
+                $folderAlias = $queryNameGenerator->generateJoinAlias('gallery_folder');
+                $normalizedSearch = strtolower($this->slugger->slug($search)->toString());
+
+                $queryBuilder
+                    ->innerJoin(sprintf('%s.folder', $rootAlias), $folderAlias)
+                    ->andWhere(sprintf('LOWER(%s.storagePath) LIKE :gallery_search', $folderAlias))
+                    ->setParameter('gallery_search', '%' . addcslashes($normalizedSearch, '%_') . '%');
+            }
+        }
 
         $year = $context['filters']['year'] ?? null;
         if ($year === null || $year === '') {
