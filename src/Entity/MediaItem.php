@@ -13,10 +13,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
-use App\Enum\MediaItemType;
-use App\Repository\MediaItemRepository;
+use App\Controller\Api\GalleryYearsController;
 use App\Controller\Api\MediaItemCopyController;
 use App\Controller\Api\MediaItemUploadController;
+use App\Enum\MediaItemType;
+use App\Repository\MediaItemRepository;
 use App\State\MediaItemDeleteProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,6 +54,14 @@ use Symfony\Component\Validator\Constraints as Assert;
                     description: 'Sucht Galeriebilder nach einem Begriff im vollständigen Ordnerpfad.',
                 ),
             ],
+        ),
+        new GetCollection(
+            uriTemplate: '/gallery/years',
+            controller: GalleryYearsController::class,
+            read: false,
+            paginationEnabled: false,
+            output: false,
+            name: 'gallery_years',
         ),
         new Get(uriTemplate: '/media_items/{id}'),
         new Post(
