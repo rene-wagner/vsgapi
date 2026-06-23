@@ -39,7 +39,9 @@ final class GalleryExtension implements QueryCollectionExtensionInterface
             ->setParameter('gallery_type', MediaItemType::Image)
             ->andWhere(sprintf('%s.isHiddenInApi = :gallery_hidden', $rootAlias))
             ->setParameter('gallery_hidden', false)
-            ->addOrderBy(sprintf('%s.imageCreatedAt', $rootAlias), 'DESC');
+            ->addOrderBy(sprintf('%s.imageCreatedAt', $rootAlias), 'DESC')
+            ->addOrderBy(sprintf('%s.createdAt', $rootAlias), 'DESC')
+            ->addOrderBy(sprintf('%s.id', $rootAlias), 'DESC');
 
         $search = $context['filters']['q'] ?? null;
         if ($search !== null && $search !== '') {
