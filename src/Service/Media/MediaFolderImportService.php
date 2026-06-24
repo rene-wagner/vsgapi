@@ -81,7 +81,6 @@ class MediaFolderImportService
                 : null;
 
             [$mimeType, $extension] = $fileInfo;
-            $importedAt = new \DateTimeImmutable();
             $originalFilename = $file->getFilename();
             $displayName = pathinfo($originalFilename, PATHINFO_FILENAME) . '.' . $extension;
             $id = Uuid::v4()->toRfc4122();
@@ -112,7 +111,7 @@ class MediaFolderImportService
             $targetAbsolutePath = $this->mediaStorageService->absolutePath($targetPath);
             $item->setSizeBytes((int) filesize($targetAbsolutePath));
             $item->setPath($targetPath);
-            $item->setImageCreatedAt($this->imageMetadataDateExtractor->extract($targetAbsolutePath, $mimeType) ?? $importedAt);
+            $item->setImageCreatedAt($this->imageMetadataDateExtractor->extract($targetAbsolutePath, $mimeType));
             $item->setIsHiddenInApi(false);
 
             if ($this->shouldGenerateThumbnail($mimeType)) {
